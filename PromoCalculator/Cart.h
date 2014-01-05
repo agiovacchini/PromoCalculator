@@ -1,0 +1,29 @@
+//
+//  Cart.h
+//  PromoCalculator
+//
+//  Created by Andrea Giovacchini on 04/01/14.
+//  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
+//
+
+#ifndef __PromoCalculator__Cart__
+#define __PromoCalculator__Cart__
+
+#include <iostream>
+#include "map"
+
+#endif /* defined(__PromoCalculator__Cart__) */
+#include "Item.h"
+
+#include "BaseTypes.h"
+
+
+
+class Cart {
+    Totals totals ;
+    std::map <Item, long> itemsMap ;
+
+public:
+    Cart() ;
+    Totals addItem(Item pItem) ;
+} ;
