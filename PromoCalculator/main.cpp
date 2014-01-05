@@ -50,7 +50,7 @@ int main(int argc, const char * argv[])
     articolo3.setDepartment(dept1);
     
     //std::cout << "\nPrice: " << articolo.getPrice() ;
-    
+    /*
     tmpTotals = carrello.addItem(articolo1) ;
     std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo2) ;
@@ -60,5 +60,9 @@ int main(int argc, const char * argv[])
     tmpTotals = carrello.addItem(articolo3) ;
     std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     std::cout << "\n\n" ;
+    */ 
+     
+    carrello.printCart();
+
     return 0;
 }

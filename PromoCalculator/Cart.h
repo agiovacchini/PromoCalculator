@@ -21,9 +21,10 @@
 
 class Cart {
     Totals totals ;
-    std::map <Item, long> itemsMap ;
+    std::map <Item, int> itemsMap ;
 
 public:
     Cart() ;
     Totals addItem(Item pItem) ;
+    void printCart( );
 } ;
