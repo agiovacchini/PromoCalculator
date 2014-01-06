@@ -23,8 +23,6 @@ int main(int argc, const char * argv[])
     Item articolo1, articolo2, articolo3, articolo4  ;
     Cart carrello ;
     Totals tmpTotals ;
-    //std::unique_ptr<Department> dept3(new Department);
-    
 
     dept1.setCode(1);
     dept1.setDescription("Salumi");
@@ -50,23 +48,15 @@ int main(int argc, const char * argv[])
     articolo4.setDescription("Pecorino") ;
     articolo4.setCode(1233) ;
     articolo4.setDepartment(dept2);
-
-    //std::cout << "\nPrice: " << articolo.getPrice() ;
     
     tmpTotals = carrello.addItem(articolo1) ;
-    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo2) ;
-    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo2) ;
-    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo3) ;
-    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo4) ;
     tmpTotals = carrello.addItem(articolo4) ;
     tmpTotals = carrello.removeItem(articolo4) ;
     //tmpTotals = carrello.removeItem(articolo4) ;
-    
-    std::cout << "\n\n" ;
     
     carrello.printCart();
 
