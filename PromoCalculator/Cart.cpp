@@ -60,11 +60,13 @@ Totals Cart::removeItem(Item& pItem)
             pItem.setQuantity(qty) ;
         }
     }
+    
     //itemsMap[&pItem] = ITEM ;
     //itemsMap[&totals] = TOTAL ;
     //std::cout << "\nPuntatore:" << &pItem << " " <<  qty;
     //std::cout << "\nDimensione carrello: " << itemsMap.size();
     //std::cout << "\n" << pItem.getDescription() << " - " << pItem.getPrice() << " - " << pItem.getDepartment().getDescription() ;
+    
     return totals ;
 }
 
