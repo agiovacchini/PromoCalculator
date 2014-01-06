@@ -20,7 +20,7 @@ using namespace std;
 int main(int argc, const char * argv[])
 {
     Department dept1, dept2 ;
-    Item articolo1, articolo2, articolo3  ;
+    Item articolo1, articolo2, articolo3, articolo4  ;
     Cart carrello ;
     Totals tmpTotals ;
     //std::unique_ptr<Department> dept3(new Department);
@@ -30,8 +30,6 @@ int main(int argc, const char * argv[])
     dept1.setDescription("Salumi");
     dept2.setCode(2);
     dept2.setDescription("Formaggi");
-    dept2.setCode(2);
-    dept2.setDescription("Cicci");
     
     articolo1.setPrice(5.9) ;
     articolo1.setDescription("Parmigiano") ;
@@ -43,25 +41,33 @@ int main(int argc, const char * argv[])
     articolo2.setCode(123213) ;
     articolo2.setDepartment(dept1);
     
-    
     articolo3.setPrice(1.3) ;
     articolo3.setDescription("Salame") ;
     articolo3.setCode(123212) ;
     articolo3.setDepartment(dept1);
     
+    articolo4.setPrice(1.34) ;
+    articolo4.setDescription("Pecorino") ;
+    articolo4.setCode(1233) ;
+    articolo4.setDepartment(dept2);
+
     //std::cout << "\nPrice: " << articolo.getPrice() ;
-    /*
+    
     tmpTotals = carrello.addItem(articolo1) ;
-    std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
+    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo2) ;
-    std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
+    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo2) ;
-    std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
+    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
     tmpTotals = carrello.addItem(articolo3) ;
-    std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
+    //std::cout << "\nCart items number: " << tmpTotals.itemsNumber << " val: " << tmpTotals.totalAmount ;
+    tmpTotals = carrello.addItem(articolo4) ;
+    tmpTotals = carrello.addItem(articolo4) ;
+    tmpTotals = carrello.removeItem(articolo4) ;
+    //tmpTotals = carrello.removeItem(articolo4) ;
+    
     std::cout << "\n\n" ;
-    */ 
-     
+    
     carrello.printCart();
 
     return 0;

@@ -21,10 +21,11 @@
 
 class Cart {
     Totals totals ;
-    std::map <Item, int> itemsMap ;
+    std::map <void*, int> itemsMap ;
 
 public:
     Cart() ;
-    Totals addItem(Item pItem) ;
+    Totals addItem(Item& pItem) ;
+    Totals removeItem(Item& pItem);
     void printCart( );
 } ;
