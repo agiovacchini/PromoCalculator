@@ -105,7 +105,7 @@ void Cart::printCart()
 {
     typedef std::map<void*, int>::iterator itemRows;
     Item* itmRow ;
-    Totals* totalsRow ;
+    //Totals* totalsRow ;
     
     std::cout << "\nCart print start" ;
     for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {

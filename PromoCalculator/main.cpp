@@ -6,8 +6,19 @@
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
+#include <thread>
+#include <sstream>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+#include <boost/bind.hpp>
+#include <boost/smart_ptr.hpp>
+#include <boost/asio.hpp>
+#include <boost/thread/thread.hpp>
+
 
 #include "Department.h"
 #include "Item.h"
@@ -15,10 +26,74 @@
 #include "BaseTypes.h"
 
 using namespace std;
+using boost::asio::ip::tcp;
+using boost::property_tree::ptree;
+using boost::property_tree::read_json;
+using boost::property_tree::write_json;
 
+const int max_length = 1024;
 
-int main(int argc, const char * argv[])
+typedef boost::shared_ptr<tcp::socket> socket_ptr;
+
+void session(socket_ptr sock)
 {
+    try
+    {
+        for (;;)
+        {
+            char data[max_length];
+            
+            boost::system::error_code error;
+            size_t length = sock->read_some(boost::asio::buffer(data), error);
+            if (error == boost::asio::error::eof)
+                break; // Connection closed cleanly by peer.
+            else if (error)
+                throw boost::system::system_error(error); // Some other error.
+            
+            ptree pt2;
+            std::istringstream is (data);
+            read_json (is, pt2);
+            
+            std::string action = pt2.get<std::string> ("action");
+            
+            if ( (action.compare("add")==0) || (action.compare("remove")==0) )
+            {
+                std::string barcode = pt2.get<std::string> ("barcode");
+                
+                std::cout << "action:" << action ;
+                std::cout << "barcode:" << barcode ;
+                
+                boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
+                boost::asio::write(*sock, boost::asio::buffer(barcode, sizeof(barcode)));
+            }
+            
+            if (action.compare("close")==0)
+            {
+                boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
+            }
+
+
+
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception in thread: " << e.what() << "\n";
+    }
+}
+
+void server(boost::asio::io_service& io_service, short port)
+{
+    tcp::acceptor a(io_service, tcp::endpoint(tcp::v4(), port));
+    for (;;)
+    {
+        socket_ptr sock(new tcp::socket(io_service));
+        a.accept(*sock);
+        boost::thread t(boost::bind(session, sock));
+    }
+}
+
+void myCarts () {
     Department dept1, dept2 ;
     Item articolo1, articolo2, articolo3, articolo4  ;
     Cart carrello ;
@@ -62,6 +137,28 @@ int main(int argc, const char * argv[])
     
     
     carrello.printCart();
+    
+}
+
+int main(int argc, const char * argv[])
+{
+    std::thread t1(myCarts);
+    //std::thread t2(myCarts);
+    t1.join();
+    //t2.join();
+    
+    try
+    {
+        std::cout << "Starting server" ;
+        boost::asio::io_service io_service;
+        
+        using namespace std; // For atoi.
+        server(io_service, 50000);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
 
     return 0;
 }
