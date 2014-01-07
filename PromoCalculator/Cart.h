@@ -20,12 +20,15 @@
 
 
 class Cart {
-    Totals totals ;
+    //Totals totals ;
+    std::map <string, string> configurationMap ;
     std::map <void*, int> itemsMap ;
-
+    std::map <unsigned long long, Totals> totalsMap ;
+    
 public:
     Cart() ;
     Totals addItem(Item& pItem) ;
     Totals removeItem(Item& pItem);
-    void printCart( );
+    void printConfiguration();
+    void printCart();
 } ;

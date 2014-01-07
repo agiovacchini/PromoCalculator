@@ -23,7 +23,9 @@ int main(int argc, const char * argv[])
     Item articolo1, articolo2, articolo3, articolo4  ;
     Cart carrello ;
     Totals tmpTotals ;
-
+    
+    carrello.printConfiguration();
+    
     dept1.setCode(1);
     dept1.setDescription("Salumi");
     dept2.setCode(2);
@@ -57,6 +59,7 @@ int main(int argc, const char * argv[])
     tmpTotals = carrello.addItem(articolo4) ;
     tmpTotals = carrello.removeItem(articolo4) ;
     //tmpTotals = carrello.removeItem(articolo4) ;
+    
     
     carrello.printCart();
 

@@ -16,8 +16,12 @@ struct Totals {
 
 typedef Totals Totals ;
 
-#define ITEM    0x01
-#define DEPT    0x02
-#define TOTAL   0x03
+#define ITEM        0x01
+#define DEPT        0x02
+#define TOTAL       0x03
+#define LOY_CARD    0x04
+
+#define CARD_PREFIX 0x10001
+
 
 #endif
