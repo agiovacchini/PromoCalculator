@@ -139,12 +139,13 @@ void myCarts () {
     //tmpTotals = carrello.removeItem(articolo4) ;
     
     tmpTotals = carrello.addItem(bs.itemsMap[6945339]) ;
-    /*tmpTotals = carrello.addItem(bs.itemsMap[6560998]) ;
+    tmpTotals = carrello.addItem(bs.itemsMap[6560998]) ;
     tmpTotals = carrello.addItem(bs.itemsMap[5227470]) ;
     tmpTotals = carrello.addItem(bs.itemsMap[6455173]) ;
     tmpTotals = carrello.addItem(bs.itemsMap[6765110]) ;
     tmpTotals = carrello.addItem(bs.itemsMap[6945339]) ;
-    */
+    tmpTotals = carrello.addItem(bs.itemsMap[bs.barcodesMap[8033604138826].getItemCode()]) ;
+    
     carrello.printCart();
     
 }

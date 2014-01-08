@@ -59,6 +59,11 @@ void Cart::printConfiguration()
     std::cout << "\nConfig print end\n" ;
 }
 
+/*Totals Cart::addItemByBarcode(unsigned long long pBarcode)
+{
+        //bs.itemsMap[6945339]
+}*/
+
 Totals Cart::addItem(Item& pItem)
 {
     long qty = pItem.getQuantity() + 1;

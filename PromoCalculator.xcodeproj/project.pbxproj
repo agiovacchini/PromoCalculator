@@ -17,6 +17,7 @@
 		45871079187CC3F5007EFF50 /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 45871078187CC3F5007EFF50 /* libboost_system.dylib */; };
 		4587107C187D5E11007EFF50 /* BaseSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4587107A187D5E11007EFF50 /* BaseSystem.cpp */; };
 		45D45D681879866000D5FC36 /* Department.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45D45D661879866000D5FC36 /* Department.cpp */; };
+		45DC82A3187DA17200F27E91 /* Barcodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45DC82A1187DA17200F27E91 /* Barcodes.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,8 @@
 		45D45D6518797E6B00D5FC36 /* BaseTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseTypes.h; sourceTree = "<group>"; };
 		45D45D661879866000D5FC36 /* Department.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Department.cpp; sourceTree = "<group>"; };
 		45D45D671879866000D5FC36 /* Department.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Department.h; sourceTree = "<group>"; };
+		45DC82A1187DA17200F27E91 /* Barcodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Barcodes.cpp; sourceTree = "<group>"; };
+		45DC82A2187DA17200F27E91 /* Barcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Barcodes.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 		4546CE3418784B9100198E29 /* PromoCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				45DC82A1187DA17200F27E91 /* Barcodes.cpp */,
+				45DC82A2187DA17200F27E91 /* Barcodes.h */,
 				4587107A187D5E11007EFF50 /* BaseSystem.cpp */,
 				4587107B187D5E11007EFF50 /* BaseSystem.h */,
 				45D45D661879866000D5FC36 /* Department.cpp */,
@@ -155,6 +160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45DC82A3187DA17200F27E91 /* Barcodes.cpp in Sources */,
 				4546CE43187860B600198E29 /* Cart.cpp in Sources */,
 				4587107C187D5E11007EFF50 /* BaseSystem.cpp in Sources */,
 				4546CE4018785A5700198E29 /* Item.cpp in Sources */,

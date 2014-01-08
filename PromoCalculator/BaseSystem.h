@@ -12,15 +12,19 @@
 
 #include "Department.h"
 #include "Item.h"
+#include "Barcodes.h"
 #include "Cart.h"
 #include "BaseTypes.h"
 
 class BaseSystem {
 public:
-    std::map <unsigned long long, Item> itemsMap ;
     std::map <unsigned long long, Department> deparmentsMap ;
+    std::map <unsigned long long, Item> itemsMap ;
+    std::map <unsigned long long, Barcodes> barcodesMap ;
+    
     void readDepartmentArchive( string pFileName ) ;
     void readItemArchive( string pFileName ) ;
+    void readBarcodesArchive( string pFileName ) ;
     void readArchives( ) ;
     Item getItemByIntCode( unsigned long long pIntcode ) ;
 };
