@@ -40,6 +40,11 @@ BaseSystem bs ;
 
 void session(socket_ptr sock)
 {
+    unsigned long initializedCartNumber = 0 ;
+    string msg = "" ;
+    std::uint32_t cartId = 0 ;
+    std::uint64_t barcode = 0 ;
+    
     try
     {
         for (;;)
@@ -58,24 +63,48 @@ void session(socket_ptr sock)
             read_json (is, pt2);
             
             std::string action = pt2.get<std::string> ("action");
-            
-            if ( (action.compare("add")==0) || (action.compare("remove")==0) )
+
+            if (action.compare("init")==0)
             {
-                std::string barcode = pt2.get<std::string> ("barcode");
+                initializedCartNumber = bs.newCart() ;
+                msg = "Initialized cart " + std::to_string( initializedCartNumber ) + "\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+            }
+            
+            if (action.compare("add")==0)
+            {
+                barcode = pt2.get<std::uint64_t> ("barcode");
+                cartId = pt2.get<std::uint32_t> ("cartId");
                 
-                std::cout << "action:" << action ;
-                std::cout << "barcode:" << barcode ;
+                bs.getCart(cartId)->addItem(bs.itemsMap[bs.barcodesMap[barcode].getItemCode()]) ;
+                msg = "Cart #" + std::to_string( cartId ) + ", added barcode " + std::to_string( barcode ) + "\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                bs.getCart(cartId)->printCart() ;
+            }
+
+            if (action.compare("remove")==0)
+            {
+                barcode = pt2.get<std::uint64_t> ("barcode");
+                cartId = pt2.get<std::uint32_t> ("cartId");
                 
-                boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
-                boost::asio::write(*sock, boost::asio::buffer(barcode, sizeof(barcode)));
+                bs.getCart(cartId)->removeItem(bs.itemsMap[bs.barcodesMap[barcode].getItemCode()]) ;
+                msg = "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) + "\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                bs.getCart(cartId)->printCart() ;
+            }
+
+            if (action.compare("print")==0)
+            {
+                cartId = pt2.get<std::uint32_t> ("cartId");
+                bs.getCart(cartId)->printCart() ;
+                msg = "Cart #" + std::to_string( cartId ) + " printed\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
             }
             
             if (action.compare("close")==0)
             {
                 boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
             }
-
-
 
         }
     }
@@ -96,72 +125,34 @@ void server(boost::asio::io_service& io_service, short port)
     }
 }
 
-void myCarts () {
-    //Department dept1, dept2 ;
-    //Item articolo1, articolo2, articolo3, articolo4  ;
-    Cart carrello ;
-    Totals tmpTotals ;
-    
-    carrello.printConfiguration();
-    /*
-    dept1.setCode(1);
-    dept1.setDescription("Salumi");
-    dept2.setCode(2);
-    dept2.setDescription("Formaggi");
-    
-    articolo1.setPrice(5.9) ;
-    articolo1.setDescription("Parmigiano") ;
-    articolo1.setCode(90882) ;
-    articolo1.setDepartment(dept2);
-    
-    articolo2.setPrice(2.1) ;
-    articolo2.setDescription("Prosciutto") ;
-    articolo2.setCode(123213) ;
-    articolo2.setDepartment(dept1);
-    
-    articolo3.setPrice(1.3) ;
-    articolo3.setDescription("Salame") ;
-    articolo3.setCode(123212) ;
-    articolo3.setDepartment(dept1);
-    
-    articolo4.setPrice(1.34) ;
-    articolo4.setDescription("Pecorino") ;
-    articolo4.setCode(1233) ;
-    articolo4.setDepartment(dept2);
-    */
-    
-    //tmpTotals = carrello.addItem(articolo2) ;
-    //tmpTotals = carrello.addItem(articolo2) ;
-    //tmpTotals = carrello.addItem(articolo3) ;
-    //tmpTotals = carrello.addItem(articolo4) ;
-    //tmpTotals = carrello.addItem(articolo4) ;
-    //tmpTotals = carrello.removeItem(articolo4) ;
-    //tmpTotals = carrello.removeItem(articolo4) ;
-    
-    tmpTotals = carrello.addItem(bs.itemsMap[6945339]) ;
-    tmpTotals = carrello.addItem(bs.itemsMap[6560998]) ;
-    tmpTotals = carrello.addItem(bs.itemsMap[5227470]) ;
-    tmpTotals = carrello.addItem(bs.itemsMap[6455173]) ;
-    tmpTotals = carrello.addItem(bs.itemsMap[6765110]) ;
-    tmpTotals = carrello.addItem(bs.itemsMap[6945339]) ;
-    tmpTotals = carrello.addItem(bs.itemsMap[bs.barcodesMap[8033604138826].getItemCode()]) ;
-    
-    carrello.printCart();
-    
-}
-
-
 
 int main(int argc, const char * argv[])
 {
     
+    //unsigned long cart1 = bs.newCart() ;
+    //unsigned long cart2 = bs.newCart() ;
+    
+    //std::cout << "\nNew Cart: " << cart1 ;
+    //std::cout << "\nNew Cart: " << cart2 ;
 
     bs.readArchives() ;
+    /*
+    bs.getCart(cart2)->addItem(bs.itemsMap[6945339]) ;
+    bs.getCart(cart1)->addItem(bs.itemsMap[6560998]) ;
+    bs.getCart(cart2)->addItem(bs.itemsMap[5227470]) ;
+    bs.getCart(cart2)->addItem(bs.itemsMap[6455173]) ;
+    bs.getCart(cart1)->addItem(bs.itemsMap[6765110]) ;
+    bs.getCart(cart1)->addItem(bs.itemsMap[6945339]) ;
+    bs.getCart(cart2)->addItem(bs.itemsMap[bs.barcodesMap[8033604138826].getItemCode()]) ;
+    bs.getCart(cart1)->printCart() ;
+    bs.getCart(cart2)->printCart() ;
+    */
+
     //std::cout << "\n" << bs.getItemByIntCode(6945339).toStr() ;
     //std::cout << "\n" << bs.getItemByIntCode(6962864).toStr() ;
-    std::thread t1(myCarts);
+    //std::thread t1(myCarts);
     //std::thread t2(myCarts);
-    t1.join();
+    //t1.join();
     //t2.join();
     
     //readArchives();
@@ -175,7 +166,7 @@ int main(int argc, const char * argv[])
         
         using namespace std; // For atoi.
         
-        //server(io_service, 50000);
+        server(io_service, 50000);
     }
     catch (std::exception& e)
     {

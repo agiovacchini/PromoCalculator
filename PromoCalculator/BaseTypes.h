@@ -14,7 +14,13 @@ struct Totals {
     float totalAmount ;
 };
 
+struct CartRow {
+    int type ;
+    long quantity ;
+};
+
 typedef Totals Totals ;
+
 
 #define ITEM        0x01
 #define DEPT        0x02

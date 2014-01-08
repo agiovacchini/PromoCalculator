@@ -20,15 +20,27 @@
 class Cart {
     //Totals totals ;
     std::map <string, string> configurationMap ;
-    std::map <void*, int> itemsMap ;
+    std::map <void*, CartRow> itemsMap ;
     std::map <unsigned long long, Totals> totalsMap ;
     
+    unsigned long number ;
+    
 public:
-    Cart() ;
+    Cart( ) ;
+    
+    unsigned long getNumber() const ;
+    void setNumber( unsigned long pNumber ) ;
+    
     Totals addItem(Item& pItem) ;
     Totals removeItem(Item& pItem);
     void printConfiguration();
     void printCart();
+    
+    friend bool operator== (const Cart& p1, const Cart& p2)
+    {
+        return p1.getNumber() == p2.getNumber() ;
+    }
+    
 } ;
 
 #endif /* defined(__PromoCalculator__Cart__) */

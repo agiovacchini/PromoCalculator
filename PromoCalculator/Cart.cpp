@@ -11,8 +11,11 @@
 #include <fstream>
 #include <sstream>
 
-Cart::Cart()
+Cart::Cart( )
 {
+    
+    CartRow totalCartRow = { TOTAL, 0 } ;
+    CartRow itemCartRow = { ITEM, 0 } ;
     //totals.totalAmount = 0.0 ;
     //totals.itemsNumber = 0 ;
     //const char config[] = "cardPrefix=0260\n";
@@ -20,7 +23,7 @@ Cart::Cart()
     
     totalsMap[0].totalAmount = 0.0 ;
     totalsMap[0].itemsNumber = 0 ;
-    itemsMap[&totalsMap[0]] = TOTAL ;
+    itemsMap[&totalsMap[0]] = totalCartRow ;
     
     std::ifstream configFile( configFilePath + "PromoCalculator.ini" );
     if (!configFile) {
@@ -47,6 +50,15 @@ Cart::Cart()
     }
 }
 
+void Cart::setNumber( unsigned long pNumber )
+{
+    this->number = pNumber ;
+}
+
+unsigned long Cart::getNumber() const
+{
+    return this->number ;
+}
 
 void Cart::printConfiguration()
 {
@@ -66,7 +78,7 @@ void Cart::printConfiguration()
 
 Totals Cart::addItem(Item& pItem)
 {
-    long qty = pItem.getQuantity() + 1;
+    long qty = itemsMap[&pItem].quantity + 1 ;
     
     totalsMap[0].itemsNumber++ ;
     totalsMap[0].totalAmount = totalsMap[0].totalAmount + pItem.getPrice() ;
@@ -74,8 +86,8 @@ Totals Cart::addItem(Item& pItem)
     totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + pItem.getPrice() ;
 
     std::cout << "\ndept: " << pItem.getDepartment().getCode() ;
-    pItem.setQuantity(qty) ;
-    itemsMap[&pItem] = ITEM ;
+    //pItem.setQuantity(qty) ;
+    itemsMap[&pItem] = { ITEM, qty } ;
     return totalsMap[0] ;
 }
 
@@ -86,10 +98,11 @@ Totals Cart::removeItem(Item& pItem)
     if (itemsMap.find(&pItem) == itemsMap.end())
     {
         std::cout << "\nNot found: " << pItem.getDescription() ;
-    } else
+    }
+    else
     {
         std::cout << "\nFound: " << pItem.getDescription() ;
-        qty = pItem.getQuantity() - 1;
+        qty = itemsMap[&pItem].quantity - 1 ;
         
         totalsMap[0].itemsNumber-- ;
         totalsMap[0].totalAmount = totalsMap[0].totalAmount - pItem.getPrice() ;
@@ -101,7 +114,7 @@ Totals Cart::removeItem(Item& pItem)
             itemsMap.erase(&pItem) ;
         } else
         {
-            pItem.setQuantity(qty) ;
+            itemsMap[&pItem] = { ITEM, qty } ;
         }
     }
     
@@ -110,17 +123,17 @@ Totals Cart::removeItem(Item& pItem)
 
 void Cart::printCart()
 {
-    typedef std::map<void*, int>::iterator itemRows;
+    typedef std::map<void*, CartRow>::iterator itemRows;
     Item* itmRow ;
     //Totals* totalsRow ;
     
-    std::cout << "\nCart print start" ;
+    std::cout << "\nCart #" << this->number <<  "print start" ;
     for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
-        int key = iterator->second ;
-        switch (key) {
+        CartRow key = iterator->second ;
+        switch (key.type) {
             case ITEM:
                 itmRow = (Item*)iterator->first;
-                std::cout << "\n" << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << itmRow->getQuantity();
+                std::cout << "\n" << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity;
                 break;
             case DEPT:
                 break;
@@ -132,7 +145,7 @@ void Cart::printCart()
                 break;
         }
         
-        std::cout << "\nkey: " << key ;
+        //std::cout << "\nkey: " << key ;
     }
     
     std::cout << "\nTotals start" ;

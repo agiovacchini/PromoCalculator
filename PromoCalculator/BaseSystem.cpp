@@ -16,8 +16,18 @@
 
 #include "BaseSystem.h"
 
+#define BOOST_ALL_DYN_LINK
+
+static unsigned long nextCartNumber ;
+
 namespace qi = boost::spirit::qi;
+
 using namespace std;
+
+BaseSystem::BaseSystem()
+{
+    nextCartNumber = 1 ;
+}
 
 void BaseSystem::readDepartmentArchive( string pFileName )
 {
@@ -225,4 +235,19 @@ void BaseSystem::readArchives()
 Item BaseSystem::getItemByIntCode( unsigned long long pIntcode )
 {
     return itemsMap[pIntcode];
+}
+
+unsigned long BaseSystem::newCart()
+{
+    unsigned long thisCartNumber = nextCartNumber ;
+    Cart myCart ;
+    myCart.setNumber( thisCartNumber ) ;
+    cartsMap[thisCartNumber] = myCart ;
+    nextCartNumber++;
+    return thisCartNumber ;
+}
+
+Cart* BaseSystem::getCart( unsigned long pCartNumber )
+{
+    return &cartsMap[pCartNumber] ;
 }
