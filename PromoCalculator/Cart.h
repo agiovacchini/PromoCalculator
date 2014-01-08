@@ -12,9 +12,7 @@
 #include <iostream>
 #include "map"
 
-#endif /* defined(__PromoCalculator__Cart__) */
 #include "Item.h"
-
 #include "BaseTypes.h"
 
 
@@ -32,3 +30,5 @@ public:
     void printConfiguration();
     void printCart();
 } ;
+
+#endif /* defined(__PromoCalculator__Cart__) */

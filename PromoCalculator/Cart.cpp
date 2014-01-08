@@ -16,13 +16,15 @@ Cart::Cart()
     //totals.totalAmount = 0.0 ;
     //totals.itemsNumber = 0 ;
     //const char config[] = "cardPrefix=0260\n";
+    string configFilePath = "/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/" ;
+    
     totalsMap[0].totalAmount = 0.0 ;
     totalsMap[0].itemsNumber = 0 ;
     itemsMap[&totalsMap[0]] = TOTAL ;
     
-    std::ifstream configFile("/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/PromoCalculator.ini");
+    std::ifstream configFile( configFilePath + "PromoCalculator.ini" );
     if (!configFile) {
-        std::cout << "\nNo PromoCalculator.ini file found in current directory." ;
+        std::cout << "\nNo PromoCalculator.ini file found in " << configFilePath << " directory." ;
         exit(-1);
     } else {
         std::cout << "\nCart initialized." ;
@@ -66,7 +68,7 @@ Totals Cart::addItem(Item& pItem)
     totalsMap[pItem.getDepartment().getCode()].itemsNumber++ ;
     totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + pItem.getPrice() ;
 
-    
+    std::cout << "\ndept: " << pItem.getDepartment().getCode() ;
     pItem.setQuantity(qty) ;
     itemsMap[&pItem] = ITEM ;
     return totalsMap[0] ;

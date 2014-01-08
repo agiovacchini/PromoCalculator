@@ -29,6 +29,7 @@ public:
     
     string getDescription() const ;
 
+    string toStr() const ;
 } ;
 
 

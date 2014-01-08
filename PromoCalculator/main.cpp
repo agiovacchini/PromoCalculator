@@ -24,6 +24,7 @@
 #include "Item.h"
 #include "Cart.h"
 #include "BaseTypes.h"
+#include "BaseSystem.h"
 
 using namespace std;
 using boost::asio::ip::tcp;
@@ -34,6 +35,8 @@ using boost::property_tree::write_json;
 const int max_length = 1024;
 
 typedef boost::shared_ptr<tcp::socket> socket_ptr;
+
+BaseSystem bs ;
 
 void session(socket_ptr sock)
 {
@@ -94,13 +97,13 @@ void server(boost::asio::io_service& io_service, short port)
 }
 
 void myCarts () {
-    Department dept1, dept2 ;
-    Item articolo1, articolo2, articolo3, articolo4  ;
+    //Department dept1, dept2 ;
+    //Item articolo1, articolo2, articolo3, articolo4  ;
     Cart carrello ;
     Totals tmpTotals ;
     
     carrello.printConfiguration();
-    
+    /*
     dept1.setCode(1);
     dept1.setDescription("Salumi");
     dept2.setCode(2);
@@ -125,35 +128,53 @@ void myCarts () {
     articolo4.setDescription("Pecorino") ;
     articolo4.setCode(1233) ;
     articolo4.setDepartment(dept2);
+    */
     
-    tmpTotals = carrello.addItem(articolo1) ;
-    tmpTotals = carrello.addItem(articolo2) ;
-    tmpTotals = carrello.addItem(articolo2) ;
-    tmpTotals = carrello.addItem(articolo3) ;
-    tmpTotals = carrello.addItem(articolo4) ;
-    tmpTotals = carrello.addItem(articolo4) ;
-    tmpTotals = carrello.removeItem(articolo4) ;
+    //tmpTotals = carrello.addItem(articolo2) ;
+    //tmpTotals = carrello.addItem(articolo2) ;
+    //tmpTotals = carrello.addItem(articolo3) ;
+    //tmpTotals = carrello.addItem(articolo4) ;
+    //tmpTotals = carrello.addItem(articolo4) ;
+    //tmpTotals = carrello.removeItem(articolo4) ;
     //tmpTotals = carrello.removeItem(articolo4) ;
     
-    
+    tmpTotals = carrello.addItem(bs.itemsMap[6945339]) ;
+    /*tmpTotals = carrello.addItem(bs.itemsMap[6560998]) ;
+    tmpTotals = carrello.addItem(bs.itemsMap[5227470]) ;
+    tmpTotals = carrello.addItem(bs.itemsMap[6455173]) ;
+    tmpTotals = carrello.addItem(bs.itemsMap[6765110]) ;
+    tmpTotals = carrello.addItem(bs.itemsMap[6945339]) ;
+    */
     carrello.printCart();
     
 }
 
+
+
 int main(int argc, const char * argv[])
 {
+    
+
+    bs.readArchives() ;
+    //std::cout << "\n" << bs.getItemByIntCode(6945339).toStr() ;
+    //std::cout << "\n" << bs.getItemByIntCode(6962864).toStr() ;
     std::thread t1(myCarts);
     //std::thread t2(myCarts);
     t1.join();
     //t2.join();
     
+    //readArchives();
+
+    
+    std::cout << "\n";
     try
     {
         std::cout << "Starting server" ;
         boost::asio::io_service io_service;
         
         using namespace std; // For atoi.
-        server(io_service, 50000);
+        
+        //server(io_service, 50000);
     }
     catch (std::exception& e)
     {

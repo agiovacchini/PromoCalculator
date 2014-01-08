@@ -48,3 +48,14 @@ void Item::setQuantity( long pQuantity ) {
 long Item::getQuantity() const {
     return this->quantity ;
 }
+
+string Item::toStr() const {
+    string row = "" ;
+    
+    row = std::to_string(this->code)
+    + ", " + this->description
+    + ", " + std::to_string(this->price) ;
+    + ", " + std::to_string(this->department->getCode()) ;
+    
+    return row ;
+}

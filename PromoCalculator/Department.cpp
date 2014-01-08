@@ -23,3 +23,9 @@ void Department::setDescription( string pDescription ) {
 string Department::getDescription() const {
     return this->description ;
 }
+
+string Department::toStr() const {
+    return std::to_string(this->code)
+    + ", " + this->description
+    ;
+}

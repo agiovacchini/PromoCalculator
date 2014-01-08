@@ -40,11 +40,15 @@ public:
 
     void setDepartment( Department& pDepartment ) ;
     
+    void setDepartmentByCode( Department& pDepartment ) ;
+    
     Department& getDepartment() const ;
     
     void setQuantity( long pQuantity ) ;
     
     long getQuantity() const ;
+    
+    string toStr() const ;
     
     //Per la mappa, le funzioni che chiamano devono avere il modificatore const per attestare che non
     //hanno effetti collaterali
