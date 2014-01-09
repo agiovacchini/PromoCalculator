@@ -11,7 +11,7 @@
 
 struct Totals {
     long itemsNumber ;
-    float totalAmount ;
+    double totalAmount ;
 };
 
 struct CartRow {

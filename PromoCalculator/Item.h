@@ -19,7 +19,7 @@ using namespace std;
 class Item {
     
     unsigned long long int code ;
-    float price ;
+    double price ;
     string description ;
     long quantity ;
     Department *department ;
@@ -30,9 +30,9 @@ public:
     
     unsigned long long int getCode() const ;
     
-    void setPrice( float pPrice ) ;
+    void setPrice( double pPrice ) ;
     
-    float getPrice() const ;
+    double getPrice() const ;
     
     void setDescription( string pDescription ) ;
     

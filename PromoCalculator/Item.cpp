@@ -16,11 +16,11 @@ unsigned long long int Item::getCode() const {
     return this->code ;
 }
 
-void Item::setPrice( float pPrice ) {
+void Item::setPrice( double pPrice ) {
     this->price = pPrice ;
 }
 
-float Item::getPrice() const {
+double Item::getPrice() const {
     return this->price ;
 }
 

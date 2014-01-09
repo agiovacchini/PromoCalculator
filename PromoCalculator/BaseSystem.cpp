@@ -147,7 +147,7 @@ void BaseSystem::readItemArchive( string pFileName )
                     tempItm.setDepartment(deparmentsMap[atol(i.c_str())]);
                     break;
                 case 26:
-                    tempItm.setPrice(atof(i.c_str())/100.) ;
+                    tempItm.setPrice(stod(i.c_str())/100.) ;
                     break;
                 default:
                     break ;
