@@ -36,14 +36,20 @@ using boost::property_tree::write_json;
 
 
 class BaseSystem {
+    string basePath ;
 public:
+    std::map <string, string> configurationMap ;
     std::map <unsigned long long, Department> deparmentsMap ;
     std::map <unsigned long long, Item> itemsMap ;
     std::map <unsigned long long, Barcodes> barcodesMap ;
     std::map <unsigned long long, Cart> cartsMap ;
     typedef boost::shared_ptr<tcp::socket> socket_ptr;
 
-    BaseSystem( ) ;
+    BaseSystem( string pBasePath ) ;
+    string getBasePath() const ;
+    void setBasePath( string pBasePath ) ;
+    
+    void printConfiguration() ;
     void readDepartmentArchive( string pFileName ) ;
     void readItemArchive( string pFileName ) ;
     void readBarcodesArchive( string pFileName ) ;

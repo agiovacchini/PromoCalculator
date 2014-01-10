@@ -26,10 +26,38 @@ namespace qi = boost::spirit::qi;
 
 using namespace std;
 
-BaseSystem::BaseSystem()
+BaseSystem::BaseSystem( string pBasePath )
 {
-    nextCartNumber = 1 ;
     boost::asio::io_service io_service;
+    this->basePath = pBasePath ;
+    
+    nextCartNumber = 1 ;
+
+    std::ifstream configFile( this->basePath + "PromoCalculator.ini" );
+    if (!configFile) {
+        std::cout << "\nNo PromoCalculator.ini file found in " << basePath << " directory." ;
+        exit(-1);
+    } else {
+        std::cout << "\nCart initialized." ;
+    }
+    
+    std::string line;
+    while( std::getline(configFile, line) )
+    {
+        //std::cout << "\n" << line ;
+        std::istringstream is_line(line);
+        std::string key;
+        if( std::getline(is_line, key, '=') )
+        {
+            std::string value;
+            if( std::getline(is_line, value) )
+                //store_line(key, value);
+                configurationMap[key] = value ;
+            //std::cout << "\n" << key << " - " << value ;
+        }
+    }
+
+    configFile.close() ;
     
     this->readArchives() ;
     
@@ -46,23 +74,45 @@ BaseSystem::BaseSystem()
     
 }
 
+string BaseSystem::getBasePath() const
+{
+    return this->basePath ;
+}
+
+void BaseSystem::setBasePath( string pBasePath )
+{
+    this->basePath = pBasePath ;
+}
+
+void BaseSystem::printConfiguration()
+{
+    typedef std::map<string, string>::iterator configurationRows;
+    
+    std::cout << "\nConfig print start" ;
+    for(configurationRows iterator = configurationMap.begin(); iterator != configurationMap.end(); iterator++) {
+        std::cout << "\nkey: " << iterator->first << ", value: " << iterator->second ;
+    }
+    std::cout << "\nConfig print end\n" ;
+}
+
 void BaseSystem::readDepartmentArchive( string pFileName )
 {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
     
-    string configFilePath = "/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/ARCHIVES/" ;
+    //string configFilePath = "./ARCHIVES/" ;
     
     // Tokenizer
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
+    string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
     
-    std::ifstream archiveFile( configFilePath + pFileName );
+    std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "\nFile " + pFileName + " not found" ;
+        std::cout << "\nFile " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        std::cout << "\nFile " + pFileName + " found" ;
+        std::cout << "\nFile " + archiveFileName + " found" ;
     }
     
     std::string line;
@@ -115,19 +165,18 @@ void BaseSystem::readItemArchive( string pFileName )
 {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
     
-    string configFilePath = "/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/ARCHIVES/" ;
-    
     // Tokenizer
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
+    string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
     
-    std::ifstream archiveFile( configFilePath + pFileName );
+    std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "\nFile " + pFileName + " not found" ;
+        std::cout << "\nFile " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        std::cout << "\nFile " + pFileName + " loaded" ;
+        std::cout << "\nFile " + archiveFileName + " loaded" ;
     }
     
     std::string line;
@@ -185,19 +234,18 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
     
-    string configFilePath = "/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/ARCHIVES/" ;
-    
     // Tokenizer
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
+
+    string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
     
-    
-    std::ifstream archiveFile( configFilePath + pFileName );
+    std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "\nFile " + pFileName + " not found" ;
+        std::cout << "\nFile " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        std::cout << "\nFile " + pFileName + " loaded" ;
+        std::cout << "\nFile " + archiveFileName + " loaded" ;
     }
     
     std::string line;
@@ -287,7 +335,7 @@ void BaseSystem::salesSession(socket_ptr sock)
             {
                 cartId = pt2.get<std::uint32_t> ("cartId");
                 
-                this->getCart(cartId)->persist("/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/ARCHIVES/") ;
+                this->getCart(cartId)->persist() ;
                 msg = "Cart #" + std::to_string( cartId ) + " saved\n" ;
                 boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
             }
@@ -357,8 +405,9 @@ unsigned long BaseSystem::newCart()
 {
     unsigned long thisCartNumber = nextCartNumber ;
     Cart myCart ;
-    myCart.setNumber( thisCartNumber ) ;
+    myCart.setBasePath( basePath ) ;
     cartsMap[thisCartNumber] = myCart ;
+
     nextCartNumber++;
     return thisCartNumber ;
 }

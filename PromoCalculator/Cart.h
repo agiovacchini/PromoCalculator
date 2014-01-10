@@ -10,6 +10,8 @@
 #define __PromoCalculator__Cart__
 
 #include <iostream>
+#include <fstream>
+
 #include "map"
 
 #include "Item.h"
@@ -18,12 +20,13 @@
 
 class Cart {
     //Totals totals ;
-    std::map <string, string> configurationMap ;
     std::map <void*, CartRow> itemsMap ;
     std::map <void*, long> barcodesMap ;
     std ::map <unsigned long long, Totals> totalsMap ;
-    
     unsigned long number ;
+    string cartFileName ;
+    string tmpTransactionFileName ;
+    std::ofstream tmpTransactionFile ;
     
 public:
     Cart( ) ;
@@ -36,11 +39,12 @@ public:
     Totals addItemByBarcode( Item& pItem, Barcodes& pBarcode, long pQtyItem ) ;
     Totals removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
     //Totals removeItem(Item& pItem) ;
+    void setBasePath( string pBasePath ) ;
+    string getBasePath() const ;
     void printConfiguration() ;
     void printCart() ;
-    int persist( string pBasePath ) ;
-    
-    
+    int persist( ) ;
+        
     friend bool operator== (const Cart& p1, const Cart& p2)
     {
         return p1.getNumber() == p2.getNumber() ;
@@ -64,6 +68,7 @@ public:
 		return is;
 	}
     
+    //const volatile Cart&& operator=(Cart&) volatile const && = delete;
 } ;
 
 #endif /* defined(__PromoCalculator__Cart__) */

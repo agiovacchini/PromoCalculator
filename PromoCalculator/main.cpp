@@ -23,6 +23,6 @@ const int max_length = 1024;
 
 int main(int argc, const char * argv[])
 {
-    BaseSystem bs ;
+    BaseSystem bs = BaseSystem("/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/") ;
     return 0;
 }

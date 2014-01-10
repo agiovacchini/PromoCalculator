@@ -8,46 +8,26 @@
 
 #include "BaseTypes.h"
 #include "Cart.h"
-#include <fstream>
 #include <sstream>
+#include <stdio.h>
+#include "boost/format.hpp"
+
+static string basePath = "./" ;
 
 Cart::Cart( )
 {
     itemsMap.clear() ;
     CartRow totalCartRow = { TOTAL, 0 } ;
+    
     //CartRow itemCartRow = { ITEM, 0 } ;
     //totals.totalAmount = 0.0 ;
     //totals.itemsNumber = 0 ;
     //const char config[] = "cardPrefix=0260\n";
-    string configFilePath = "/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/" ;
     
     totalsMap[0].totalAmount = 0.0 ;
     totalsMap[0].itemsNumber = 0 ;
     itemsMap[&totalsMap[0]] = totalCartRow ;
     
-    std::ifstream configFile( configFilePath + "PromoCalculator.ini" );
-    if (!configFile) {
-        std::cout << "\nNo PromoCalculator.ini file found in " << configFilePath << " directory." ;
-        exit(-1);
-    } else {
-        std::cout << "\nCart initialized." ;
-    }
-    
-    std::string line;
-    while( std::getline(configFile, line) )
-    {
-        //std::cout << "\n" << line ;
-        std::istringstream is_line(line);
-        std::string key;
-        if( std::getline(is_line, key, '=') )
-        {
-            std::string value;
-            if( std::getline(is_line, value) )
-                //store_line(key, value);
-                configurationMap[key] = value ;
-                //std::cout << "\n" << key << " - " << value ;
-        }
-    }
 }
 
 void Cart::setNumber( unsigned long pNumber )
@@ -60,16 +40,14 @@ unsigned long Cart::getNumber() const
     return this->number ;
 }
 
-void Cart::printConfiguration()
+void Cart::setBasePath( string pBasePath )
 {
-    typedef std::map<string, string>::iterator configurationRows;
-    
-    std::cout << "\nConfig print start" ;
-    for(configurationRows iterator = configurationMap.begin(); iterator != configurationMap.end(); iterator++) {
-        std::cout << "\nkey: " << iterator->first << ", value: " << iterator->second ;
-    }
-    std::cout << "\nConfig print end\n" ;
+    basePath = pBasePath ;
+    cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
+    tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
+    tmpTransactionFile.open( tmpTransactionFileName );
 }
+
 
 /*Totals Cart::addItemByBarcode(unsigned long long pBarcode)
 {
@@ -193,18 +171,25 @@ void Cart::printCart()
     std::cout << "\nCart print end\n" ;
 }
 
-int Cart::persist( string pBasePath )
+int Cart::persist( )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
     typedef std::map<void*, long>::iterator barcodesRows;
     Barcodes* barcodesRow ;
     long qty = 0 ;
+ 
+    std::cout << "\ncartFileName: " << cartFileName << "\n" ;
+
+    std::ofstream cartFile( cartFileName );
+
     for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
     {
         barcodesRow = (Barcodes*)iterator->first;
         qty = iterator->second ;
-        std::cout << barcodesRow->getCode() << ", " << qty << "\n";
+        cartFile << barcodesRow->getCode() << "," << qty << "\n";
     }
+    
+    cartFile.close() ;
     
     return 0 ;
 }
