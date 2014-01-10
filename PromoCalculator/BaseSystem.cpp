@@ -147,7 +147,7 @@ void BaseSystem::readItemArchive( string pFileName )
                     tempItm.setDepartment(deparmentsMap[atol(i.c_str())]);
                     break;
                 case 26:
-                    tempItm.setPrice(stod(i.c_str())/100.) ;
+                    tempItm.setPrice(atol(i.c_str())) ;
                     break;
                 default:
                     break ;
@@ -250,4 +250,9 @@ unsigned long BaseSystem::newCart()
 Cart* BaseSystem::getCart( unsigned long pCartNumber )
 {
     return &cartsMap[pCartNumber] ;
+}
+
+bool BaseSystem::persistCarts( )
+{
+    return true ;
 }

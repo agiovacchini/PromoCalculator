@@ -13,15 +13,15 @@
 #include "map"
 
 #include "Item.h"
+#include "Barcodes.h"
 #include "BaseTypes.h"
-
-
 
 class Cart {
     //Totals totals ;
     std::map <string, string> configurationMap ;
     std::map <void*, CartRow> itemsMap ;
-    std::map <unsigned long long, Totals> totalsMap ;
+    std::map <void*, long> barcodesMap ;
+    std ::map <unsigned long long, Totals> totalsMap ;
     
     unsigned long number ;
     
@@ -31,15 +31,38 @@ public:
     unsigned long getNumber() const ;
     void setNumber( unsigned long pNumber ) ;
     
-    Totals addItem(Item& pItem) ;
-    Totals removeItem(Item& pItem);
-    void printConfiguration();
-    void printCart();
+    //Totals addItemByItemCode(Item& pItem) ;
+    Totals addItemByBarcode(Item& pItem, Barcodes& pBarcode) ;
+    Totals addItemByBarcode( Item& pItem, Barcodes& pBarcode, long pQtyItem ) ;
+    Totals removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
+    //Totals removeItem(Item& pItem) ;
+    void printConfiguration() ;
+    void printCart() ;
+    int persist( string pBasePath ) ;
+    
     
     friend bool operator== (const Cart& p1, const Cart& p2)
     {
         return p1.getNumber() == p2.getNumber() ;
     }
+    
+    
+    //http://www.cplusplus.com/forum/beginner/49924/
+    friend std::ostream& operator<<(std::ostream& os, const Cart& s)
+	{
+		// write out individual members of s with an end of line between each one
+		//os << s.weight << '\n';
+		//os << s.size;
+		return os;
+	}
+    
+	// Extraction operator
+	friend std::istream& operator>>(std::istream& is, Cart& s)
+	{
+		// read in individual members of s
+		//is >> s.weight >> s.size;
+		return is;
+	}
     
 } ;
 

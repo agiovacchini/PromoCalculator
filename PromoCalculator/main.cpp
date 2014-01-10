@@ -19,6 +19,7 @@
 #include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
 
+#include "gmock/gmock.h"
 
 #include "Department.h"
 #include "Item.h"
@@ -44,6 +45,7 @@ void session(socket_ptr sock)
     string msg = "" ;
     std::uint32_t cartId = 0 ;
     std::uint64_t barcode = 0 ;
+    std::int32_t qty = 0 ;
     
     try
     {
@@ -74,9 +76,10 @@ void session(socket_ptr sock)
             if (action.compare("add")==0)
             {
                 barcode = pt2.get<std::uint64_t> ("barcode");
+                qty = pt2.get<std::int32_t> ("qty");
                 cartId = pt2.get<std::uint32_t> ("cartId");
                 
-                bs.getCart(cartId)->addItem(bs.itemsMap[bs.barcodesMap[barcode].getItemCode()]) ;
+                bs.getCart(cartId)->addItemByBarcode(bs.itemsMap[bs.barcodesMap[barcode].getItemCode()], bs.barcodesMap[barcode], qty) ;
                 msg = "Cart #" + std::to_string( cartId ) + ", added barcode " + std::to_string( barcode ) + "\n" ;
                 boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
                 bs.getCart(cartId)->printCart() ;
@@ -87,7 +90,7 @@ void session(socket_ptr sock)
                 barcode = pt2.get<std::uint64_t> ("barcode");
                 cartId = pt2.get<std::uint32_t> ("cartId");
                 
-                bs.getCart(cartId)->removeItem(bs.itemsMap[bs.barcodesMap[barcode].getItemCode()]) ;
+                bs.getCart(cartId)->removeItemByBarcode(bs.itemsMap[bs.barcodesMap[barcode].getItemCode()], bs.barcodesMap[barcode]) ;
                 msg = "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) + "\n" ;
                 boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
                 bs.getCart(cartId)->printCart() ;

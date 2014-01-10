@@ -18,7 +18,61 @@
 		4587107C187D5E11007EFF50 /* BaseSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4587107A187D5E11007EFF50 /* BaseSystem.cpp */; };
 		45D45D681879866000D5FC36 /* Department.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45D45D661879866000D5FC36 /* Department.cpp */; };
 		45DC82A3187DA17200F27E91 /* Barcodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45DC82A1187DA17200F27E91 /* Barcodes.cpp */; };
+		45DC82A5187E091E00F27E91 /* libboost_log.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 45DC82A4187E091E00F27E91 /* libboost_log.dylib */; };
+		45DC82A7187E097100F27E91 /* libboost_log_setup.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 45DC82A6187E097100F27E91 /* libboost_log_setup.dylib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		45D54B8E187E871D0001DA04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4539C8FF0EC27F6400A70F4C;
+			remoteInfo = "gtest-framework";
+		};
+		45D54B90187E871D0001DA04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40C848FA101A209C0083642A;
+			remoteInfo = "gtest-static";
+		};
+		45D54B92187E871D0001DA04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40C8490B101A217E0083642A;
+			remoteInfo = "gtest_main-static";
+		};
+		45D54B94187E871D0001DA04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40899F430FFA7184000B29AE;
+			remoteInfo = "gtest_unittest-framework";
+		};
+		45D54B96187E871D0001DA04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40C84987101A36850083642A;
+			remoteInfo = "gtest_unittest-static";
+		};
+		45D54B98187E871D0001DA04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4089A0130FFACEFC000B29AE;
+			remoteInfo = "sample1_unittest-framework";
+		};
+		45D54B9A187E871D0001DA04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 40C84997101A36A60083642A;
+			remoteInfo = "sample1_unittest-static";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		4546CE3018784B9100198E29 /* CopyFiles */ = {
@@ -50,8 +104,11 @@
 		45D45D6518797E6B00D5FC36 /* BaseTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseTypes.h; sourceTree = "<group>"; };
 		45D45D661879866000D5FC36 /* Department.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Department.cpp; sourceTree = "<group>"; };
 		45D45D671879866000D5FC36 /* Department.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Department.h; sourceTree = "<group>"; };
+		45D54B82187E871D0001DA04 /* gtest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = gtest.xcodeproj; path = "../../gmock-1.7.0/gtest/xcode/gtest.xcodeproj"; sourceTree = "<group>"; };
 		45DC82A1187DA17200F27E91 /* Barcodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Barcodes.cpp; sourceTree = "<group>"; };
 		45DC82A2187DA17200F27E91 /* Barcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Barcodes.h; sourceTree = "<group>"; };
+		45DC82A4187E091E00F27E91 /* libboost_log.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_log.dylib; path = ../../../../../../usr/local/lib/libboost_log.dylib; sourceTree = "<group>"; };
+		45DC82A6187E097100F27E91 /* libboost_log_setup.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_log_setup.dylib; path = ../../../../../../usr/local/lib/libboost_log_setup.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +118,8 @@
 			files = (
 				45871077187CC3DA007EFF50 /* libboost_thread.dylib in Frameworks */,
 				45871079187CC3F5007EFF50 /* libboost_system.dylib in Frameworks */,
+				45DC82A5187E091E00F27E91 /* libboost_log.dylib in Frameworks */,
+				45DC82A7187E097100F27E91 /* libboost_log_setup.dylib in Frameworks */,
 				45871075187CC3B8007EFF50 /* libboost_iostreams.dylib in Frameworks */,
 				45871072187CA33D007EFF50 /* libboost_filesystem.dylib in Frameworks */,
 			);
@@ -78,6 +137,9 @@
 				45871074187CC3B8007EFF50 /* libboost_iostreams.dylib */,
 				45871078187CC3F5007EFF50 /* libboost_system.dylib */,
 				45871076187CC3DA007EFF50 /* libboost_thread.dylib */,
+				45DC82A4187E091E00F27E91 /* libboost_log.dylib */,
+				45DC82A6187E097100F27E91 /* libboost_log_setup.dylib */,
+				45D54B82187E871D0001DA04 /* gtest.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -107,6 +169,20 @@
 				4546CE3718784B9100198E29 /* PromoCalculator.1 */,
 			);
 			path = PromoCalculator;
+			sourceTree = "<group>";
+		};
+		45D54B83187E871D0001DA04 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				45D54B8F187E871D0001DA04 /* gtest.framework */,
+				45D54B91187E871D0001DA04 /* libgtest.a */,
+				45D54B93187E871D0001DA04 /* libgtest_main.a */,
+				45D54B95187E871D0001DA04 /* gtest_unittest-framework */,
+				45D54B97187E871D0001DA04 /* gtest_unittest */,
+				45D54B99187E871D0001DA04 /* sample1_unittest-framework */,
+				45D54B9B187E871D0001DA04 /* sample1_unittest-static */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -148,12 +224,70 @@
 			mainGroup = 4546CE2918784B9000198E29;
 			productRefGroup = 4546CE3318784B9100198E29 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 45D54B83187E871D0001DA04 /* Products */;
+					ProjectRef = 45D54B82187E871D0001DA04 /* gtest.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				4546CE3118784B9100198E29 /* PromoCalculator */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		45D54B8F187E871D0001DA04 /* gtest.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = gtest.framework;
+			remoteRef = 45D54B8E187E871D0001DA04 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45D54B91187E871D0001DA04 /* libgtest.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libgtest.a;
+			remoteRef = 45D54B90187E871D0001DA04 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45D54B93187E871D0001DA04 /* libgtest_main.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libgtest_main.a;
+			remoteRef = 45D54B92187E871D0001DA04 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45D54B95187E871D0001DA04 /* gtest_unittest-framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "gtest_unittest-framework";
+			remoteRef = 45D54B94187E871D0001DA04 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45D54B97187E871D0001DA04 /* gtest_unittest */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = gtest_unittest;
+			remoteRef = 45D54B96187E871D0001DA04 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45D54B99187E871D0001DA04 /* sample1_unittest-framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "sample1_unittest-framework";
+			remoteRef = 45D54B98187E871D0001DA04 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		45D54B9B187E871D0001DA04 /* sample1_unittest-static */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = "sample1_unittest-static";
+			remoteRef = 45D54B9A187E871D0001DA04 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4546CE2E18784B9100198E29 /* Sources */ = {
@@ -250,6 +384,7 @@
 					"$(inherited)",
 					/usr/local/include/,
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					$GMOCK_HOME/include/,
 				);
 				INSTALL_PATH = /Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator;
 				LIBRARY_SEARCH_PATHS = (
@@ -257,7 +392,7 @@
 					/usr/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = /usr/local/include/;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/ /Users/andreagiovacchini/Documents/Sviluppo/gmock-1.7.0/include/ /Users/andreagiovacchini/Documents/Sviluppo/gmock-1.7.0/gtest/include/";
 			};
 			name = Debug;
 		};
@@ -267,8 +402,9 @@
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/boost_1_55_0/,
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"/Users/andreagiovacchini/Documents/Sviluppo/gmock-1.7.0/include/",
+					/usr/local/include/,
 				);
 				INSTALL_PATH = /Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator;
 				LIBRARY_SEARCH_PATHS = (
@@ -276,7 +412,7 @@
 					/usr/local/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				USER_HEADER_SEARCH_PATHS = /usr/local/include/;
+				USER_HEADER_SEARCH_PATHS = "/usr/local/include/ /Users/andreagiovacchini/Documents/Sviluppo/gmock-1.7.0/include/ /Users/andreagiovacchini/Documents/Sviluppo/gmock-1.7.0/gtest/include/";
 			};
 			name = Release;
 		};

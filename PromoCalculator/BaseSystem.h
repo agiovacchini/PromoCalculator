@@ -31,7 +31,7 @@ public:
     void readArchives( ) ;
     unsigned long newCart( ) ;
     Cart* getCart( unsigned long pCartNumber ) ;
-    
+    bool persistCarts( ) ;
     
     Item getItemByIntCode( unsigned long long pIntcode ) ;
 };
