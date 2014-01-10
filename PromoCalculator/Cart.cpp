@@ -203,7 +203,7 @@ int Cart::persist( string pBasePath )
     {
         barcodesRow = (Barcodes*)iterator->first;
         qty = iterator->second ;
-        std::cout << barcodesRow->getCode() << ", " << qty ;
+        std::cout << barcodesRow->getCode() << ", " << qty << "\n";
     }
     
     return 0 ;
