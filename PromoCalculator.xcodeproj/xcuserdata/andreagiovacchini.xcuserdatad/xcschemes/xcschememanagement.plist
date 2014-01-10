@@ -7,12 +7,22 @@
 		<key>PromoCalculator.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
+		</dict>
+		<key>tests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>10</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>4546CE3118784B9100198E29</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>45973AED187F7921003D045A</key>
 		<dict>
 			<key>primary</key>
 			<true/>

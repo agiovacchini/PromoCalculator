@@ -13,10 +13,12 @@
 #include <fstream>
 #include <boost/tokenizer.hpp>
 #include <boost/spirit/include/qi.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 #include "BaseSystem.h"
 
-#define BOOST_ALL_DYN_LINK
+const int max_length = 1024;
 
 static unsigned long nextCartNumber ;
 
@@ -27,6 +29,21 @@ using namespace std;
 BaseSystem::BaseSystem()
 {
     nextCartNumber = 1 ;
+    boost::asio::io_service io_service;
+    
+    this->readArchives() ;
+    
+    try
+    {
+        std::cout << "Starting server" ;
+        using namespace std; // For atoi.
+        salesServer(io_service, 50000);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
+    
 }
 
 void BaseSystem::readDepartmentArchive( string pFileName )
@@ -230,6 +247,105 @@ void BaseSystem::readArchives()
     this->readDepartmentArchive( "DEPARTMENTS.CSV" ) ;
     this->readItemArchive( "ITEMS.CSV" ) ;
     this->readBarcodesArchive( "BARCODES.CSV" ) ;
+}
+
+void BaseSystem::salesSession(socket_ptr sock)
+{
+    unsigned long initializedCartNumber = 0 ;
+    string msg = "" ;
+    std::uint32_t cartId = 0 ;
+    std::uint64_t barcode = 0 ;
+    std::int32_t qty = 0 ;
+    
+    try
+    {
+        for (;;)
+        {
+            char data[max_length];
+            
+            boost::system::error_code error;
+            size_t length = sock->read_some(boost::asio::buffer(data), error);
+            if (error == boost::asio::error::eof)
+                break; // Connection closed cleanly by peer.
+            else if (error)
+                throw boost::system::system_error(error); // Some other error.
+            
+            ptree pt2;
+            std::istringstream is (data);
+            read_json (is, pt2);
+            
+            std::string action = pt2.get<std::string> ("action");
+            
+            if (action.compare("init")==0)
+            {
+                initializedCartNumber = this->newCart() ;
+                msg = "Initialized cart " + std::to_string( initializedCartNumber ) + "\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+            }
+            
+            if (action.compare("save")==0)
+            {
+                cartId = pt2.get<std::uint32_t> ("cartId");
+                
+                this->getCart(cartId)->persist("/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/ARCHIVES/") ;
+                msg = "Cart #" + std::to_string( cartId ) + " saved\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+            }
+            
+            if (action.compare("add")==0)
+            {
+                barcode = pt2.get<std::uint64_t> ("barcode");
+                qty = pt2.get<std::int32_t> ("qty");
+                cartId = pt2.get<std::uint32_t> ("cartId");
+                
+                this->getCart(cartId)->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
+                msg = "Cart #" + std::to_string( cartId ) + ", added barcode " + std::to_string( barcode ) + "\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                this->getCart(cartId)->printCart() ;
+            }
+            
+            if (action.compare("remove")==0)
+            {
+                barcode = pt2.get<std::uint64_t> ("barcode");
+                cartId = pt2.get<std::uint32_t> ("cartId");
+                
+                this->getCart(cartId)->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
+                msg = "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) + "\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                this->getCart(cartId)->printCart() ;
+            }
+            
+            if (action.compare("print")==0)
+            {
+                cartId = pt2.get<std::uint32_t> ("cartId");
+                this->getCart(cartId)->printCart() ;
+                msg = "Cart #" + std::to_string( cartId ) + " printed\n" ;
+                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+            }
+            
+            if (action.compare("close")==0)
+            {
+                boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
+            }
+            
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception in thread: " << e.what() << "\n";
+    }
+}
+
+void BaseSystem::salesServer(boost::asio::io_service& io_service, short port)
+{
+    tcp::acceptor tcpAcceptor(io_service, tcp::endpoint(tcp::v4(), port));
+    for (;;)
+    {
+        socket_ptr sock(new tcp::socket(io_service));
+        tcpAcceptor.accept(*sock);
+        //void *funcPtr = boost::bind(session, sock) ;
+        boost::thread newThread(boost::bind(&BaseSystem::salesSession, this, sock));
+    }
 }
 
 Item BaseSystem::getItemByIntCode( unsigned long long pIntcode )

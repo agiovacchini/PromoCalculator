@@ -15,7 +15,7 @@ Cart::Cart( )
 {
     itemsMap.clear() ;
     CartRow totalCartRow = { TOTAL, 0 } ;
-    CartRow itemCartRow = { ITEM, 0 } ;
+    //CartRow itemCartRow = { ITEM, 0 } ;
     //totals.totalAmount = 0.0 ;
     //totals.itemsNumber = 0 ;
     //const char config[] = "cardPrefix=0260\n";
@@ -196,24 +196,15 @@ void Cart::printCart()
 int Cart::persist( string pBasePath )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
-    Item* itmRow ;
-
-    for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
-        CartRow key = iterator->second ;
-        switch (key.type) {
-            case ITEM:
-                itmRow = (Item*)iterator->first;
-                std::cout << "\n" << itmRow->getCode() ;
-                break;
-            case DEPT:
-                break;
-            case TOTAL:
-                break;
-            default:
-                break;
-        }
-        
-        //std::cout << "\nkey: " << key ;
+    typedef std::map<void*, long>::iterator barcodesRows;
+    Barcodes* barcodesRow ;
+    long qty = 0 ;
+    for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
+    {
+        barcodesRow = (Barcodes*)iterator->first;
+        qty = iterator->second ;
+        std::cout << barcodesRow->getCode() << ", " << qty ;
     }
+    
     return 0 ;
 }

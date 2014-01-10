@@ -9,12 +9,30 @@
 #ifndef __PromoCalculator__BaseSystem__
 #define __PromoCalculator__BaseSystem__
 
+#include <cstdlib>
+#include <thread>
+#include <iostream>
+#include <string>
+#include <sstream>
+
+#include <boost/asio.hpp>
+#include <boost/thread/thread.hpp>
+#include <boost/bind.hpp>
+#include <boost/smart_ptr.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 #include "Department.h"
 #include "Item.h"
 #include "Barcodes.h"
 #include "Cart.h"
 #include "BaseTypes.h"
+
+#define BOOST_ALL_DYN_LINK
+using boost::asio::ip::tcp;
+using boost::property_tree::ptree;
+using boost::property_tree::read_json;
+using boost::property_tree::write_json;
 
 
 class BaseSystem {
@@ -23,12 +41,16 @@ public:
     std::map <unsigned long long, Item> itemsMap ;
     std::map <unsigned long long, Barcodes> barcodesMap ;
     std::map <unsigned long long, Cart> cartsMap ;
-    
+    typedef boost::shared_ptr<tcp::socket> socket_ptr;
+
     BaseSystem( ) ;
     void readDepartmentArchive( string pFileName ) ;
     void readItemArchive( string pFileName ) ;
     void readBarcodesArchive( string pFileName ) ;
     void readArchives( ) ;
+    void salesServer(boost::asio::io_service& io_service, short port) ;
+    void salesSession(socket_ptr sock) ;
+
     unsigned long newCart( ) ;
     Cart* getCart( unsigned long pCartNumber ) ;
     bool persistCarts( ) ;
