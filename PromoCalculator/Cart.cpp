@@ -12,7 +12,8 @@
 #include <stdio.h>
 #include "boost/format.hpp"
 
-static string basePath = "./" ;
+//static string basePath = "./" ;
+std::ofstream tmpTransactionFile ;
 
 Cart::Cart( )
 {
@@ -45,6 +46,7 @@ void Cart::setBasePath( string pBasePath )
     basePath = pBasePath ;
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
     tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
+    std::cout << "\n" << cartFileName << " - " << tmpTransactionFileName ;
     tmpTransactionFile.open( tmpTransactionFileName );
 }
 

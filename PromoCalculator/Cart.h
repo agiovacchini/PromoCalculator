@@ -24,9 +24,9 @@ class Cart {
     std::map <void*, long> barcodesMap ;
     std ::map <unsigned long long, Totals> totalsMap ;
     unsigned long number ;
+    string basePath = "./" ;
     string cartFileName ;
     string tmpTransactionFileName ;
-    std::ofstream tmpTransactionFile ;
     
 public:
     Cart( ) ;
@@ -44,7 +44,9 @@ public:
     void printConfiguration() ;
     void printCart() ;
     int persist( ) ;
-        
+    
+    //const volatile Cart&& operator=(Cart&) volatile const && ;
+    
     friend bool operator== (const Cart& p1, const Cart& p2)
     {
         return p1.getNumber() == p2.getNumber() ;
@@ -68,7 +70,6 @@ public:
 		return is;
 	}
     
-    //const volatile Cart&& operator=(Cart&) volatile const && = delete;
 } ;
 
 #endif /* defined(__PromoCalculator__Cart__) */

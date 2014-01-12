@@ -403,11 +403,12 @@ Item BaseSystem::getItemByIntCode( unsigned long long pIntcode )
 
 unsigned long BaseSystem::newCart()
 {
-    unsigned long thisCartNumber = nextCartNumber ;
+    unsigned long long thisCartNumber = nextCartNumber ;
     Cart myCart ;
+    myCart.setNumber( thisCartNumber ) ;
     myCart.setBasePath( basePath ) ;
     cartsMap[thisCartNumber] = myCart ;
-
+    
     nextCartNumber++;
     return thisCartNumber ;
 }
