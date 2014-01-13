@@ -15,7 +15,7 @@
 //static string basePath = "./" ;
 std::ofstream tmpTransactionFile ;
 
-Cart::Cart( )
+Cart::Cart( string pBasePath, unsigned long pNumber )
 {
     itemsMap.clear() ;
     CartRow totalCartRow = { TOTAL, 0 } ;
@@ -29,6 +29,7 @@ Cart::Cart( )
     totalsMap[0].itemsNumber = 0 ;
     itemsMap[&totalsMap[0]] = totalCartRow ;
     state = CART_NOT_INITIALIZED ;
+    initialize( pBasePath, pNumber) ;
 }
 
 void Cart::setNumber( unsigned long pNumber )

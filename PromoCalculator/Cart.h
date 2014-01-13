@@ -30,7 +30,7 @@ class Cart {
     string tmpTransactionFileName ;
     
 public:
-    Cart( ) ;
+    Cart( string pBasePath, unsigned long pNumber ) ;
     
     unsigned long getNumber() const ;
     void setNumber( unsigned long pNumber ) ;
