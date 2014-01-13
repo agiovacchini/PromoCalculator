@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "411087812.527705"
+            timestampString = "411290662.054346"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
             landmarkName = "Cart::printCart()"
             landmarkType = "5">
          </BreakpointContent>
@@ -71,7 +71,7 @@
                   symbolName = "Item::toStr() const"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Item.cpp"
-                  timestampString = "411087812.635393"
+                  timestampString = "411293199.003415"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "57"
@@ -85,7 +85,7 @@
                   symbolName = "Item::toStr() const"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Item.cpp"
-                  timestampString = "411087812.635801"
+                  timestampString = "411293199.005155"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "57"
@@ -102,27 +102,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411088365.909269"
+            timestampString = "411290805.574387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411088365.909269"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "401"
-            endingLineNumber = "401"
-            landmarkName = "BaseSystem::getItemByIntCode( unsigned long long pIntcode )"
-            landmarkType = "5">
+            startingLineNumber = "409"
+            endingLineNumber = "409">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -131,13 +115,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "411087812.527705"
+            filePath = "PromoCalculator/BaseSystem.cpp"
+            timestampString = "411290805.574387"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "Cart::Cart( )"
+            startingLineNumber = "406"
+            endingLineNumber = "406"
+            landmarkName = "BaseSystem::getItemByIntCode( unsigned long long pIntcode )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -152,9 +136,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "19"
-            endingLineNumber = "19"
-            landmarkName = "class Cart"
-            landmarkType = "3">
+            endingLineNumber = "19">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -163,12 +145,12 @@
                   symbolName = "Cart::operator=(Cart const&amp;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
-                  timestampString = "411087812.636594"
+                  timestampString = "411293199.005715"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19"
-                  offsetFromSymbolStart = "20">
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "23">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -177,12 +159,12 @@
                   symbolName = "Cart::operator=(Cart const&amp;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
-                  timestampString = "411087812.637038"
+                  timestampString = "411293199.006351"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19"
-                  offsetFromSymbolStart = "52">
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "55">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -191,12 +173,12 @@
                   symbolName = "Cart::operator=(Cart const&amp;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
-                  timestampString = "411087812.637478"
+                  timestampString = "411293199.007043"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19"
-                  offsetFromSymbolStart = "99">
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "102">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -205,12 +187,12 @@
                   symbolName = "Cart::operator=(Cart const&amp;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
-                  timestampString = "411087812.637918"
+                  timestampString = "411293199.007434"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19"
-                  offsetFromSymbolStart = "146">
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "149">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -219,11 +201,11 @@
                   symbolName = "Cart::~Cart()"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
-                  timestampString = "411087812.638412"
+                  timestampString = "411293199.007786"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
                   offsetFromSymbolStart = "16">
                </Location>
             </Locations>
@@ -236,12 +218,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "411090303.676626"
+            timestampString = "411292703.014389"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "Cart::setBasePath( string pBasePath )"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "Cart::initialize( string pBasePath, unsigned long pNumber )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PromoCalculator/BaseSystem.cpp"
+            timestampString = "411293194.727595"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "411"
+            endingLineNumber = "411"
+            landmarkName = "BaseSystem::newCart()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

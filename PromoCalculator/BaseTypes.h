@@ -29,5 +29,12 @@ typedef Totals Totals ;
 
 #define CARD_PREFIX 0x10001
 
+#define CART_STATE_READY_FOR_ITEM 0x00
+#define CART_STATE_TOTAL 0x01
+#define CART_STATE_ASKING 0x02
+#define CART_STATE_PAYING 0x03
+#define CART_NOT_INITIALIZED 0xFF
+#define CART_STATE_ERROR 0xFF
+
 
 #endif

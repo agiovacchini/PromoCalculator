@@ -28,7 +28,7 @@ Cart::Cart( )
     totalsMap[0].totalAmount = 0.0 ;
     totalsMap[0].itemsNumber = 0 ;
     itemsMap[&totalsMap[0]] = totalCartRow ;
-    
+    state = CART_NOT_INITIALIZED ;
 }
 
 void Cart::setNumber( unsigned long pNumber )
@@ -41,8 +41,14 @@ unsigned long Cart::getNumber() const
     return this->number ;
 }
 
-void Cart::setBasePath( string pBasePath )
+unsigned int Cart::getState() const {
+    return this->state;
+}
+
+void Cart::initialize( string pBasePath, unsigned long pNumber )
 {
+    number = pNumber ;
+    state = CART_STATE_READY_FOR_ITEM ;
     basePath = pBasePath ;
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
     tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;

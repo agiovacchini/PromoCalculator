@@ -331,49 +331,54 @@ void BaseSystem::salesSession(socket_ptr sock)
                 boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
             }
             
-            if (action.compare("save")==0)
+            std::cout << "\nState: " << this->getCart(cartId)->getState() << "\n" ;
+            
+            if (this->getCart(cartId)->getState() != CART_NOT_INITIALIZED)
             {
-                cartId = pt2.get<std::uint32_t> ("cartId");
+                if (action.compare("save")==0)
+                {
+                    cartId = pt2.get<std::uint32_t> ("cartId");
+                    
+                    this->getCart(cartId)->persist() ;
+                    msg = "Cart #" + std::to_string( cartId ) + " saved\n" ;
+                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                }
                 
-                this->getCart(cartId)->persist() ;
-                msg = "Cart #" + std::to_string( cartId ) + " saved\n" ;
-                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
-            }
-            
-            if (action.compare("add")==0)
-            {
-                barcode = pt2.get<std::uint64_t> ("barcode");
-                qty = pt2.get<std::int32_t> ("qty");
-                cartId = pt2.get<std::uint32_t> ("cartId");
+                if (action.compare("add")==0)
+                {
+                    barcode = pt2.get<std::uint64_t> ("barcode");
+                    qty = pt2.get<std::int32_t> ("qty");
+                    cartId = pt2.get<std::uint32_t> ("cartId");
+                    
+                    this->getCart(cartId)->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
+                    msg = "Cart #" + std::to_string( cartId ) + ", added barcode " + std::to_string( barcode ) + "\n" ;
+                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                    this->getCart(cartId)->printCart() ;
+                }
                 
-                this->getCart(cartId)->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
-                msg = "Cart #" + std::to_string( cartId ) + ", added barcode " + std::to_string( barcode ) + "\n" ;
-                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
-                this->getCart(cartId)->printCart() ;
-            }
-            
-            if (action.compare("remove")==0)
-            {
-                barcode = pt2.get<std::uint64_t> ("barcode");
-                cartId = pt2.get<std::uint32_t> ("cartId");
+                if (action.compare("remove")==0)
+                {
+                    barcode = pt2.get<std::uint64_t> ("barcode");
+                    cartId = pt2.get<std::uint32_t> ("cartId");
+                    
+                    this->getCart(cartId)->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
+                    msg = "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) + "\n" ;
+                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                    this->getCart(cartId)->printCart() ;
+                }
                 
-                this->getCart(cartId)->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
-                msg = "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) + "\n" ;
-                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
-                this->getCart(cartId)->printCart() ;
-            }
-            
-            if (action.compare("print")==0)
-            {
-                cartId = pt2.get<std::uint32_t> ("cartId");
-                this->getCart(cartId)->printCart() ;
-                msg = "Cart #" + std::to_string( cartId ) + " printed\n" ;
-                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
-            }
-            
-            if (action.compare("close")==0)
-            {
-                boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
+                if (action.compare("print")==0)
+                {
+                    cartId = pt2.get<std::uint32_t> ("cartId");
+                    this->getCart(cartId)->printCart() ;
+                    msg = "Cart #" + std::to_string( cartId ) + " printed\n" ;
+                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                }
+                
+                if (action.compare("close")==0)
+                {
+                    boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
+                }
             }
             
         }
@@ -405,8 +410,7 @@ unsigned long BaseSystem::newCart()
 {
     unsigned long long thisCartNumber = nextCartNumber ;
     Cart myCart ;
-    myCart.setNumber( thisCartNumber ) ;
-    myCart.setBasePath( basePath ) ;
+    myCart.initialize( basePath, thisCartNumber ) ;
     cartsMap[thisCartNumber] = myCart ;
     
     nextCartNumber++;

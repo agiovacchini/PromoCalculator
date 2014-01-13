@@ -24,6 +24,7 @@ class Cart {
     std::map <void*, long> barcodesMap ;
     std ::map <unsigned long long, Totals> totalsMap ;
     unsigned long number ;
+    unsigned int state ;
     string basePath = "./" ;
     string cartFileName ;
     string tmpTransactionFileName ;
@@ -39,7 +40,8 @@ public:
     Totals addItemByBarcode( Item& pItem, Barcodes& pBarcode, long pQtyItem ) ;
     Totals removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
     //Totals removeItem(Item& pItem) ;
-    void setBasePath( string pBasePath ) ;
+    unsigned int getState() const ;
+    void initialize( string pBasePath, unsigned long pNumber ) ;
     string getBasePath() const ;
     void printConfiguration() ;
     void printCart() ;
