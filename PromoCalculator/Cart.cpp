@@ -13,23 +13,23 @@
 #include "boost/format.hpp"
 
 //static string basePath = "./" ;
-std::ofstream tmpTransactionFile ;
 
 Cart::Cart( string pBasePath, unsigned long pNumber )
 {
+    number = pNumber ;
+    basePath = pBasePath ;
+    state = CART_STATE_READY_FOR_ITEM ;
+
     itemsMap.clear() ;
     CartRow totalCartRow = { TOTAL, 0 } ;
-    
-    //CartRow itemCartRow = { ITEM, 0 } ;
-    //totals.totalAmount = 0.0 ;
-    //totals.itemsNumber = 0 ;
-    //const char config[] = "cardPrefix=0260\n";
     
     totalsMap[0].totalAmount = 0.0 ;
     totalsMap[0].itemsNumber = 0 ;
     itemsMap[&totalsMap[0]] = totalCartRow ;
-    state = CART_NOT_INITIALIZED ;
-    initialize( pBasePath, pNumber) ;
+    cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
+    tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
+    std::cout << "\n" << cartFileName << " - " << tmpTransactionFileName << "\n" ;
+    tmpTransactionFile.open( tmpTransactionFileName );
 }
 
 void Cart::setNumber( unsigned long pNumber )
@@ -48,13 +48,7 @@ unsigned int Cart::getState() const {
 
 void Cart::initialize( string pBasePath, unsigned long pNumber )
 {
-    number = pNumber ;
-    state = CART_STATE_READY_FOR_ITEM ;
-    basePath = pBasePath ;
-    cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
-    tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
-    std::cout << "\n" << cartFileName << " - " << tmpTransactionFileName ;
-    tmpTransactionFile.open( tmpTransactionFileName );
+
 }
 
 
@@ -69,7 +63,7 @@ Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode )
     return addItemByBarcode(pItem,pBarcode,pQtyItem) ;
 }
 
-Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, long pQtyItem )
+Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem )
 {
     long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
     long qtyBarcode = barcodesMap[&pBarcode] + pQtyItem ;
@@ -83,6 +77,7 @@ Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, long pQtyItem )
     //pItem.setQuantity(qty) ;
     itemsMap[&pItem] = { ITEM, qtyItem } ;
     barcodesMap[&pBarcode] = qtyBarcode ;
+    tmpTransactionFile << "A," << pBarcode.getCode() << "," << pQtyItem << "\n";
     return totalsMap[0] ;
 }
 
@@ -121,7 +116,7 @@ Totals Cart::removeItemByBarcode( Item& pItem, Barcodes& pBarcode )
         totalsMap[0].totalAmount = totalsMap[0].totalAmount - pItem.getPrice() ;
         totalsMap[pItem.getDepartment().getCode()].itemsNumber-- ;
         totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount - pItem.getPrice() ;
-
+        tmpTransactionFile << "R," << pBarcode.getCode() << "," << "1" << "\n";
         if (qtyItem < 1)
         {
             std::cout << "\nErasing item" ;
@@ -200,5 +195,12 @@ int Cart::persist( )
     
     cartFile.close() ;
     
+    return 0 ;
+}
+
+int Cart::close()
+{
+    tmpTransactionFile.close() ;
+    state = CART_STATE_CLOSED ;
     return 0 ;
 }

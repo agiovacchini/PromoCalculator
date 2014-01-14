@@ -12,9 +12,13 @@
 #include <sstream>
 #include <fstream>
 #include <boost/tokenizer.hpp>
+
 #include <boost/spirit/include/qi.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
+
 
 #include "BaseSystem.h"
 
@@ -23,6 +27,7 @@ const int max_length = 1024;
 static unsigned long nextCartNumber ;
 
 namespace qi = boost::spirit::qi;
+namespace fs = boost::filesystem;
 
 using namespace std;
 
@@ -31,6 +36,28 @@ BaseSystem::BaseSystem( string pBasePath )
     boost::asio::io_service io_service;
     this->basePath = pBasePath ;
     
+    /*
+    const std::string target_path( this->basePath );
+    const boost::regex my_filter( "*\.transaction_in_progress" );
+    
+    std::vector< std::string > all_matching_files;
+    
+    boost::filesystem::directory_iterator end_itr; // Default ctor yields past-the-end
+    for( boost::filesystem::directory_iterator i( target_path ); i != end_itr; ++i )
+    {
+        // Skip if not a file
+        if( !boost::filesystem::is_regular_file( i->status() ) ) continue;
+        
+        boost::smatch what;
+        
+        // Skip if no match
+        if( !boost::regex_match( i->path().filename(), what, my_filter ) ) continue;
+        
+        // File matches, store it
+        all_matching_files.push_back( i->path().filename() );
+    }
+    */
+    
     nextCartNumber = 1 ;
 
     std::ifstream configFile( this->basePath + "PromoCalculator.ini" );
@@ -38,7 +65,29 @@ BaseSystem::BaseSystem( string pBasePath )
         std::cout << "\nNo PromoCalculator.ini file found in " << basePath << " directory." ;
         exit(-1);
     } else {
-        std::cout << "\nCart initialized." ;
+        if (!fs::exists(this->basePath + "CARTS"))
+        {
+            std::cout << "\nNo CARTS subfolder found" ;
+            exit(-1);
+        }
+        
+        if (fs::is_directory(this->basePath + "CARTS"))
+        {
+            std::cout << "\nCARTS subfolder found" ;
+            fs::recursive_directory_iterator it(this->basePath + "CARTS");
+            fs::recursive_directory_iterator endit;
+            while(it != endit)
+            {
+                //std::cout << "\nFile: " << it->path().filename() << "\n" ;
+                if (fs::is_regular_file(*it) and it->path().extension() == ".transaction_in_progress")
+                {
+                    //ret.push_back(it->path().filename());
+                    std::cout << "\nFile corrispondente: " << it->path().filename() << "\n" ;
+                }
+                ++it;
+            }
+        }
+        std::cout << "\nSystem initialized." ;
     }
     
     std::string line;
@@ -347,7 +396,7 @@ void BaseSystem::salesSession(socket_ptr sock)
                     //currentCart = carts->second;
             //}
             
-            if (myCart->getState() != CART_NOT_INITIALIZED)
+            if ( (myCart->getState() != CART_NOT_INITIALIZED) && (myCart->getState() != CART_STATE_CLOSED) )
             {
                 if (action.compare("save")==0)
                 {
@@ -386,6 +435,8 @@ void BaseSystem::salesSession(socket_ptr sock)
                 
                 if (action.compare("close")==0)
                 {
+                    myCart->close() ;
+                    msg = "Cart #" + std::to_string( cartId ) + " closed\n" ;
                     boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
                 }
             }

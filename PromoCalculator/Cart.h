@@ -28,7 +28,8 @@ class Cart {
     string basePath = "./" ;
     string cartFileName ;
     string tmpTransactionFileName ;
-    
+    std::ofstream tmpTransactionFile ;
+
 public:
     Cart( string pBasePath, unsigned long pNumber ) ;
     
@@ -37,7 +38,7 @@ public:
     
     //Totals addItemByItemCode(Item& pItem) ;
     Totals addItemByBarcode(Item& pItem, Barcodes& pBarcode) ;
-    Totals addItemByBarcode( Item& pItem, Barcodes& pBarcode, long pQtyItem ) ;
+    Totals addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem ) ;
     Totals removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
     //Totals removeItem(Item& pItem) ;
     unsigned int getState() const ;
@@ -46,6 +47,7 @@ public:
     void printConfiguration() ;
     void printCart() ;
     int persist( ) ;
+    int close( ) ;
     
     //const volatile Cart&& operator=(Cart&) volatile const && ;
     
