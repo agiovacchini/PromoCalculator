@@ -29,7 +29,6 @@ Cart::Cart( string pBasePath, unsigned long pNumber )
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
     tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
     std::cout << "\n" << cartFileName << " - " << tmpTransactionFileName << "\n" ;
-    tmpTransactionFile.open( tmpTransactionFileName );
 }
 
 void Cart::setNumber( unsigned long pNumber )
@@ -77,7 +76,9 @@ Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQ
     //pItem.setQuantity(qty) ;
     itemsMap[&pItem] = { ITEM, qtyItem } ;
     barcodesMap[&pBarcode] = qtyBarcode ;
+    tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
     tmpTransactionFile << "A," << pBarcode.getCode() << "," << pQtyItem << "\n";
+    tmpTransactionFile.close() ;
     return totalsMap[0] ;
 }
 
@@ -116,7 +117,9 @@ Totals Cart::removeItemByBarcode( Item& pItem, Barcodes& pBarcode )
         totalsMap[0].totalAmount = totalsMap[0].totalAmount - pItem.getPrice() ;
         totalsMap[pItem.getDepartment().getCode()].itemsNumber-- ;
         totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount - pItem.getPrice() ;
+        tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
         tmpTransactionFile << "R," << pBarcode.getCode() << "," << "1" << "\n";
+        tmpTransactionFile.close();
         if (qtyItem < 1)
         {
             std::cout << "\nErasing item" ;
@@ -161,10 +164,9 @@ void Cart::printCart()
             default:
                 break;
         }
-        
         //std::cout << "\nkey: " << key ;
     }
-    
+    std::cout << "\nState: " << this->getState() ;
     std::cout << "\nTotals start" ;
     typedef std::map<unsigned long long, Totals>::iterator configurationRows;
 
@@ -200,7 +202,7 @@ int Cart::persist( )
 
 int Cart::close()
 {
-    tmpTransactionFile.close() ;
+    //tmpTransactionFile.close() ;
     state = CART_STATE_CLOSED ;
     return 0 ;
 }
