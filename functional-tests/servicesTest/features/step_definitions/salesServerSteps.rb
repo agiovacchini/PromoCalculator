@@ -36,6 +36,10 @@ Given(/^request to remove item "(.*?)" from cart "(.*?)"$/) do |arg1, arg2|
   sleep sleepTime
 end
 
+Given(/^request to print cart "(.*?)"$/) do |arg1|
+  retCodr = salesServer.PrintCart arg1
+end
+
 Given(/^request to persist cart "(.*?)"$/) do |arg1|
   retCodr = salesServer.PersistCart arg1
 end

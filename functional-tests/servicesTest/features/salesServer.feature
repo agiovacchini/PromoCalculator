@@ -12,6 +12,8 @@ Feature: Test kStore Servlet
 
     Given request to remove item "8710163214634" from cart "1"
 
+    Given request to print cart "1"
+
     Given request to persist cart "1"
 
     Given request to close connection

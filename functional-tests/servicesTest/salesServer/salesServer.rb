@@ -19,25 +19,31 @@ class SalesServer
   end
 
   def OpenCart( )
-    msg = "{\"action\":\"init\"}"
+    msg = "{\"action\":\"init\"}\n"
+    puts "--- #{msg} ---"
+    @socket.puts(msg)
+  end
+
+  def PrintCart( pCart )
+    msg = "{\"action\":\"print\",\"cartId\":#{pCart}}\n"
     puts "--- #{msg} ---"
     @socket.puts(msg)
   end
 
   def PersistCart( pCart )
-    msg = "{\"action\":\"save\",\"cartId\":#{pCart}}"
+    msg = "{\"action\":\"save\",\"cartId\":#{pCart}}\n"
     puts "--- #{msg} ---"
     @socket.puts(msg)
   end
 
   def AddItem( pQty, pBarcode, pCart )
-    msg = "{\"action\":\"add\",\"barcode\":#{pBarcode},\"cartId\":#{pCart},\"qty\":#{pQty}}"
+    msg = "{\"action\":\"add\",\"barcode\":#{pBarcode},\"cartId\":#{pCart},\"qty\":#{pQty}}\n"
     puts "--- #{msg} ---"
     @socket.puts(msg)
   end
 
   def RemoveItem( pBarcode, pCart )
-    msg = "{\"action\":\"remove\",\"barcode\":#{pBarcode},\"cartId\":#{pCart}}"
+    msg = "{\"action\":\"remove\",\"barcode\":#{pBarcode},\"cartId\":#{pCart}}\n"
     puts "--- #{msg} ---"
     @socket.puts(msg)
   end
