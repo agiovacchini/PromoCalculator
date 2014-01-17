@@ -31,7 +31,7 @@ class Cart {
     std::ofstream tmpTransactionFile ;
 
 public:
-    Cart( string pBasePath, unsigned long pNumber ) ;
+    Cart( string pBasePath, unsigned long pNumber, unsigned int pAction ) ;
     
     unsigned long getNumber() const ;
     void setNumber( unsigned long pNumber ) ;

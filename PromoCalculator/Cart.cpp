@@ -14,11 +14,11 @@
 
 //static string basePath = "./" ;
 
-Cart::Cart( string pBasePath, unsigned long pNumber )
+Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
 {
     number = pNumber ;
     basePath = pBasePath ;
-    state = CART_STATE_READY_FOR_ITEM ;
+    
 
     itemsMap.clear() ;
     CartRow totalCartRow = { TOTAL, 0 } ;
@@ -29,7 +29,21 @@ Cart::Cart( string pBasePath, unsigned long pNumber )
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
     tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
     std::cout << "\n" << cartFileName << " - " << tmpTransactionFileName << "\n" ;
+    
+    switch (pAction)
+    {
+        case GEN_CART_NEW:
+            state = CART_STATE_READY_FOR_ITEM ;
+            break ;
+        case GEN_CART_LOAD:
+            state = CART_NOT_INITIALIZED ;
+            
+            break;
+        default:
+            break;
+    }
 }
+
 
 void Cart::setNumber( unsigned long pNumber )
 {
@@ -147,13 +161,13 @@ void Cart::printCart()
     Item* itmRow ;
     //Totals* totalsRow ;
     
-    std::cout << "\nCart #" << this->number <<  "print start" ;
+    std::cout << "Cart #" << this->number <<  "print start\n" ;
     for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
         CartRow key = iterator->second ;
         switch (key.type) {
             case ITEM:
                 itmRow = (Item*)iterator->first;
-                std::cout << "\n" << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity;
+                std::cout << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity << "\n" ;
                 break;
             case DEPT:
                 break;
@@ -166,15 +180,15 @@ void Cart::printCart()
         }
         //std::cout << "\nkey: " << key ;
     }
-    std::cout << "\nState: " << this->getState() ;
-    std::cout << "\nTotals start" ;
+    std::cout << "State: " << this->getState() << "\n" ;
+    std::cout << "Totals start\n" ;
     typedef std::map<unsigned long long, Totals>::iterator configurationRows;
 
     for(configurationRows iterator = totalsMap.begin(); iterator != totalsMap.end(); iterator++) {
-        std::cout << "\nDept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber ;
+        std::cout << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber << "\n" ;
     }
-    std::cout << "\nTotals end\n" ;
-    std::cout << "\nCart print end\n" ;
+    std::cout << "Totals end\n" ;
+    std::cout << "Cart print end\n" ;
 }
 
 int Cart::persist( )
@@ -184,7 +198,7 @@ int Cart::persist( )
     Barcodes* barcodesRow ;
     long qty = 0 ;
  
-    std::cout << "\ncartFileName: " << cartFileName << "\n" ;
+    std::cout << "cartFileName: " << cartFileName << "\n" ;
 
     std::ofstream cartFile( cartFileName );
 

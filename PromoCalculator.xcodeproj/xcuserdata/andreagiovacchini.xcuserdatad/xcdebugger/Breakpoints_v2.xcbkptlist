@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "411461543.073581"
+            timestampString = "411649315.056765"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "Cart::printCart()"
             landmarkType = "5">
          </BreakpointContent>
@@ -71,7 +71,7 @@
                   symbolName = "Item::toStr() const"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Item.cpp"
-                  timestampString = "411331486.15668"
+                  timestampString = "411652830.091621"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "57"
@@ -85,7 +85,7 @@
                   symbolName = "Item::toStr() const"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Item.cpp"
-                  timestampString = "411331486.157143"
+                  timestampString = "411652830.091979"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "57"
@@ -102,11 +102,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411463485.699633"
+            timestampString = "411654131.442057"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "488"
-            endingLineNumber = "488">
+            startingLineNumber = "484"
+            endingLineNumber = "484">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -116,11 +116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411463485.699633"
+            timestampString = "411654131.442057"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "485"
-            endingLineNumber = "485"
+            startingLineNumber = "481"
+            endingLineNumber = "481"
             landmarkName = "BaseSystem::getItemByIntCode( unsigned long long pIntcode )"
             landmarkType = "5">
          </BreakpointContent>
@@ -146,12 +146,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411463485.699633"
+            timestampString = "411654131.442057"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "490"
-            endingLineNumber = "490"
-            landmarkName = "BaseSystem::newCart()"
+            startingLineNumber = "486"
+            endingLineNumber = "486"
+            landmarkName = "BaseSystem::newCart( unsigned int pAction )"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -162,12 +162,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411463485.699633"
+            timestampString = "411654131.442057"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "390"
-            endingLineNumber = "390"
-            landmarkName = "BaseSystem::salesSession(socket_ptr sock)"
+            startingLineNumber = "400"
+            endingLineNumber = "400"
+            landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
             landmarkType = "5">
             <Locations>
                <Location
@@ -208,12 +208,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411463485.699633"
+            timestampString = "411654131.442057"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "410"
-            endingLineNumber = "410"
-            landmarkName = "BaseSystem::salesSession(socket_ptr sock)"
+            startingLineNumber = "412"
+            endingLineNumber = "412"
+            landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -224,12 +224,88 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411463485.699633"
+            timestampString = "411654131.442057"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "405"
             endingLineNumber = "405"
-            landmarkName = "BaseSystem::salesSession(socket_ptr sock)"
+            landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BaseSystem::salesSession(boost::shared_ptr&lt;boost::asio::basic_stream_socket&lt;boost::asio::ip::tcp, boost::asio::stream_socket_service&lt;boost::asio::ip::tcp&gt; &gt; &gt;)"
+                  moduleName = "PromoCalculator"
+                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
+                  timestampString = "411498295.201954"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "405"
+                  endingLineNumber = "405"
+                  offsetFromSymbolStart = "4358">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BaseSystem::salesSession(boost::shared_ptr&lt;boost::asio::basic_stream_socket&lt;boost::asio::ip::tcp, boost::asio::stream_socket_service&lt;boost::asio::ip::tcp&gt; &gt; &gt;)"
+                  moduleName = "PromoCalculator"
+                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
+                  timestampString = "411498295.202346"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "405"
+                  endingLineNumber = "405"
+                  offsetFromSymbolStart = "4637">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "BaseSystem::salesSession(boost::shared_ptr&lt;boost::asio::basic_stream_socket&lt;boost::asio::ip::tcp, boost::asio::stream_socket_service&lt;boost::asio::ip::tcp&gt; &gt; &gt;)"
+                  moduleName = "PromoCalculator"
+                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
+                  timestampString = "411498295.202799"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "405"
+                  endingLineNumber = "405"
+                  offsetFromSymbolStart = "4749">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PromoCalculator/BaseSystem.cpp"
+            timestampString = "411654131.442057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "397"
+            endingLineNumber = "397"
+            landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PromoCalculator/BaseSystem.cpp"
+            timestampString = "411654131.442057"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "458"
+            endingLineNumber = "458"
+            landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -240,12 +316,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "411463485.699633"
+            timestampString = "411654131.442057"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
-            landmarkName = "BaseSystem::salesSession(socket_ptr sock)"
+            startingLineNumber = "427"
+            endingLineNumber = "427"
+            landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
             landmarkType = "5">
             <Locations>
                <Location
@@ -255,12 +331,12 @@
                   symbolName = "BaseSystem::salesSession(boost::shared_ptr&lt;boost::asio::basic_stream_socket&lt;boost::asio::ip::tcp, boost::asio::stream_socket_service&lt;boost::asio::ip::tcp&gt; &gt; &gt;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "411331486.157965"
+                  timestampString = "411652830.093667"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "339"
-                  endingLineNumber = "339"
-                  offsetFromSymbolStart = "3982">
+                  startingLineNumber = "436"
+                  endingLineNumber = "436"
+                  offsetFromSymbolStart = "7251">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -269,12 +345,12 @@
                   symbolName = "BaseSystem::salesSession(boost::shared_ptr&lt;boost::asio::basic_stream_socket&lt;boost::asio::ip::tcp, boost::asio::stream_socket_service&lt;boost::asio::ip::tcp&gt; &gt; &gt;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "411331486.158505"
+                  timestampString = "411652830.094083"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "339"
-                  endingLineNumber = "339"
-                  offsetFromSymbolStart = "4156">
+                  startingLineNumber = "436"
+                  endingLineNumber = "436"
+                  offsetFromSymbolStart = "9947">
                </Location>
             </Locations>
          </BreakpointContent>

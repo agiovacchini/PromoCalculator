@@ -56,8 +56,8 @@ public:
     void readArchives( ) ;
     void salesServer(boost::asio::io_service& io_service, short port) ;
     void salesSession(socket_ptr sock) ;
-
-    unsigned long newCart( ) ;
+    void sendRespMsg( socket_ptr pSock, string pMsg ) ;
+    unsigned long newCart( unsigned int pAction ) ;
     Cart* getCart( unsigned long pCartNumber ) ;
     bool persistCarts( ) ;
     

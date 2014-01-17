@@ -21,6 +21,7 @@
 
 
 #include "BaseSystem.h"
+#include "BaseTypes.h"
 
 const int max_length = 256;
 
@@ -44,18 +45,18 @@ BaseSystem::BaseSystem( string pBasePath )
 
     std::ifstream configFile( this->basePath + "PromoCalculator.ini" );
     if (!configFile) {
-        std::cout << "\nNo PromoCalculator.ini file found in " << basePath << " directory." ;
+        std::cout << "No PromoCalculator.ini file found in " << basePath << " directory.\n" ;
         exit(-1);
     } else {
         if (!fs::exists(this->basePath + "CARTS"))
         {
-            std::cout << "\nNo CARTS subfolder found" ;
+            std::cout << "No CARTS subfolder found\n" ;
             exit(-1);
         }
         
         if (fs::is_directory(this->basePath + "CARTS"))
         {
-            std::cout << "\nCARTS subfolder found" ;
+            std::cout << "CARTS subfolder found\n" ;
             fs::recursive_directory_iterator it(this->basePath + "CARTS");
             fs::recursive_directory_iterator endit;
             while(it != endit)
@@ -70,6 +71,8 @@ BaseSystem::BaseSystem( string pBasePath )
                         nextCartNumber = currentTmpCartNumber + 1 ;
                     }
                     std::cout << "File tmpTrans: " << it->path().filename() << " num: " << currentTmpCartNumber << " next: " << nextCartNumber << "\n";
+                    
+                    newCart( GEN_CART_LOAD ) ;
                     
                     std::ifstream tmpTransactonFileToLoad( this->basePath + "CARTS/" + it->path().filename().c_str() );
                     
@@ -96,7 +99,7 @@ BaseSystem::BaseSystem( string pBasePath )
                 ++it;
             }
         }
-        std::cout << "\nSystem initialized." ;
+        std::cout << "System initialized.\n" ;
     }
     
     while( std::getline(configFile, line) )
@@ -120,7 +123,7 @@ BaseSystem::BaseSystem( string pBasePath )
     
     try
     {
-        std::cout << "Starting server" ;
+        std::cout << "Starting server\n" ;
         using namespace std; // For atoi.
         salesServer(io_service, 50000);
     }
@@ -145,11 +148,11 @@ void BaseSystem::printConfiguration()
 {
     typedef std::map<string, string>::iterator configurationRows;
     
-    std::cout << "\nConfig print start" ;
+    std::cout << "Config print start\n" ;
     for(configurationRows iterator = configurationMap.begin(); iterator != configurationMap.end(); iterator++) {
-        std::cout << "\nkey: " << iterator->first << ", value: " << iterator->second ;
+        std::cout << "key: " << iterator->first << ", value: " << iterator->second << "\n";
     }
-    std::cout << "\nConfig print end\n" ;
+    std::cout << "Config print end\n" ;
 }
 
 void BaseSystem::readDepartmentArchive( string pFileName )
@@ -166,10 +169,10 @@ void BaseSystem::readDepartmentArchive( string pFileName )
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "\nFile " + archiveFileName + " not found" ;
+        std::cout << "File " + archiveFileName + " not found\n" ;
         exit(-1);
     } else {
-        std::cout << "\nFile " + archiveFileName + " found" ;
+        std::cout << "File " + archiveFileName + " found\n" ;
     }
     
     std::string line;
@@ -214,7 +217,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
         //std::cout << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
         
     }
-    std::cout << "\nFinished loading file " + pFileName ;
+    std::cout << "Finished loading file " + pFileName + "\n" ;
 
 }
 
@@ -230,10 +233,10 @@ void BaseSystem::readItemArchive( string pFileName )
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "\nFile " + archiveFileName + " not found" ;
+        std::cout << "File " + archiveFileName + " not found\n" ;
         exit(-1);
     } else {
-        std::cout << "\nFile " + archiveFileName + " loaded" ;
+        std::cout << "File " + archiveFileName + " loaded\n" ;
     }
     
     std::string line;
@@ -284,7 +287,7 @@ void BaseSystem::readItemArchive( string pFileName )
         //std::cout << "\n" << itemsMap[tempItm.getCode()].toStr();
 
     }
-    std::cout << "\nFinished loading file " + pFileName ;
+    std::cout << "Finished loading file " + pFileName + "\n" ;
 }
 
 void BaseSystem::readBarcodesArchive( string pFileName )
@@ -299,10 +302,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "\nFile " + archiveFileName + " not found" ;
+        std::cout << "File " + archiveFileName + " not found\n" ;
         exit(-1);
     } else {
-        std::cout << "\nFile " + archiveFileName + " loaded" ;
+        std::cout << "File " + archiveFileName + " loaded\n" ;
     }
     
     std::string line;
@@ -344,7 +347,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
         //std::cout << "\n" << itemsMap[tempItm.getCode()].toStr();
         
     }
-    std::cout << "\nFinished loading file " + pFileName ;
+    std::cout << "Finished loading file " + pFileName + "\n" ;
 }
 
 void BaseSystem::readArchives()
@@ -354,9 +357,14 @@ void BaseSystem::readArchives()
     this->readBarcodesArchive( "BARCODES.CSV" ) ;
 }
 
-void BaseSystem::salesSession(socket_ptr sock)
+void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
-    //unsigned long initializedCartNumber = 0 ;
+    boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
+    std::cout << "pMsg: " << pMsg << ", size: " << pMsg.size() << "\n" ;
+}
+
+void BaseSystem::salesSession(socket_ptr pSock)
+{
     string msg = "" ;
     std::uint64_t cartId = 0 ;
     std::uint64_t barcode = 0 ;
@@ -370,96 +378,82 @@ void BaseSystem::salesSession(socket_ptr sock)
             memset(data,0,max_length);
 
             boost::system::error_code error;
-            size_t length = sock->read_some(boost::asio::buffer(data), error);
+            size_t length = pSock->read_some(boost::asio::buffer(data), error);
             if (error == boost::asio::error::eof)
             {
-                std::cout << "\nreset by peer\n" ;
+                std::cout << "Connection reset by peer\n" ;
                 break; // Connection closed cleanly by peer.
             } else if (error)
             {
-                std::cout << "\nOh my God!\n" ;
+                std::cout << "Oh my God! There's been a bad fault on socket!\n" ;
                 throw boost::system::system_error(error); // Some other error.
             }
             ptree pt2;
             std::istringstream is (data);
-            //std::cout << " \n111111--" << data << "--\n" ;
+
             read_json (is, pt2);
-            //std::cout << "\n222222\n" ;
+            
             std::string action = pt2.get<std::string> ("action");
             if (action.compare("init")==0)
             {
-                cartId = this->newCart() ;
-                msg = "Initialized cart " + std::to_string( cartId ) + "\n" ;
-                boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                cartId = this->newCart( GEN_CART_NEW ) ;
+                sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + "}\n") ;
             } else {
                 cartId = pt2.get<std::uint64_t> ("cartId");
             }
             
-            //std::cout << "\nState: " << cartsMap.find(cartId)->getState() ;
-            //myCart->getState() << "\n" ;
-            //typedef std::map<unsigned long long, Cart>::iterator = carts;
             typename std::map<unsigned long long, Cart>::iterator it = cartsMap.find(cartId);
             Cart* myCart = nullptr;
 
             if (it != cartsMap.end()) {
                 myCart = &(it->second) ;
             }
-            //std::cout << "\nState: " << myCart->getState() ;
-            //for (carts=cartsMap.begin(); carts!=cartsMap.end(); carts++) {
-                    //currentCart = carts->second;
-            //}
             
-            if ( (myCart->getState() != CART_NOT_INITIALIZED) && (myCart->getState() != CART_STATE_CLOSED) )
+            if ( (myCart != nullptr) && (myCart->getState() != CART_NOT_INITIALIZED) && (myCart->getState() != CART_STATE_CLOSED) )
             {
                 if (action.compare("save")==0)
                 {
                     myCart->persist() ;
-                    msg = "Cart #" + std::to_string( cartId ) + " saved" ;
-                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + " saved\n") ;
                 }
                 
                 if (action.compare("add")==0)
                 {
-                    //std::cout << "\naaaa1\n" ;
                     barcode = pt2.get<std::uint64_t> ("barcode");
-                    //std::cout << "\naaaa2\n" ;
                     qty = pt2.get<std::int32_t> ("qty");
                     
-                    msg = "Cart #" + std::to_string( cartId ) + ", added barcode " + std::to_string( barcode ) ;
-                    //std::cout << "\n" << msg << "\n" ;
-                    
                     myCart->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
-                    //std::cout << "\noooo1\n" ;
-                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+
+                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"barcode\":" + std::to_string( barcode ) + "}\n") ;
+
                     myCart->printCart() ;
                 }
                 //std::cout << "\noooo1y\n" ;
                 if (action.compare("remove")==0)
                 {
                     barcode = pt2.get<std::uint64_t> ("barcode");
-                    msg = "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) ;
-                    //std::cout << "\n" << msg << "\n" ;
-                    
                     myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
-                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                    
+                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) + "\n") ;
+                    
                     myCart->printCart() ;
                 }
                 
                 if (action.compare("print")==0)
                 {
-                    msg = "Cart #" + std::to_string( cartId ) + " printed" ;
-                    //std::cout << "\n" << msg << "\n" ;
                     myCart->printCart() ;
-                    boost::asio::write(*sock, boost::asio::buffer(msg, sizeof(msg)));
+                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + " printed\n") ;
                 }
                 
                 if (action.compare("close")==0)
                 {
-                    msg = "Cart #" + std::to_string( cartId ) + " closed" ;
-                    //std::cout << "\n" << msg << "\n" ;
                     myCart->close() ;
-                    boost::asio::write(*sock, boost::asio::buffer(action, sizeof(action)));
+                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + " closed\n") ;
                 }
+            }
+            else
+            {
+                std::cout << "Invalid cart state\n" ;
             }
             
         }
@@ -487,11 +481,11 @@ Item BaseSystem::getItemByIntCode( unsigned long long pIntcode )
     return itemsMap[pIntcode];
 }
 
-unsigned long BaseSystem::newCart()
+unsigned long BaseSystem::newCart( unsigned int pAction )
 {
     unsigned long long thisCartNumber = nextCartNumber ;
 
-    cartsMap.emplace( std::piecewise_construct, std::make_tuple(thisCartNumber), std::make_tuple(this->basePath,thisCartNumber) ) ;
+    cartsMap.emplace( std::piecewise_construct, std::make_tuple(thisCartNumber), std::make_tuple(this->basePath,thisCartNumber,pAction) ) ;
     
     nextCartNumber++;
     return thisCartNumber ;

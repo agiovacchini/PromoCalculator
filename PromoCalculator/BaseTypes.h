@@ -37,5 +37,7 @@ typedef Totals Totals ;
 #define CART_NOT_INITIALIZED 0xFE
 #define CART_STATE_ERROR 0xFF
 
+#define GEN_CART_NEW       0x01
+#define GEN_CART_LOAD      0x02
 
 #endif

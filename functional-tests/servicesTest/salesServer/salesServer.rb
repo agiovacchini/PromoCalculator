@@ -6,46 +6,60 @@ class SalesServer
 
   @socket = nil
   @thrListen = nil
+  @msgReceived=0
+  @msgText=""
+
   Thread.abort_on_exception = true
 
   def InitializeSession( pIp, pPort )
     puts "ip: #{pIp}, port: #{pPort}"
     @socket = TCPSocket.open(pIp, pPort)
-    #@thrListen = Thread.new {
-    #  while 0!=1
-    #    puts @socket.gets
-    #  end
-    #}
+    @thrListen = Thread.new {
+      while 0!=1
+        puts "Aspetto messaggio"
+        @msgText = @socket.gets
+        @msgReceived = 1
+      end
+    }
+  end
+
+  def sendMsg( pMsg )
+    @msgReceived=0
+    puts "Sending message: #{pMsg}"
+    @socket.puts(pMsg)
+    while ( @msgReceived==0 )
+      sleep 0.1
+    end
   end
 
   def OpenCart( )
     msg = "{\"action\":\"init\"}\n"
-    puts "--- #{msg} ---"
-    @socket.puts(msg)
+    sendMsg( msg )
+    return @msgText
   end
 
   def PrintCart( pCart )
     msg = "{\"action\":\"print\",\"cartId\":#{pCart}}\n"
-    puts "--- #{msg} ---"
-    @socket.puts(msg)
+    sendMsg( msg )
+    return @msgText
   end
 
   def PersistCart( pCart )
     msg = "{\"action\":\"save\",\"cartId\":#{pCart}}\n"
-    puts "--- #{msg} ---"
-    @socket.puts(msg)
+    sendMsg( msg )
+    return @msgText
   end
 
   def AddItem( pQty, pBarcode, pCart )
     msg = "{\"action\":\"add\",\"barcode\":#{pBarcode},\"cartId\":#{pCart},\"qty\":#{pQty}}\n"
-    puts "--- #{msg} ---"
-    @socket.puts(msg)
+    sendMsg( msg )
+    return @msgText
   end
 
   def RemoveItem( pBarcode, pCart )
     msg = "{\"action\":\"remove\",\"barcode\":#{pBarcode},\"cartId\":#{pCart}}\n"
-    puts "--- #{msg} ---"
-    @socket.puts(msg)
+    sendMsg( msg )
+    return @msgText
   end
 
   def CloseSocket(  )
