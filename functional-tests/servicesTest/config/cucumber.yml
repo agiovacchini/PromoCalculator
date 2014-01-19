@@ -1,1 +1,1 @@
-test: TEST_ENV=myMac ../servicesTest/features/salesServerSteps.rb
+default: TEST_ENV=myMac ../servicesTest/features/salesServer.feature

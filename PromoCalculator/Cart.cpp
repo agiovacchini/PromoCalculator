@@ -19,7 +19,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     number = pNumber ;
     basePath = pBasePath ;
     
-
+    
     itemsMap.clear() ;
     CartRow totalCartRow = { TOTAL, 0 } ;
     
@@ -59,16 +59,21 @@ unsigned int Cart::getState() const {
     return this->state;
 }
 
+void Cart::setState( unsigned int pState ) {
+    std::cout << "Carrello: passaggio di stato da " << this->state << " a " << pState ;
+    this->state = pState ;
+}
+
 void Cart::initialize( string pBasePath, unsigned long pNumber )
 {
-
+    
 }
 
 
 /*Totals Cart::addItemByBarcode(unsigned long long pBarcode)
-{
-        //bs.itemsMap[6945339]
-}*/
+ {
+ //bs.itemsMap[6945339]
+ }*/
 
 Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode )
 {
@@ -78,80 +83,94 @@ Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode )
 
 Totals Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem )
 {
-    long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
-    long qtyBarcode = barcodesMap[&pBarcode] + pQtyItem ;
-    
-    totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
-    totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
-    totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
-    totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
-    
-    //std::cout << "\ndept: " << pItem.getDepartment().getCode() ;
-    //pItem.setQuantity(qty) ;
-    itemsMap[&pItem] = { ITEM, qtyItem } ;
-    barcodesMap[&pBarcode] = qtyBarcode ;
-    tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
-    tmpTransactionFile << "A," << pBarcode.getCode() << "," << pQtyItem << "\n";
-    tmpTransactionFile.close() ;
+    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
+    {
+        long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
+        long qtyBarcode = barcodesMap[&pBarcode] + pQtyItem ;
+        
+        totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
+        totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
+        totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
+        totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
+        
+        
+        itemsMap[&pItem] = { ITEM, qtyItem } ;
+        barcodesMap[&pBarcode] = qtyBarcode ;
+        
+        if (this->getState()==CART_STATE_READY_FOR_ITEM)
+        {
+            tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
+            tmpTransactionFile << "A," << pBarcode.getCode() << "," << pQtyItem << "\n";
+            tmpTransactionFile.close() ;
+        }
+    }
     return totalsMap[0] ;
 }
 
 /*
-Totals Cart::addItemByCode(Item& pItem)
-{
-    long qty = itemsMap[&pItem].quantity + 1 ;
-    
-    totalsMap[0].itemsNumber++ ;
-    totalsMap[0].totalAmount = totalsMap[0].totalAmount + pItem.getPrice() ;
-    totalsMap[pItem.getDepartment().getCode()].itemsNumber++ ;
-    totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + pItem.getPrice() ;
-
-    std::cout << "\ndept: " << pItem.getDepartment().getCode() ;
-    //pItem.setQuantity(qty) ;
-    itemsMap[&pItem] = { ITEM, qty } ;
-    return totalsMap[0] ;
-}
+ Totals Cart::addItemByCode(Item& pItem)
+ {
+ long qty = itemsMap[&pItem].quantity + 1 ;
+ 
+ totalsMap[0].itemsNumber++ ;
+ totalsMap[0].totalAmount = totalsMap[0].totalAmount + pItem.getPrice() ;
+ totalsMap[pItem.getDepartment().getCode()].itemsNumber++ ;
+ totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + pItem.getPrice() ;
+ 
+ std::cout << "\ndept: " << pItem.getDepartment().getCode() ;
+ //pItem.setQuantity(qty) ;
+ itemsMap[&pItem] = { ITEM, qty } ;
+ return totalsMap[0] ;
+ }
  */
 
 Totals Cart::removeItemByBarcode( Item& pItem, Barcodes& pBarcode )
 {
-    long qtyItem ; //= itemsMap[&pItem].quantity ;
-    long qtyBarcode ; //= barcodesMap[&pBarcode] ;
-    
-    if ((itemsMap.find(&pItem) == itemsMap.end()))
+    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
-        std::cout << "\nNot found: " << pItem.getDescription() ;
-    }
-    else
-    {
-        std::cout << "\nFound: " << pItem.getDescription() ;
-        qtyItem = itemsMap[&pItem].quantity - 1 ;
-        qtyBarcode = barcodesMap[&pBarcode] - 1 ;
-        totalsMap[0].itemsNumber-- ;
-        totalsMap[0].totalAmount = totalsMap[0].totalAmount - pItem.getPrice() ;
-        totalsMap[pItem.getDepartment().getCode()].itemsNumber-- ;
-        totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount - pItem.getPrice() ;
-        tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
-        tmpTransactionFile << "R," << pBarcode.getCode() << "," << "1" << "\n";
-        tmpTransactionFile.close();
-        if (qtyItem < 1)
+        
+        long qtyItem ; //= itemsMap[&pItem].quantity ;
+        long qtyBarcode ; //= barcodesMap[&pBarcode] ;
+        
+        if ((itemsMap.find(&pItem) == itemsMap.end()))
         {
-            std::cout << "\nErasing item" ;
-            itemsMap.erase(&pItem) ;
-        } else
-        {
-            itemsMap[&pItem] = { ITEM, qtyItem } ;
+            std::cout << "Not found: " << pItem.getDescription() << "\n" ;
         }
+        else
+        {
+            std::cout << "Found: " << pItem.getDescription() << "\n" ;
+            qtyItem = itemsMap[&pItem].quantity - 1 ;
+            qtyBarcode = barcodesMap[&pBarcode] - 1 ;
+            totalsMap[0].itemsNumber-- ;
+            totalsMap[0].totalAmount = totalsMap[0].totalAmount - pItem.getPrice() ;
+            totalsMap[pItem.getDepartment().getCode()].itemsNumber-- ;
+            totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount - pItem.getPrice() ;
 
-        if (qtyBarcode < 1)
-        {
-            barcodesMap.erase(&pBarcode) ;
-        } else
-        {
-            barcodesMap[&pBarcode] = qtyBarcode ;
+            if (qtyItem < 1)
+            {
+                std::cout << "Erasing item\n" ;
+                itemsMap.erase(&pItem) ;
+            } else
+            {
+                itemsMap[&pItem] = { ITEM, qtyItem } ;
+            }
+            
+            if (qtyBarcode < 1)
+            {
+                barcodesMap.erase(&pBarcode) ;
+            } else
+            {
+                barcodesMap[&pBarcode] = qtyBarcode ;
+            }
+            
+            if (this->getState()==CART_STATE_READY_FOR_ITEM)
+            {
+                tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
+                tmpTransactionFile << "R," << pBarcode.getCode() << "," << "1" << "\n";
+                tmpTransactionFile.close();
+            }
         }
     }
-    
     return totalsMap[0] ;
 }
 
@@ -183,7 +202,7 @@ void Cart::printCart()
     std::cout << "State: " << this->getState() << "\n" ;
     std::cout << "Totals start\n" ;
     typedef std::map<unsigned long long, Totals>::iterator configurationRows;
-
+    
     for(configurationRows iterator = totalsMap.begin(); iterator != totalsMap.end(); iterator++) {
         std::cout << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber << "\n" ;
     }
@@ -197,11 +216,11 @@ int Cart::persist( )
     typedef std::map<void*, long>::iterator barcodesRows;
     Barcodes* barcodesRow ;
     long qty = 0 ;
- 
+    
     std::cout << "cartFileName: " << cartFileName << "\n" ;
-
+    
     std::ofstream cartFile( cartFileName );
-
+    
     for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
     {
         barcodesRow = (Barcodes*)iterator->first;

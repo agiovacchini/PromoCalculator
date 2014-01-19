@@ -3,34 +3,40 @@
   <component name="ChangeListManager">
     <list default="true" id="c53156f1-7971-4283-8b65-6fcac891fa91" name="Default" comment="">
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.o" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000003.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000004.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000004.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000005.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000006.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000007.transaction_in_progress" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000008.transaction_in_progress" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000009.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000010.transaction_in_progress" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000011.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000012.transaction_in_progress" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/4295647059.transaction_in_progress" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/4295647068.transaction_in_progress" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/5332420908920982677.transaction_in_progress" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator/PromoCalculator.1" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000005.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000005.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000006.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000006.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000007.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000007.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000010.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000010.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000012.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000012.transaction_in_progress" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000001.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000001.transaction_in_progress" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000002.cart" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000002.cart" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000002.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000002.transaction_in_progress" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000003.cart" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000003.cart" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000003.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator/CARTS/0000000003.transaction_in_progress" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.h" afterPath="$PROJECT_DIR$/PromoCalculator/BaseSystem.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseTypes.h" afterPath="$PROJECT_DIR$/PromoCalculator/BaseTypes.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Cart.h" afterPath="$PROJECT_DIR$/PromoCalculator/Cart.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/PromoCalculator.iml" afterPath="$PROJECT_DIR$/.idea/PromoCalculator.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/config/cucumber.yml" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/config/cucumber.yml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/salesServer/salesServer.rb" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/salesServer/salesServer.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PromoCalculator.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389956038742" ignored="false" />
+    <file path="/Dummy.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1390129840117" ignored="false" />
     <file path="/config.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715301202" ignored="false" />
     <file path="/env.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715334158" ignored="false" />
     <file path="/kStore.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389714005173" ignored="false" />
@@ -40,9 +46,18 @@
     <file path="/cucumber.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715643744" ignored="false" />
     <file path="/kStoreMultiThreadedTester.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389717477122" ignored="false" />
     <file path="/salesServer.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389957490157" ignored="false" />
-    <file path="/salesServerSteps.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389962119397" ignored="false" />
-    <file path="/salesServer.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389856714995" ignored="false" />
+    <file path="/salesServerSteps.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1390131367592" ignored="false" />
+    <file path="/salesServer.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1390131435638" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/functional-tests/kWalletWebServicesTests/features/kStore.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389856679709" ignored="false" />
+    <file path="/Rake.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389964030973" ignored="false" />
+    <file path="/buildForTest.sh" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389965511191" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../workspace/kWallet/functional-tests/buildForTest.sh" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389965511191" ignored="false" />
+    <file path="/a.dummy" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389967626422" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../workspace/kWallet/build-ibm.properties" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968750997" ignored="false" />
+    <file path="/build-ibm.properties" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968750997" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/bin/proguard.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/gen/com/cne/kWallet/R.java" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/gen/com/cne/kWallet/Manifest.java" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +80,7 @@
       <file leaf-file-name="salesServer.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/salesServer/salesServer.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="41" selection-start="73" selection-end="73" vertical-scroll-proportion="0.0">
+            <state line="25" column="45" selection-start="476" selection-end="476" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -74,7 +89,7 @@
       <file leaf-file-name="salesServerSteps.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="23" selection-start="462" selection-end="462" vertical-scroll-proportion="0.0">
+            <state line="26" column="8" selection-start="494" selection-end="513" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -83,7 +98,25 @@
       <file leaf-file-name="salesServer.feature" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="0" selection-start="198" selection-end="198" vertical-scroll-proportion="0.17558528">
+            <state line="9" column="5" selection-start="184" selection-end="184" vertical-scroll-proportion="0.20737328">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Rakefile" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Rakefile">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="1" column="56" selection-start="85" selection-end="85" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cucumber.yml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/config/cucumber.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="7" selection-start="7" selection-end="7" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -107,8 +140,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/functional-tests/kWalletWebServicesTests/features/kStore.feature" />
-        <option value="$PROJECT_DIR$/functional-tests/kWalletWebServicesTests/config/cucumber.yml" />
         <option value="$PROJECT_DIR$/functional-tests/kWalletWebServicesTests/features/support/env.rb" />
         <option value="$PROJECT_DIR$/functional-tests/kWalletWebServicesTests/features/support/config.yml" />
         <option value="$PROJECT_DIR$/functional-tests/common/basicSetup/support/config.yml" />
@@ -118,6 +149,9 @@
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/kStoreMultiThreadedTester.rb" />
         <option value="$PROJECT_DIR$/functional-tests/Gemfile" />
+        <option value="$PROJECT_DIR$/Rakefile.rb" />
+        <option value="$PROJECT_DIR$/Rake.rb" />
+        <option value="$PROJECT_DIR$/Rakefile" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/config/cucumber.yml" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/salesServer/salesServer.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb" />
@@ -126,8 +160,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-59" />
-    <option name="y" value="23" />
+    <option name="y" value="22" />
     <option name="width" value="1280" />
     <option name="height" value="774" />
   </component>
@@ -157,7 +190,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -207,84 +239,6 @@
               <option name="myItemId" value="servicesTest" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="salesServer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PromoCalculator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PromoCalculator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="functional-tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servicesTest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="features" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PromoCalculator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PromoCalculator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="functional-tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servicesTest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="features" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="support" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PromoCalculator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PromoCalculator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="functional-tests" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="servicesTest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="features" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="step_definitions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -310,6 +264,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -452,7 +407,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-59" y="23" width="1280" height="774" extended-state="0" />
+    <frame x="0" y="22" width="1280" height="774" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -460,7 +415,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26661265" sideWeight="0.6706056" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27147487" sideWeight="0.6706056" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -536,13 +491,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/salesServer/salesServer.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="43" column="29" selection-start="1086" selection-end="1086" vertical-scroll-proportion="0.0">
@@ -591,11 +539,6 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/config/cucumber.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="10" selection-start="66" selection-end="66" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="2" column="12" selection-start="34" selection-end="43" vertical-scroll-proportion="0.0" />
@@ -611,23 +554,37 @@
         <state line="400" column="8" selection-start="15659" selection-end="15659" vertical-scroll-proportion="0.33281973" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Rakefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="56" selection-start="85" selection-end="85" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/salesServer/salesServer.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="41" selection-start="73" selection-end="73" vertical-scroll-proportion="0.0">
+        <state line="25" column="45" selection-start="476" selection-end="476" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/config/cucumber.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="7" selection-start="7" selection-end="7" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="23" selection-start="462" selection-end="462" vertical-scroll-proportion="0.0">
+        <state line="26" column="8" selection-start="494" selection-end="513" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="198" selection-end="198" vertical-scroll-proportion="0.17558528">
+        <state line="9" column="5" selection-start="184" selection-end="184" vertical-scroll-proportion="0.20737328">
           <folding />
         </state>
       </provider>

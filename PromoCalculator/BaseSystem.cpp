@@ -29,6 +29,10 @@ static unsigned long nextCartNumber ;
 
 namespace qi = boost::spirit::qi;
 namespace fs = boost::filesystem;
+qi::rule<std::string::const_iterator, std::string()> quoted_string = '"' >> *(qi::char_ - '"') >> '"';
+qi::rule<std::string::const_iterator, std::string()> valid_characters = qi::char_ - '"' - ',';
+qi::rule<std::string::const_iterator, std::string()> item = *(quoted_string | valid_characters );
+qi::rule<std::string::const_iterator, std::vector<std::string>()> csv_parser = item % ',';
 
 using namespace std;
 
@@ -40,7 +44,8 @@ BaseSystem::BaseSystem( string pBasePath )
     std::string value;
     unsigned long long currentTmpCartNumber = 0;
     this->basePath = pBasePath ;
-    
+    Cart* myCart = nullptr;
+
     nextCartNumber = 1 ;
 
     std::ifstream configFile( this->basePath + "PromoCalculator.ini" );
@@ -48,6 +53,25 @@ BaseSystem::BaseSystem( string pBasePath )
         std::cout << "No PromoCalculator.ini file found in " << basePath << " directory.\n" ;
         exit(-1);
     } else {
+        while( std::getline(configFile, line) )
+        {
+            //std::cout << "\n" << line ;
+            std::istringstream is_line(line);
+            std::string key;
+            if( std::getline(is_line, key, '=') )
+            {
+                std::string value;
+                if( std::getline(is_line, value) )
+                    //store_line(key, value);
+                    configurationMap[key] = value ;
+                //std::cout << "\n" << key << " - " << value ;
+            }
+        }
+        
+        configFile.close() ;
+        
+        this->readArchives() ;
+        
         if (!fs::exists(this->basePath + "CARTS"))
         {
             std::cout << "No CARTS subfolder found\n" ;
@@ -61,65 +85,90 @@ BaseSystem::BaseSystem( string pBasePath )
             fs::recursive_directory_iterator endit;
             while(it != endit)
             {
+                char rAction = ' ' ;
+                unsigned long long rCode = 0 ;
+                long rQty = 0 ;
+                Cart* tmpCart = nullptr ;
                 //std::cout << "\nFile: " << it->path().filename() << "\n" ;
                 if (fs::is_regular_file(*it) and it->path().extension() == ".transaction_in_progress")
                 {
                     //ret.push_back(it->path().filename());
                     currentTmpCartNumber = atol(it->path().stem().c_str()) ;
-                    if (currentTmpCartNumber >= nextCartNumber)
-                    {
-                        nextCartNumber = currentTmpCartNumber + 1 ;
-                    }
+                    std::cout << "==================================\n" ;
                     std::cout << "File tmpTrans: " << it->path().filename() << " num: " << currentTmpCartNumber << " next: " << nextCartNumber << "\n";
                     
-                    newCart( GEN_CART_LOAD ) ;
+                    newCart( CART_TMPFILE_LOADING ) ;
                     
+                    typename std::map<unsigned long long, Cart>::iterator itCarts = cartsMap.find( currentTmpCartNumber );
+                    
+                    cout << "Dovrei caricare carrello" << currentTmpCartNumber << "\n" ;
+                    if (itCarts != cartsMap.end()) {
+                        myCart = &(itCarts->second) ;
+                        cout << "Carico carrello\n" ;
+                    }
+                    std::cout << "Cart nr: " << myCart->getNumber() << "\n" ;
                     std::ifstream tmpTransactonFileToLoad( this->basePath + "CARTS/" + it->path().filename().c_str() );
                     
                     while( std::getline(tmpTransactonFileToLoad, line) )
                     {
                         //std::cout << "\n" << line ;
                         std::istringstream is_line(line);
-
-                        if( std::getline(is_line, key, ',') )
+                        std::string::const_iterator s_begin = line.begin();
+                        std::string::const_iterator s_end = line.end();
+                        std::vector<std::string> result;
+                        
+                        bool r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
+                        assert(r == true);
+                        assert(s_begin == s_end);
+                        int column = 0 ;
+                        for (auto i : result)
                         {
-                            
-                            if( std::getline(is_line, value) )
+                            switch (column)
                             {
-                                //store_line(key, value);
-                                std::cout << key << " - " << value << "\n" ;
-                                
-                                //mettere l'inserimento delle righe
+                                case 0:
+                                    std::cout << "Action: " << i << "\n" ;
+                                    rAction = i[0] ;
+                                    break;
+                                case 1:
+                                    std::cout << "Barcode: " << i << "\n"  ;
+                                    rCode = atol(i.c_str()) ;
+                                    break;
+                                case 2:
+                                    std::cout << "Qty: " << i  << "\n" ;
+                                    rQty = atol(i.c_str()) ;
+                                    break;
+                                default:
+                                    break ;
                             }
+                            column++ ;
+                        }
+                        switch (rAction)
+                        {
+                            case 'A':
+                                myCart->addItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode], rQty) ;
+                                break;
+                            case 'R':
+                                myCart->removeItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode]) ;
+                                break;
+                            default:
+                                std::cout << "Row action not recognized" ;
+                                break;
                         }
                     }
+                    myCart->setState(CART_STATE_READY_FOR_ITEM) ;
+                    myCart->printCart() ;
                     
                     tmpTransactonFileToLoad.close();
+                    if (currentTmpCartNumber >= nextCartNumber)
+                    {
+                        nextCartNumber = currentTmpCartNumber + 1 ;
+                    }
                 }
                 ++it;
             }
         }
         std::cout << "System initialized.\n" ;
     }
-    
-    while( std::getline(configFile, line) )
-    {
-        //std::cout << "\n" << line ;
-        std::istringstream is_line(line);
-        std::string key;
-        if( std::getline(is_line, key, '=') )
-        {
-            std::string value;
-            if( std::getline(is_line, value) )
-                //store_line(key, value);
-                configurationMap[key] = value ;
-            //std::cout << "\n" << key << " - " << value ;
-        }
-    }
-
-    configFile.close() ;
-    
-    this->readArchives() ;
     
     try
     {
@@ -178,10 +227,6 @@ void BaseSystem::readDepartmentArchive( string pFileName )
     std::string line;
     while( std::getline(archiveFile, line) )
     {
-        qi::rule<std::string::const_iterator, std::string()> quoted_string = '"' >> *(qi::char_ - '"') >> '"';
-        qi::rule<std::string::const_iterator, std::string()> valid_characters = qi::char_ - '"' - ',';
-        qi::rule<std::string::const_iterator, std::string()> item = *(quoted_string | valid_characters );
-        qi::rule<std::string::const_iterator, std::vector<std::string>()> csv_parser = item % ',';
         
         // Boost Spirit Qi
         
@@ -242,10 +287,6 @@ void BaseSystem::readItemArchive( string pFileName )
     std::string line;
     while( std::getline(archiveFile, line) )
     {
-        qi::rule<std::string::const_iterator, std::string()> quoted_string = '"' >> *(qi::char_ - '"') >> '"';
-        qi::rule<std::string::const_iterator, std::string()> valid_characters = qi::char_ - '"' - ',';
-        qi::rule<std::string::const_iterator, std::string()> item = *(quoted_string | valid_characters );
-        qi::rule<std::string::const_iterator, std::vector<std::string>()> csv_parser = item % ',';
         
         // Boost Spirit Qi
         
@@ -311,11 +352,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     std::string line;
     while( std::getline(archiveFile, line) )
     {
-        qi::rule<std::string::const_iterator, std::string()> quoted_string = '"' >> *(qi::char_ - '"') >> '"';
-        qi::rule<std::string::const_iterator, std::string()> valid_characters = qi::char_ - '"' - ',';
-        qi::rule<std::string::const_iterator, std::string()> item = *(quoted_string | valid_characters );
-        qi::rule<std::string::const_iterator, std::vector<std::string>()> csv_parser = item % ',';
-        
+ 
         // Boost Spirit Qi
         
         std::string::const_iterator s_begin = line.begin();
@@ -414,7 +451,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 if (action.compare("save")==0)
                 {
                     myCart->persist() ;
-                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + " saved\n") ;
+                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"action\":\"save\",\"status\":\"ok\"}\n") ;
                 }
                 
                 if (action.compare("add")==0)
@@ -424,7 +461,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     
                     myCart->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
 
-                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"barcode\":" + std::to_string( barcode ) + "}\n") ;
+                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" + std::to_string( barcode ) + "}\n") ;
 
                     myCart->printCart() ;
                 }
@@ -434,7 +471,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     barcode = pt2.get<std::uint64_t> ("barcode");
                     myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
                     
-                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + ", removed barcode " + std::to_string( barcode ) + "\n") ;
+                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" + std::to_string( barcode ) + "}\n") ;
                     
                     myCart->printCart() ;
                 }
@@ -442,13 +479,14 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 if (action.compare("print")==0)
                 {
                     myCart->printCart() ;
-                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + " printed\n") ;
+                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"action\":\"print\",\"status\":\"ok\"}\n") ;
                 }
                 
                 if (action.compare("close")==0)
                 {
                     myCart->close() ;
-                    sendRespMsg(pSock, "Cart #" + std::to_string( cartId ) + " closed\n") ;
+                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"action\":\"close\",\"status\":\"ok\"}\n") ;
+
                 }
             }
             else

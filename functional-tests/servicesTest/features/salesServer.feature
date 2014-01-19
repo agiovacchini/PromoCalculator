@@ -3,8 +3,11 @@ Feature: Test kStore Servlet
   Scenario: Simple shopping
     Given request to initialize a new session
 
-    Given request to open a new cart
-    Then salesServer should return RC "0" and a cart id
+    #Given request to open a new cart
+
+    Given I use existing cart "2"
+
+    #Then salesServer should return RC "0" and a cart id
 
     Given request to add "1" quantity of item "8033604138826" to cart
 

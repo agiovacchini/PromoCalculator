@@ -24,6 +24,12 @@ Given(/^request to initialize a new session$/) do
   sleep sleepTime
 end
 
+Given(/^I use existing cart "(.*?)"$/) do |pCartId|
+  cartId = pCartId
+  puts "cartId: #{cartId}"
+  sleep sleepTime
+end
+
 Given(/^request to open a new cart$/) do
   cartId = 0
   result = JSON.parse( salesServer.OpenCart )

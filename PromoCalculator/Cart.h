@@ -42,6 +42,7 @@ public:
     Totals removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
     //Totals removeItem(Item& pItem) ;
     unsigned int getState() const ;
+    void setState( unsigned int pState ) ;
     void initialize( string pBasePath, unsigned long pNumber ) ;
     string getBasePath() const ;
     void printConfiguration() ;
