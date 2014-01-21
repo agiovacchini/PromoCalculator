@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'httparty'
 require 'socket'
+require 'json'
 
 class SalesServer
 
@@ -35,31 +36,31 @@ class SalesServer
   def OpenCart( )
     msg = "{\"action\":\"init\"}\n"
     sendMsg( msg )
-    return @msgText
+    return JSON.parse(@msgText)
   end
 
   def PrintCart( pCart )
     msg = "{\"action\":\"print\",\"cartId\":#{pCart}}\n"
     sendMsg( msg )
-    return @msgText
+    return JSON.parse(@msgText)
   end
 
   def PersistCart( pCart )
     msg = "{\"action\":\"save\",\"cartId\":#{pCart}}\n"
     sendMsg( msg )
-    return @msgText
+    return JSON.parse(@msgText)
   end
 
   def AddItem( pQty, pBarcode, pCart )
     msg = "{\"action\":\"add\",\"barcode\":#{pBarcode},\"cartId\":#{pCart},\"qty\":#{pQty}}\n"
     sendMsg( msg )
-    return @msgText
+    return JSON.parse(@msgText)
   end
 
   def RemoveItem( pBarcode, pCart )
     msg = "{\"action\":\"remove\",\"barcode\":#{pBarcode},\"cartId\":#{pCart}}\n"
     sendMsg( msg )
-    return @msgText
+    return JSON.parse(@msgText)
   end
 
   def CloseSocket(  )

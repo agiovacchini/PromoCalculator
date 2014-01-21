@@ -4,13 +4,17 @@ require 'json'
 require 'net/ssh'
 require '../servicesTest/salesServer/salesServer.rb'
 
-retCode = 0
+respCartId = 0
+respReqId = 0
+respRc = 0
+
 cartId = 0
+
 
 puts "Inizializzo sales server su: #{SALES_IP}:{SALES_PORT}"
 salesServer = SalesServer.new()
 
-sleepTime = 0.2
+sleepTime = 0
 
 Given(/^I wait forever$/) do
   while 0!=1
@@ -32,41 +36,64 @@ end
 
 Given(/^request to open a new cart$/) do
   cartId = 0
-  result = JSON.parse( salesServer.OpenCart )
-  cartId = result["cartId"]
-  reqId = result["reqId"]
-  puts "cartId: #{cartId}, reqId: #{reqId}"
+  result =  salesServer.OpenCart
+  respCartId = result["cartId"]
+  respReqId = result["reqId"]
+  cartId = respCartId
+  rc = result["rc"]
+  puts "cartId: #{cartId}, reqId: #{respReqId}, rc: #{rc}"
   sleep sleepTime
 end
 
-Then(/^salesServer should return RC "(.*?)" and a cart id$/) do |arg1|
-  cartId.should > 0
+Then(/^salesServer should return RC (\d+) and a cart id$/) do |expectedRc|
+  respCartId.should > 0
+  respRc.should == expectedRc.to_i
+end
+
+Then(/^salesServer should return RC (\d+) and my cart id$/) do |expectedRc|
+  respCartId.should == cartId.to_i
+  respRc.should == expectedRc.to_i
 end
 
 Given(/^request to add "(.*?)" quantity of item "(.*?)" to cart$/) do |arg1, arg2|
-  retCode = salesServer.AddItem arg1, arg2, cartId
-  puts retCode
+  result = salesServer.AddItem arg1, arg2, cartId
+  respCartId = result["cartId"]
+  respReqId = result["reqId"]
+  respRc = result["rc"]
+  puts respRc
   sleep sleepTime
 end
 
 Given(/^request to remove item "(.*?)" from cart$/) do |arg1|
-  retCode = salesServer.RemoveItem arg1, cartId
-  puts retCode
+  result = salesServer.RemoveItem arg1, cartId
+  respCartId = result["cartId"]
+  respReqId = result["reqId"]
+  respRc = result["rc"]
+  puts respRc
   sleep sleepTime
 end
 
 Given(/^request to print cart$/) do
-  retCode = salesServer.PrintCart cartId
-  puts retCode
+  result = salesServer.PrintCart cartId
+  respCartId = result["cartId"]
+  respReqId = result["reqId"]
+  respRc = result["rc"]
+  puts respRc
 end
 
 Given(/^request to persist cart$/) do
-  retCode = salesServer.PersistCart cartId
-  puts retCode
+  result = salesServer.PersistCart cartId
+  respCartId = result["cartId"]
+  respReqId = result["reqId"]
+  respRc = result["rc"]
+  puts respRc
 end
 
 Given(/^request to close connection$/) do
-   retCode = salesServer.CloseSocket
-   puts retCode
+  result = salesServer.CloseSocket
+  respCartId = result["cartId"]
+  respReqId = result["reqId"]
+  respRc = result["rc"]
+  puts respRc
 end
 
