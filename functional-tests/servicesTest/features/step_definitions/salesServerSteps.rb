@@ -34,7 +34,8 @@ Given(/^request to open a new cart$/) do
   cartId = 0
   result = JSON.parse( salesServer.OpenCart )
   cartId = result["cartId"]
-  puts "cartId: #{cartId}"
+  reqId = result["reqId"]
+  puts "cartId: #{cartId}, reqId: #{reqId}"
   sleep sleepTime
 end
 
