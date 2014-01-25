@@ -8,17 +8,18 @@
 
 #ifndef __PromoCalculator__BaseSystem__
 #define __PromoCalculator__BaseSystem__
-
+	
+#include "BaseTypes.h"
+#include <boost/asio.hpp>
 #include <cstdlib>
-#include <thread>
+//#include <thread>
 #include <iostream>
 #include <string>
 #include <sstream>
 
-#include <boost/asio.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/bind.hpp>
-#include <boost/smart_ptr.hpp>
+//#include <boost/bind.hpp>
+//#include <boost/smart_ptr.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
@@ -26,7 +27,7 @@
 #include "Item.h"
 #include "Barcodes.h"
 #include "Cart.h"
-#include "BaseTypes.h"
+
 
 #define BOOST_ALL_DYN_LINK
 using boost::asio::ip::tcp;

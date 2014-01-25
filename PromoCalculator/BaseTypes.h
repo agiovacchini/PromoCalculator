@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
 
+#include <winsock2.h>
 #ifndef PromoCalculator_BaseTypes_h
 #define PromoCalculator_BaseTypes_h
 

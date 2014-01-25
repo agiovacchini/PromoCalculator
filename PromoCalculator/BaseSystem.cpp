@@ -93,7 +93,7 @@ BaseSystem::BaseSystem( string pBasePath )
                 if (fs::is_regular_file(*it) and it->path().extension() == ".transaction_in_progress")
                 {
                     //ret.push_back(it->path().filename());
-                    currentTmpCartNumber = atol(it->path().stem().c_str()) ;
+                    currentTmpCartNumber = std::strtoull(it->path().stem().string().c_str(),nullptr,10) ;
                     std::cout << "==================================\n" ;
                     std::cout << "File tmpTrans: " << it->path().filename() << " num: " << currentTmpCartNumber << " next: " << nextCartNumber << "\n";
                     
@@ -107,7 +107,7 @@ BaseSystem::BaseSystem( string pBasePath )
                         cout << "Carico carrello\n" ;
                     }
                     std::cout << "Cart nr: " << myCart->getNumber() << "\n" ;
-                    std::ifstream tmpTransactonFileToLoad( this->basePath + "CARTS/" + it->path().filename().c_str() );
+                    std::ifstream tmpTransactonFileToLoad( this->basePath + "CARTS/" + it->path().filename().string() );
                     
                     while( std::getline(tmpTransactonFileToLoad, line) )
                     {
@@ -131,11 +131,11 @@ BaseSystem::BaseSystem( string pBasePath )
                                     break;
                                 case 1:
                                     std::cout << "Barcode: " << i << "\n"  ;
-                                    rCode = atol(i.c_str()) ;
+                                    rCode = std::strtoull(i.c_str(),nullptr,10) ;
                                     break;
                                 case 2:
                                     std::cout << "Qty: " << i  << "\n" ;
-                                    rQty = atol(i.c_str()) ;
+                                    rQty = std::strtoull(i.c_str(),nullptr,10) ;
                                     break;
                                 default:
                                     break ;
@@ -245,7 +245,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             switch (column)
             {
                 case 1:
-                    tempDepartment.setCode(atol(i.c_str())) ;
+                    tempDepartment.setCode(std::strtoull(i.c_str(),nullptr,10)) ;
                     break;
                 case 4:
                     tempDepartment.setDescription(i) ;
@@ -305,16 +305,16 @@ void BaseSystem::readItemArchive( string pFileName )
             switch (column)
             {
                 case 1:
-                    tempItm.setCode(atol(i.c_str())) ;
+                    tempItm.setCode(std::strtoull(i.c_str(),nullptr,10)) ;
                     break;
                 case 2:
                     tempItm.setDescription(i) ;
                     break;
                 case 16:
-                    tempItm.setDepartment(deparmentsMap[atol(i.c_str())]);
+                    tempItm.setDepartment(deparmentsMap[std::strtoull(i.c_str(),nullptr,10)]);
                     break;
                 case 26:
-                    tempItm.setPrice(atol(i.c_str())) ;
+                    tempItm.setPrice(std::strtoull(i.c_str(),nullptr,10)) ;
                     break;
                 default:
                     break ;
@@ -370,10 +370,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             switch (column)
             {
                 case 1:
-                    tempBarcode.setCode(atol(i.c_str())) ;
+                    tempBarcode.setCode(std::strtoull(i.c_str(),nullptr,10)) ;
                     break;
                 case 2:
-                    tempBarcode.setItemCode(atol(i.c_str())) ;
+                    tempBarcode.setItemCode(std::strtoull(i.c_str(),nullptr,10)) ;
                     break;
             }
             column++ ;

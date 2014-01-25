@@ -1,6 +1,7 @@
-CXX		=	g++
-CXXFLAGS	=	-g -std=c++11 -Wall -L/usr/local/lib -I/usr/local/include 
-NLIB		=	-lboost_system -lboost_filesystem -lboost_iostreams -lboost_thread -lboost_iostreams
+CXX		=	x86_64-w64-mingw32-gcc-4.8.2.exe
+CXXFLAGS	=	-g -w -std=c++11 -Wall -L/lib -I/usr/local/include 
+NLIB		=	-lboost_system -lboost_filesystem -lboost_iostreams -lboost_thread
+#NLIBW		=	/lib/libboost_thread-mt.dll.a /lib/libboost_iostreams-mt.dll.a /lib/libboost_filesystem-mt.dll.a /lib/libboost_system-mt.dll.a
 
 BIN=promoCalculator
 
@@ -8,7 +9,7 @@ SRC=$(wildcard *.cpp)
 OBJ=$(SRC:%.cpp=%.o)
 
 all: $(OBJ)
-	$(CXX) -o $(BIN) $(NLIB) $^
+	$(CXX) -o $(BIN) $(NLIBW) $^
 
 %.o: %.c
 	$(CXX) $@ -c $<

@@ -1,0 +1,20 @@
+CXX		=	g++
+CXXFLAGS	= -g -w -std=c++11 -Wall -L/lib -I/usr/local/include 
+NLIB		= -lboost_system-mt.a -lboost_filesystem-mt -lboost_iostreams-mt -lboost_thread-mt -lboost_iostreams-mt
+
+
+BIN=promoCalculator
+
+SRC=$(wildcard *.cpp)
+OBJ=$(SRC:%.cpp=%.o)
+
+all: $(OBJ)
+	$(CXX) -o $(BIN) $(NLIB) $^
+
+%.o: %.c
+	$(CXX) $@ -c $<
+
+clean:
+	rm -f *.o
+	rm $(BIN)
+
