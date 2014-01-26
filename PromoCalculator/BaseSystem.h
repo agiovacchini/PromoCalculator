@@ -38,6 +38,7 @@ using boost::property_tree::write_json;
 
 class BaseSystem {
     string basePath ;
+    unsigned long nodeId ;
 public:
     std::map <string, string> configurationMap ;
     std::map <unsigned long long, Department> deparmentsMap ;
@@ -50,17 +51,20 @@ public:
     string getBasePath() const ;
     void setBasePath( string pBasePath ) ;
     
+    void loadConfiguration() ;
     void printConfiguration() ;
     void readDepartmentArchive( string pFileName ) ;
     void readItemArchive( string pFileName ) ;
     void readBarcodesArchive( string pFileName ) ;
     void readArchives( ) ;
+    void loadCartsInProgress( ) ;
     void salesServer(boost::asio::io_service& io_service, short port) ;
     void salesSession(socket_ptr sock) ;
     void sendRespMsg( socket_ptr pSock, string pMsg ) ;
     unsigned long newCart( unsigned int pAction ) ;
     Cart* getCart( unsigned long pCartNumber ) ;
     bool persistCarts( ) ;
+    int checkBarcodeType( unsigned long long  pBarcode ) ;
     
     Item getItemByIntCode( unsigned long long pIntcode ) ;
 };

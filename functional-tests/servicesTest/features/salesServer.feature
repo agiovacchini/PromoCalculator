@@ -18,8 +18,8 @@ Feature: Test kStore Servlet
     Given request to add "1" quantity of item "80642862" to cart
     Then salesServer should return RC 0 and my cart id
 
-    #Given request to add "1" quantity of item "2071775003426" to cart
-    #Then salesServer should return RC 0 and my cart id
+    Given request to add "1" quantity of item "2071775003426" to cart
+    Then salesServer should return RC 0 and my cart id
 
     Given request to add "5" quantity of item "8710163214634" to cart
     Then salesServer should return RC 0 and my cart id
