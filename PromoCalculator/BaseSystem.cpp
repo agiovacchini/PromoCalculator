@@ -58,7 +58,7 @@ BaseSystem::BaseSystem( string pBasePath )
     {
         std::cout << "Server starting...\n" ;
         using namespace std;
-        salesServer(io_service, 50000);
+        salesServer(io_service, atol(configurationMap["NetworkPort"].c_str()));
     }
     catch (std::exception& e)
     {
@@ -82,6 +82,7 @@ void BaseSystem::loadConfiguration()
     std::cout << "Config load start\n" ;
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini(this->basePath + "PromoCalculator.ini", pt);
+    configurationMap["NetworkPort"] = pt.get<std::string>("Network.Port") ;
     configurationMap["LoyCardPrefix"] = pt.get<std::string>("Loy.CardPrefix") ;
     configurationMap["BarcodesType01"] = pt.get<std::string>("Barcodes.Type") ;
     //configurationMap["NodeId"] = pt.get<std::string>("Node.Id") ;
@@ -276,11 +277,6 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             switch (column)
             {
                 case 1:
-					tmp = std::string(i) ;
-                    tempBarcode.setCode(atoll(tmp.c_str())) ;
-                    //std::cout << i.c_str() << "\n";
-                    break;
-                case 2:
 					tmp = std::string(i);
                     bcdWrk = atoll(tmp.c_str()) ;
                     bCodeType = checkBarcodeType( bcdWrk ) ;
@@ -292,13 +288,6 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 							tempStringStream.clear() ;
 							tempStringStream << bcdWrk ;
 							tmp = tempStringStream.str().substr(0,7) + "000000" ;
-                            //tmp = std::to_string(bcdWrk).c_str() ;
-                            /*tmp[7] = '0' ;
-                            tmp[8] = '0' ;
-                            tmp[9] = '0' ;
-                            tmp[10] = '0' ;
-                            tmp[11] = '0' ;
-                            tmp[12] = '0' ;*/
                             tmpBcd = atol(tmp.c_str()) ;
                         } else {
                             tmpBcd = bcdWrk ;
@@ -306,14 +295,18 @@ void BaseSystem::readBarcodesArchive( string pFileName )
                         //std::cout << "(" << tmpBcd << ") - " ;
                         tempBarcode.setCode( tmpBcd ) ;
                     }
+                    //std::cout << i.c_str() << "\n";
+                    break;
+                case 2:
+                    tempBarcode.setItemCode(atoll(i.c_str())) ;
                     break;
             }
             column++ ;
         }
-        //std::cout << tempBarcode.toStr() << " type: " << bCodeType << "\n" ;
+        //std::cout << "Barcode.getcode: " << tempBarcode.getCode() << " type: " << bCodeType << "\n" ;
         barcodesMap[tempBarcode.getCode()] = tempBarcode ;
-        
-		//std::cout << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
+        //barcodesMap.emplace( std::piecewise_construct, std::make_tuple(tempBarcode.getCode()), std::make_tuple(tempBarcode) ) ;
+		//std::cout << "toStr: " << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
         
     }
     std::cout << "Finished loading file " + pFileName + "\n" ;
@@ -422,10 +415,12 @@ void BaseSystem::loadCartsInProgress()
                         }
                         column++ ;
                     }
+  
+                    std::cout << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() << "\n";
                     
                     switch (rAction)
                     {
-						std::cout << "Debug recupero riga carrello, barcode: " << barcodesMap[rCode].toStr() << "\n";
+
                         case 'A':
                             myCart->addItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode], rQty) ;
                             break;

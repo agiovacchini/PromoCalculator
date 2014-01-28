@@ -17,6 +17,7 @@
 #include <fstream>
 //#include <pcap.h>
 #include "boost/format.hpp"
+#include "boost/date_time/posix_time/posix_time.hpp"
 //static string basePath = "./" ;
 
 using namespace std;
@@ -86,16 +87,8 @@ unsigned long Cart::getNextRequestId()
 
 void Cart::writeTransactionRow( string row )
 {
-    //timeval curTime;
-    //gettimeofday(&curTime, NULL);
-    //int milli = curTime.tv_usec / 1000;
-    char timeStamp[84] = "" ;
-    
-    //std::strftime( timeStamp, 100, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec) ) ;
-    
     tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
-    //tmpTransactionFile << timeStamp << "." << std::to_string(milli) << "," << row << "\n";
-	tmpTransactionFile << timeStamp << "," << row << "\n";
+	tmpTransactionFile << boost::posix_time::to_iso_string(boost::posix_time::microsec_clock::universal_time()) << "," << row << "\n";
     tmpTransactionFile.close() ;
 }
 
