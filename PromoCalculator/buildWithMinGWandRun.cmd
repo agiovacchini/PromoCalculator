@@ -17,4 +17,4 @@ goto fine
 echo ====================
 echo   Build ok, eseguo
 echo ====================
-PromoCalculator.exe d:\Listati\Siti\PromoCalculator\PromoCalculator.deploy\
+rem PromoCalculator.exe d:\Listati\Siti\PromoCalculator\PromoCalculator.deploy\

@@ -5,14 +5,36 @@
 //  Created by Andrea Giovacchini on 05/01/14.
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
+
+#ifndef PromoCalculator_BaseTypes_h
+
 #if defined _WIN32
 	#define WIN32_LEAN_AND_MEAN
 	#include <winsock2.h>
+#include <winbase.h>
+#include <aclapi.h>
+#include <sddl.h>
+	/*typedef struct _TRUSTEE {
+	  PTRUSTEE                   pMultipleTrustee;
+	  MULTIPLE_TRUSTEE_OPERATION MultipleTrusteeOperation;
+	  TRUSTEE_FORM               TrusteeForm;
+	  TRUSTEE_TYPE               TrusteeType;
+	  LPTSTR                     ptstrName;
+	} TRUSTEE, *PTRUSTEE;
+
+	typedef struct _EXPLICIT_ACCESS {
+	  DWORD       grfAccessPermissions;
+	  ACCESS_MODE grfAccessMode;
+	  DWORD       grfInheritance;
+	  TRUSTEE     Trustee;
+	} EXPLICIT_ACCESS, *PEXPLICIT_ACCESS;*/
+
 #endif 
+
 
 #include <sstream>
 
-#ifndef PromoCalculator_BaseTypes_h
+
 #define PromoCalculator_BaseTypes_h
 
 struct Totals {
