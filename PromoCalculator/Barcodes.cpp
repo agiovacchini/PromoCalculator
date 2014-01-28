@@ -25,10 +25,10 @@ unsigned long long int Barcodes::getItemCode() const {
 }
 
 string Barcodes::toStr() const {
-    string row = "" ;
+    std::stringstream row ;
     
-    row = std::to_string(this->code)
-    + ", " + std::to_string(this->itemCode) ;
+    row << this->code
+    << ", " << this->itemCode ;
     
-    return row ;
+    return row.str() ;
 }

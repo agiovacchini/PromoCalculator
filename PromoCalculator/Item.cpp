@@ -49,13 +49,14 @@ long Item::getQuantity() const {
     return this->quantity ;
 }
 
-string Item::toStr() const {
-    string row = "" ;
-    
-    row = std::to_string(this->code)
-    + ", " + this->description
-    + ", " + std::to_string(this->price) ;
-    + ", " + std::to_string(this->department->getCode()) ;
-    
-    return row ;
+string Item::toStr() {
+	std::stringstream tempStringStream;
+	tempStringStream.str(std::string());
+	tempStringStream.clear();
+	tempStringStream << this->code
+		<< ", " << this->description
+		<< ", " << this->price
+		<< ", " << this->department->getCode() ;
+
+	return tempStringStream.str();
 }

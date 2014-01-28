@@ -14,6 +14,7 @@ using namespace std;
 #define __PromoCalculator__Item__
 
 #include "Department.h"
+#include <sstream>
 
 
 class Item {
@@ -23,7 +24,7 @@ class Item {
     string description ;
     long quantity ;
     Department *department ;
-    
+
 public:
     
     void setCode( unsigned long long int pCode ) ;
@@ -48,7 +49,7 @@ public:
     
     long getQuantity() const ;
     
-    string toStr() const ;
+    string toStr() ;
     
     //Per la mappa, le funzioni che chiamano devono avere il modificatore const per attestare che non
     //hanno effetti collaterali

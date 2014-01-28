@@ -14,10 +14,14 @@
 #include <chrono>
 #include <ctime>
 #include <locale>
-#include <sys/time.h>
+#include <fstream>
+//#include <pcap.h>
 #include "boost/format.hpp"
-
 //static string basePath = "./" ;
+
+using namespace std;
+std::ofstream tmpTransactionFile;
+std::stringstream tempStringStream;
 
 Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
 {
@@ -82,15 +86,16 @@ unsigned long Cart::getNextRequestId()
 
 void Cart::writeTransactionRow( string row )
 {
-    timeval curTime;
-    gettimeofday(&curTime, NULL);
-    int milli = curTime.tv_usec / 1000;
+    //timeval curTime;
+    //gettimeofday(&curTime, NULL);
+    //int milli = curTime.tv_usec / 1000;
     char timeStamp[84] = "" ;
     
-    std::strftime( timeStamp, 100, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec) ) ;
+    //std::strftime( timeStamp, 100, "%Y-%m-%d %H:%M:%S", localtime(&curTime.tv_sec) ) ;
     
     tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
-    tmpTransactionFile << timeStamp << "." << std::to_string(milli) << "," << row << "\n";
+    //tmpTransactionFile << timeStamp << "." << std::to_string(milli) << "," << row << "\n";
+	tmpTransactionFile << timeStamp << "," << row << "\n";
     tmpTransactionFile.close() ;
 }
 
@@ -116,10 +121,18 @@ int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyI
         
         itemsMap[&pItem] = { ITEM, qtyItem } ;
         barcodesMap[&pBarcode] = qtyBarcode ;
-        std::cout << "Stato carrello: " << std::to_string(this->getState()) ;
+		
+		tempStringStream.str(std::string());
+		tempStringStream.clear();
+		tempStringStream << this->getState();
+
+		std::cout << "Stato carrello: " << tempStringStream.str() ;
         if (this->getState()==CART_STATE_READY_FOR_ITEM)
         {
-            this->writeTransactionRow( "A," + std::to_string( pBarcode.getCode() ) + "," + std::to_string( pQtyItem ) ) ;
+			tempStringStream.str(std::string());
+			tempStringStream.clear();
+			tempStringStream << "A," << pBarcode.getCode() << "," << pQtyItem ;
+			this->writeTransactionRow(tempStringStream.str() );
         }
     }
     return RC_OK ;
@@ -167,7 +180,10 @@ int Cart::removeItemByBarcode( Item& pItem, Barcodes& pBarcode )
             
             if (this->getState()==CART_STATE_READY_FOR_ITEM)
             {
-                this->writeTransactionRow( "R," + std::to_string( pBarcode.getCode() ) + "," + "1" ) ;
+				tempStringStream.str(std::string());
+				tempStringStream.clear();
+				tempStringStream << "R," << pBarcode.getCode() << "," << "1" ;
+				this->writeTransactionRow(tempStringStream.str() );
             }
         }
     }
@@ -220,7 +236,7 @@ int Cart::persist( )
     
     std::cout << "cartFileName: " << cartFileName << "\n" ;
     
-    std::ofstream cartFile( cartFileName );
+    std::ofstream cartFile( cartFileName.c_str() );
     
     for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
     {

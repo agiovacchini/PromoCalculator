@@ -8,6 +8,19 @@
 
 #include "Department.h"
 
+
+Department::Department()
+{
+	this->code = 0;
+	this->description = "";
+}
+
+Department::Department(unsigned long long int pCode, string pDescription)
+{
+	this->code = pCode;
+	this->description = pDescription;
+}
+
 void Department::setCode( unsigned long long int pCode ) {
     this->code = pCode ;
 }
@@ -24,8 +37,13 @@ string Department::getDescription() const {
     return this->description ;
 }
 
-string Department::toStr() const {
-    return std::to_string(this->code)
-    + ", " + this->description
-    ;
+string Department::toStr() {
+	std::stringstream tempStringStream;
+
+	tempStringStream.str(std::string());
+	tempStringStream.clear();
+	tempStringStream << this->code
+		<< ", " << this->description ;
+
+	return tempStringStream.str();
 }

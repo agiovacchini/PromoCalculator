@@ -8,7 +8,7 @@
 
 #ifndef __PromoCalculator__BaseSystem__
 #define __PromoCalculator__BaseSystem__
-	
+
 #include "BaseTypes.h"
 #include <boost/asio.hpp>
 #include <cstdlib>
@@ -46,6 +46,7 @@ public:
     std::map <unsigned long long, Barcodes> barcodesMap ;
     std::map <unsigned long long, Cart> cartsMap ;
     typedef boost::shared_ptr<tcp::socket> socket_ptr;
+	std::map<unsigned long long, Cart>::iterator mainIterator ;
 
     BaseSystem( string pBasePath ) ;
     string getBasePath() const ;

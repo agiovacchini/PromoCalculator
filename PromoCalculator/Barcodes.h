@@ -9,6 +9,7 @@
 #ifndef __PromoCalculator__Barcodes__
 #define __PromoCalculator__Barcodes__
 
+#include "BaseTypes.h"
 #include <iostream>
 #include <string>
 using namespace std;

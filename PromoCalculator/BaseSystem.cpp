@@ -6,12 +6,14 @@
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
 
+#include "BaseTypes.h"
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <regex>
+#include <boost/regex.hpp>
 #include <boost/tokenizer.hpp>
 
 #include <boost/spirit/include/qi.hpp>
@@ -22,7 +24,6 @@
 
 
 #include "BaseSystem.h"
-#include "BaseTypes.h"
 
 const int max_length = 256;
 int bCodeType = 0 ;
@@ -143,7 +144,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             switch (column)
             {
                 case 1:
-                    tempDepartment.setCode(std::strtoull(i.c_str(),nullptr,10)) ;
+                    tempDepartment.setCode(strtoull(i.c_str(),nullptr,10)) ;
                     break;
                 case 4:
                     tempDepartment.setDescription(i) ;
@@ -173,13 +174,14 @@ void BaseSystem::readItemArchive( string pFileName )
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
     string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
-    
+	string tmp = "" ;
+
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
         std::cout << "File " + archiveFileName + " not found\n" ;
         exit(-1);
     } else {
-        std::cout << "File " + archiveFileName + " loaded\n" ;
+        std::cout << "File " + archiveFileName + " found\n" ;
     }
     
     std::string line;
@@ -203,16 +205,17 @@ void BaseSystem::readItemArchive( string pFileName )
             switch (column)
             {
                 case 1:
-                    tempItm.setCode(std::strtoull(i.c_str(),nullptr,10)) ;
+					tmp = std::string(i);
+					tempItm.setCode( atoll(tmp.c_str()) );
                     break;
                 case 2:
                     tempItm.setDescription(i) ;
                     break;
                 case 16:
-                    tempItm.setDepartment(deparmentsMap[std::strtoull(i.c_str(),nullptr,10)]);
+                    tempItm.setDepartment(deparmentsMap[strtoull(i.c_str(),nullptr,10)]);
                     break;
                 case 26:
-                    tempItm.setPrice(std::strtoull(i.c_str(),nullptr,10)) ;
+                    tempItm.setPrice(strtoull(i.c_str(),nullptr,10)) ;
                     break;
                 default:
                     break ;
@@ -238,7 +241,9 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
     string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
-    
+	string tmp = "";
+	std::stringstream tempStringStream ;
+	
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
         std::cout << "File " + archiveFileName + " not found\n" ;
@@ -261,8 +266,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
         assert(r == true);
         assert(s_begin == s_end);
         int column = 0 ;
-        string tmp ;
-        
+
         
         unsigned long long tmpBcd = 0, bcdWrk = 0;
         Barcodes tempBarcode ;
@@ -272,17 +276,22 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             switch (column)
             {
                 case 1:
-                    tempBarcode.setCode(std::strtoull(i.c_str(),nullptr,10)) ;
-                    std::cout << std::strtoull(i.c_str(),nullptr,10) << "\n";
+					tmp = std::string(i) ;
+                    tempBarcode.setCode(atoll(tmp.c_str())) ;
+                    //std::cout << i.c_str() << "\n";
                     break;
                 case 2:
-                    bcdWrk = atoll(i.c_str()) ;
+					tmp = std::string(i);
+                    bcdWrk = atoll(tmp.c_str()) ;
                     bCodeType = checkBarcodeType( bcdWrk ) ;
                     if (bcdWrk > 0 ) {
                         if (bCodeType == BCODE_EAN13_PRICE_REQ)
                         {
                             //strcpy( tmp, std::to_string(bcdWrk).c_str() );
-                            tmp = std::to_string(bcdWrk).substr(0,7) + "000000" ;
+                            tempStringStream.str( std::string() ) ;
+							tempStringStream.clear() ;
+							tempStringStream << bcdWrk ;
+							tmp = tempStringStream.str().substr(0,7) + "000000" ;
                             //tmp = std::to_string(bcdWrk).c_str() ;
                             /*tmp[7] = '0' ;
                             tmp[8] = '0' ;
@@ -290,8 +299,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
                             tmp[10] = '0' ;
                             tmp[11] = '0' ;
                             tmp[12] = '0' ;*/
-                            tmpBcd = std::strtoull(tmp.c_str(), nullptr, 10) ;
-                            tmpBcd = bcdWrk ;
+                            tmpBcd = atol(tmp.c_str()) ;
                         } else {
                             tmpBcd = bcdWrk ;
                         }
@@ -302,10 +310,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             }
             column++ ;
         }
-        std::cout << tempBarcode.toStr() << " type: " << bCodeType << "\n" ;
+        //std::cout << tempBarcode.toStr() << " type: " << bCodeType << "\n" ;
         barcodesMap[tempBarcode.getCode()] = tempBarcode ;
         
-        //std::cout << "\n" << itemsMap[tempItm.getCode()].toStr();
+		//std::cout << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
         
     }
     std::cout << "Finished loading file " + pFileName + "\n" ;
@@ -323,7 +331,7 @@ void BaseSystem::loadCartsInProgress()
     std::string line;
     std::string key;
     std::string value;
-    typename std::map<unsigned long long, Cart>::iterator itCarts ;
+    std::map<unsigned long long, Cart>::iterator itCarts ;
     unsigned long long currentTmpCartNumber = 0, nextCartNumberTmp = 0 ;
     char rAction = ' ' ;
     unsigned long long rCode = 0 ;
@@ -353,10 +361,10 @@ void BaseSystem::loadCartsInProgress()
             rQty = 0 ;
             //Cart* tmpCart = nullptr ;
             //std::cout << "\nFile: " << it->path().filename() << "\n" ;
-            if (fs::is_regular_file(*it) and it->path().extension() == ".transaction_in_progress")
+            if (fs::is_regular_file(*it) && it->path().extension() == ".transaction_in_progress")
             {
                 //ret.push_back(it->path().filename());
-                currentTmpCartNumber = atol(it->path().stem().c_str()) ;
+                currentTmpCartNumber = atol(it->path().stem().string().c_str()) ;
                 
                 //nextCartNumber is saved and then restored to avoid problems with the max cart number when leaving this function in case of sorting problems of filenames from filesystem
                 nextCartNumberTmp = nextCartNumber ;
@@ -403,11 +411,11 @@ void BaseSystem::loadCartsInProgress()
                                 break;
                             case 2:
                                 //std::cout << "Barcode: " << i << "\n"  ;
-                                rCode = atol(i.c_str()) ;
+                                rCode = atoll(i.c_str()) ;
                                 break;
                             case 3:
                                 //std::cout << "Qty: " << i  << "\n" ;
-                                rQty = atol(i.c_str()) ;
+                                rQty = atoll(i.c_str()) ;
                                 break;
                             default:
                                 break ;
@@ -417,6 +425,7 @@ void BaseSystem::loadCartsInProgress()
                     
                     switch (rAction)
                     {
+						std::cout << "Debug recupero riga carrello, barcode: " << barcodesMap[rCode].toStr() << "\n";
                         case 'A':
                             myCart->addItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode], rQty) ;
                             break;
@@ -445,25 +454,28 @@ void BaseSystem::loadCartsInProgress()
 
 int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
 {
+	using namespace boost;
     int type = 0 ;
-    
     regex ean13( "\\d{13}" ) ;
-    regex ean13PriceReq( "2\\d{12}" ) ;
-    regex upc( "\\d{12}" ) ;
-    regex ean8( "\\d{8}" ) ;
-    regex loyCard( "260\\d{9}") ;
-    
-    //std::cout << "Barcode: ---" << std::to_string(pBarcode) << "---" ;
-    
-    if (regex_match( std::to_string(pBarcode), loyCard ) )
+	regex ean13PriceReq( "2\\d{12}" ) ;
+	regex upc( "\\d{12}" ) ;
+	regex ean8( "\\d{8}" ) ;
+	regex loyCard( "260\\d{9}") ;
+	std::stringstream tempStringStream ;
+
+    tempStringStream.str( std::string() ) ;
+	tempStringStream.clear() ;
+	tempStringStream << pBarcode ;
+	//std::cout << "Barcode: ---" << tempStringStream.str() << "---\n" ;
+    if (regex_match( tempStringStream.str(), loyCard ) )
     {
         //std::cout << "Barcode type: Loyalty Card\n" ;
         return BCODE_LOYCARD ;
     }
     
-    if (regex_match( std::to_string(pBarcode), ean13 ) )
+    if (regex_match( tempStringStream.str(), ean13 ) )
     {
-        if (regex_match( std::to_string(pBarcode), ean13PriceReq ) )
+        if (regex_match( tempStringStream.str(), ean13PriceReq ) )
         {
             //std::cout << "Barcode type: EAN13 with price\n" ;
             return BCODE_EAN13_PRICE_REQ ;
@@ -473,13 +485,13 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
         }
     }
     
-    if (regex_match( std::to_string(pBarcode), upc ) )
+    if (regex_match( tempStringStream.str(), upc ) )
     {
         //std::cout << "Barcode type: UPC\n" ;
         return BCODE_UPC ;
     }
     
-    if (regex_match( std::to_string(pBarcode), ean8 ) )
+    if (regex_match( tempStringStream.str(), ean8 ) )
     {
         //std::cout << "Barcode type: EAN8\n" ;
         return BCODE_EAN8 ;
@@ -503,6 +515,9 @@ void BaseSystem::salesSession(socket_ptr pSock)
     std::uint64_t barcode = 0 ;
     std::uint64_t barcodeWrk = 0 ;
     std::int32_t qty = 0 ;
+	std::ostringstream tempStringStream ;
+	std::ostringstream streamCartId ;
+	
     char tmp[13] ;
 
     int rc = 0 ;
@@ -514,7 +529,9 @@ void BaseSystem::salesSession(socket_ptr pSock)
         for (;;)
         {
             memset(data,0,max_length);
-            
+            tempStringStream.str( std::string() ) ;
+			tempStringStream.clear() ;
+			
             boost::system::error_code error;
             size_t length = pSock->read_some(boost::asio::buffer(data), error);
             if (error == boost::asio::error::eof)
@@ -535,16 +552,22 @@ void BaseSystem::salesSession(socket_ptr pSock)
             if (action.compare("init")==0)
             {
                 cartId = this->newCart( GEN_CART_NEW ) ;
-                sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"rc\":" + std::to_string( rc ) + "}\n") ;
+				tempStringStream << "{\"cartId\":" << cartId << ",\"rc\":" << rc << "}\n" ;
+                sendRespMsg(pSock, tempStringStream.str() ) ;
             } else {
                 cartId = pt2.get<std::uint64_t> ("cartId");
             }
             
-            typename std::map<unsigned long long, Cart>::iterator it = cartsMap.find(cartId);
+            mainIterator = cartsMap.find(cartId);
             Cart* myCart = nullptr;
             
-            if (it != cartsMap.end()) {
-                myCart = &(it->second) ;
+			streamCartId.str( std::string() ) ;
+			streamCartId.clear() ;
+			streamCartId << cartId ;
+			std::string strCartId = streamCartId.str() ;
+			
+			if (mainIterator != cartsMap.end()) {
+				myCart = &(mainIterator->second);
             }
             
             if ( (myCart != nullptr) && (myCart->getState() != CART_NOT_INITIALIZED) && (myCart->getState() != CART_STATE_CLOSED) )
@@ -553,7 +576,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 if (action.compare("save")==0)
                 {
                     rc = myCart->persist() ;
-                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"rc\":" + std::to_string( rc ) + ",\"requestId\":" + std::to_string( requestId ) + ",\"action\":\"save\",\"status\":\"ok\"}\n") ;
+                    tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"save\",\"status\":\"ok\"}\n" ;
+					sendRespMsg(pSock, tempStringStream.str() );
                 }
                 
                 if (action.compare("add")==0)
@@ -569,14 +593,17 @@ void BaseSystem::salesSession(socket_ptr pSock)
                         {
                             if (bCodeType == BCODE_EAN13_PRICE_REQ)
                             {
-                                strcpy( tmp, std::to_string(barcode).c_str() );
+								tempStringStream.str( std::string() ) ;
+								tempStringStream.clear() ;
+								tempStringStream << barcode ;
+                                strcpy( tmp, tempStringStream.str().c_str() );
                                 tmp[7] = '0' ;
                                 tmp[8] = '0' ;
                                 tmp[9] = '0' ;
                                 tmp[10] = '0' ;
                                 tmp[11] = '0' ;
                                 tmp[12] = '0' ;
-                                barcodeWrk = std::strtoull(tmp, nullptr, 10) ;
+                                barcodeWrk = strtoull(tmp, nullptr, 10) ;
                             } else {
                                 barcodeWrk = barcode ;
                             }
@@ -588,8 +615,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     } else {
                         rc = RC_ERR ;
                     }
-                    
-                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"rc\":" + std::to_string( rc ) + ",\"requestId\":" + std::to_string( requestId ) + ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" + std::to_string( barcode ) + "}\n") ;
+                    tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" << barcode << "}\n" ;
+                    sendRespMsg(pSock, tempStringStream.str() ) ;
                     //myCart->printCart() ;
                 }
                 //std::cout << "\noooo1y\n" ;
@@ -597,8 +624,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 {
                     barcode = pt2.get<std::uint64_t> ("barcode");
                     rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
-                    
-                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"rc\":" + std::to_string( rc ) + ",\"requestId\":" + std::to_string( requestId ) + ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" + std::to_string( barcode ) + "}\n") ;
+                    tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" << barcode << "}\n" ;
+                    sendRespMsg(pSock, tempStringStream.str() ) ;
                     
                     //myCart->printCart() ;
                 }
@@ -606,13 +633,15 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 if (action.compare("print")==0)
                 {
                     rc = myCart->printCart() ;
-                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"rc\":" + std::to_string( rc ) + ",\"requestId\":" + std::to_string( requestId ) + ",\"action\":\"print\",\"status\":\"ok\"}\n") ;
+					tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"print\",\"status\":\"ok\"}\n" ;
+                    sendRespMsg(pSock, tempStringStream.str()) ;
                 }
                 
                 if (action.compare("close")==0)
                 {
                     rc = myCart->close() ;
-                    sendRespMsg(pSock, "{\"cartId\":" + std::to_string( cartId ) + ",\"rc\":" + std::to_string( rc ) + ",\"requestId\":" + std::to_string( requestId ) + ",\"action\":\"close\",\"status\":\"ok\"}\n") ;
+					tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"close\",\"status\":\"ok\"}\n" ;
+                    sendRespMsg(pSock, tempStringStream.str() ) ;
                     
                 }
             }

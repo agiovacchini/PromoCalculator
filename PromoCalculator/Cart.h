@@ -29,7 +29,6 @@ class Cart {
     string basePath = "./" ;
     string cartFileName ;
     string tmpTransactionFileName ;
-    std::ofstream tmpTransactionFile ;
 
 public:
     Cart( string pBasePath, unsigned long pNumber, unsigned int pAction ) ;
@@ -62,6 +61,7 @@ public:
 		// write out individual members of s with an end of line between each one
 		//os << s.weight << '\n';
 		//os << s.size;
+		os << s.basePath << s.cartFileName ;
 		return os;
 	}
     
@@ -70,6 +70,7 @@ public:
 	{
 		// read in individual members of s
 		//is >> s.weight >> s.size;
+		is >> s.basePath >> s.cartFileName;
 		return is;
 	}
     

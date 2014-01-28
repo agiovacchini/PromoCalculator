@@ -14,6 +14,7 @@ using namespace std;
 #define __PromoCalculator__Department__
 
 #include <iostream>
+#include <sstream>
 
 class Department {
     
@@ -21,6 +22,10 @@ class Department {
     string description ;
 
 public:
+	Department();
+
+	Department(unsigned long long int pCode, string pDescription);
+
     void setCode( unsigned long long int pCode ) ;
     
     unsigned long long int getCode() const ;
@@ -29,7 +34,8 @@ public:
     
     string getDescription() const ;
 
-    string toStr() const ;
+    string toStr() ;
+
 } ;
 
 

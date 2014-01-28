@@ -6,8 +6,11 @@
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
 #if defined _WIN32
-    #include <winsock2.h>
-#endif
+	#define WIN32_LEAN_AND_MEAN
+	#include <winsock2.h>
+#endif 
+
+#include <sstream>
 
 #ifndef PromoCalculator_BaseTypes_h
 #define PromoCalculator_BaseTypes_h
