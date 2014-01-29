@@ -244,7 +244,7 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
 
     // TO_DO: Perform work until service stops.
-	BaseSystem bs = BaseSystem("d:\\Listati\\Siti\\PromoCalculator\\PromoCalculator.deploy\\");
+	//BaseSystem bs = BaseSystem("d:\\Listati\\Siti\\PromoCalculator\\PromoCalculator.deploy\\");
 
     while(1)
     {
