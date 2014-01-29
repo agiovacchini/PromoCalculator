@@ -51,6 +51,12 @@ class SalesServer
     return JSON.parse(@msgText)
   end
 
+  def SendToPos( pCart, pPosNumber )
+    msg = "{\"action\":\"sendToPos\",\"cartId\":#{pCart},\"posNumber\":#{pPosNumber}}\n"
+    sendMsg( msg )
+    return JSON.parse(@msgText)
+  end
+
   def AddItem( pQty, pBarcode, pCart )
     msg = "{\"action\":\"add\",\"barcode\":#{pBarcode},\"cartId\":#{pCart},\"qty\":#{pQty}}\n"
     sendMsg( msg )

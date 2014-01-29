@@ -24,6 +24,7 @@ class Cart {
     std::map <void*, long> barcodesMap ;
     std::map <unsigned long long, Totals> totalsMap ;
     unsigned long number ;
+    unsigned long itemsNumber ;
     unsigned long nextRequestId ;
     unsigned int state ;
     string basePath = "./" ;
@@ -45,6 +46,7 @@ public:
     unsigned long getNextRequestId() ;
     int printCart() ;
     int persist( ) ;
+    int sendToPos( unsigned long pPosNumber ) ;
     int close( ) ;
     
     //const volatile Cart&& operator=(Cart&) volatile const && ;

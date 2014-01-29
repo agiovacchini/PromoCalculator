@@ -176,7 +176,7 @@ void BaseSystem::readItemArchive( string pFileName )
     
     string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
 	string tmp = "" ;
-
+    
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
         std::cout << "File " + archiveFileName + " not found\n" ;
@@ -267,7 +267,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
         assert(r == true);
         assert(s_begin == s_end);
         int column = 0 ;
-
+        
         
         unsigned long long tmpBcd = 0, bcdWrk = 0;
         Barcodes tempBarcode ;
@@ -415,12 +415,12 @@ void BaseSystem::loadCartsInProgress()
                         }
                         column++ ;
                     }
-  
+                    
                     std::cout << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() << "\n";
                     
                     switch (rAction)
                     {
-
+                            
                         case 'A':
                             myCart->addItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode], rQty) ;
                             break;
@@ -457,7 +457,7 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
 	regex ean8( "\\d{8}" ) ;
 	regex loyCard( "260\\d{9}") ;
 	std::stringstream tempStringStream ;
-
+    
     tempStringStream.str( std::string() ) ;
 	tempStringStream.clear() ;
 	tempStringStream << pBarcode ;
@@ -514,7 +514,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
 	std::ostringstream streamCartId ;
 	
     char tmp[13] ;
-
+    
     int rc = 0 ;
     unsigned long requestId = 0 ;
     char data[max_length];
@@ -560,7 +560,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
 			streamCartId.clear() ;
 			streamCartId << cartId ;
 			std::string strCartId = streamCartId.str() ;
-			
+            unsigned long posNumber = 0 ;
+            
 			if (mainIterator != cartsMap.end()) {
 				myCart = &(mainIterator->second);
             }
@@ -572,6 +573,14 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 {
                     rc = myCart->persist() ;
                     tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"save\",\"status\":\"ok\"}\n" ;
+					sendRespMsg(pSock, tempStringStream.str() );
+                }
+                
+                if (action.compare("sendToPos")==0)
+                {
+                    posNumber = pt2.get<std::uint32_t> ("posNumber");
+                    rc = myCart->sendToPos( posNumber ) ;
+                    tempStringStream << "{\"cartId\":" << strCartId << ",\"posNumber\":" << posNumber  << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"sendToPos\",\"status\":\"ok\"}\n" ;
 					sendRespMsg(pSock, tempStringStream.str() );
                 }
                 

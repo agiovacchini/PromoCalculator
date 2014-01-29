@@ -81,3 +81,17 @@ Feature: Test kStore Servlet
 
     Given request to close connection
     Then salesServer should return RC 0 and my cart id
+
+  Scenario: Send existing cart to POS
+
+    Given request to initialize a new session
+
+    Given I use existing cart "1"
+
+    Given request to send to POS "35"
+    Then salesServer should return RC 0 and my cart id
+
+    Given I use existing cart "3"
+
+    Given request to send to POS "1"
+    Then salesServer should return RC 0 and my cart id

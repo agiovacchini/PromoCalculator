@@ -18,6 +18,7 @@
 //#include <pcap.h>
 #include "boost/format.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
+#include <boost/date_time/posix_time/posix_time_io.hpp>
 //static string basePath = "./" ;
 
 using namespace std;
@@ -27,6 +28,7 @@ std::stringstream tempStringStream;
 Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
 {
     number = pNumber ;
+    itemsNumber = 0 ;
     nextRequestId = 0 ;
     basePath = pBasePath ;
     
@@ -111,6 +113,7 @@ int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyI
         totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
         totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
         
+        itemsNumber = itemsNumber + pQtyItem ;
         
         itemsMap[&pItem] = { ITEM, qtyItem } ;
         barcodesMap[&pBarcode] = qtyBarcode ;
@@ -153,7 +156,9 @@ int Cart::removeItemByBarcode( Item& pItem, Barcodes& pBarcode )
             totalsMap[0].totalAmount = totalsMap[0].totalAmount - pItem.getPrice() ;
             totalsMap[pItem.getDepartment().getCode()].itemsNumber-- ;
             totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount - pItem.getPrice() ;
-
+            
+            itemsNumber-- ;
+            
             if (qtyItem < 1)
             {
                 std::cout << "Erasing item\n" ;
@@ -241,6 +246,48 @@ int Cart::persist( )
     cartFile.close() ;
     return RC_OK ;
 }
+
+int Cart::sendToPos( unsigned long pPosNumber )
+{
+    typedef std::map<void*, CartRow>::iterator itemRows;
+    typedef std::map<void*, long>::iterator barcodesRows;
+    Barcodes* barcodesRow ;
+    long qty = 0 ;
+    string scanInFileName = (boost::format("%sSCANIN/POS%03lu.TMP") % basePath % pPosNumber).str() ;
+    std::cout << "Sending to pos with file: " << cartFileName << "\n" ;
+    boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
+    std::stringstream date_stream;
+    date_stream.imbue(std::locale(date_stream.getloc(), facet));
+    date_stream << boost::posix_time::microsec_clock::universal_time();
+    
+    std::ofstream scanInFile( scanInFileName.c_str() );
+    scanInFile << "03;" << date_stream.str() //tsInit
+        << ";" << date_stream.str() //tsEnd
+        << ";" << pPosNumber
+        << ";" << "60697808" //customerCode
+        << ";" << "11012" //serverId
+        << ";" << this->number
+        << ";" << "0"
+        << ";" << this->itemsNumber
+        << ";" << totalsMap[0].totalAmount
+        << ";" << totalsMap[0].totalAmount
+        << ";" << "0260697808017"
+        << endl;
+    
+    for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
+    {
+        barcodesRow = (Barcodes*)iterator->first;
+        qty = iterator->second ;
+        for (unsigned long repetitions = 0; repetitions < qty; repetitions++ )
+        {
+            scanInFile << "04;" << barcodesRow->getCode() << ";" << "0.00" << date_stream.str() << endl;
+        }
+    }
+    
+    scanInFile.close() ;
+    return RC_OK ;
+}
+
 
 int Cart::close()
 {

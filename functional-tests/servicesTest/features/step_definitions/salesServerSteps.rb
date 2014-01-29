@@ -89,6 +89,14 @@ Given(/^request to persist cart$/) do
   puts respRc
 end
 
+Given(/^request to send to POS "(.*?)"$/) do |pPosNumber|
+  result = salesServer.SendToPos cartId, pPosNumber
+  respCartId = result["cartId"]
+  respReqId = result["reqId"]
+  respRc = result["rc"]
+  puts respRc
+end
+
 Given(/^request to close connection$/) do
   result = salesServer.CloseSocket
   respCartId = result["cartId"]
