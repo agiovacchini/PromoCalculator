@@ -17,6 +17,7 @@
 #include <fstream>
 //#include <pcap.h>
 #include "boost/format.hpp"
+#include "boost/filesystem.hpp"
 #include "boost/date_time/posix_time/posix_time.hpp"
 #include <boost/date_time/posix_time/posix_time_io.hpp>
 //static string basePath = "./" ;
@@ -36,7 +37,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     itemsMap.clear() ;
     CartRow totalCartRow = { TOTAL, 0 } ;
     
-    totalsMap[0].totalAmount = 0.0 ;
+    totalsMap[0].totalAmount = 0 ;
     totalsMap[0].itemsNumber = 0 ;
     itemsMap[&totalsMap[0]] = totalCartRow ;
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
@@ -247,20 +248,21 @@ int Cart::persist( )
     return RC_OK ;
 }
 
-int Cart::sendToPos( unsigned long pPosNumber )
+int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
     typedef std::map<void*, long>::iterator barcodesRows;
     Barcodes* barcodesRow ;
     long qty = 0 ;
-    string scanInFileName = (boost::format("%sSCANIN/POS%03lu.TMP") % basePath % pPosNumber).str() ;
-    std::cout << "Sending to pos with file: " << cartFileName << "\n" ;
+	string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
+	string scanInFileName = (boost::format("%s/POS%03lu.IN") % pScanInPath % pPosNumber).str();
+	std::cout << "Sending to pos with file: " << cartFileName << "\n";
     boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
     std::stringstream date_stream;
     date_stream.imbue(std::locale(date_stream.getloc(), facet));
     date_stream << boost::posix_time::microsec_clock::universal_time();
     
-    std::ofstream scanInFile( scanInFileName.c_str() );
+    std::ofstream scanInFile( scanInTmpFileName.c_str() );
     scanInFile << "03;" << date_stream.str() //tsInit
         << ";" << date_stream.str() //tsEnd
         << ";" << pPosNumber
@@ -278,13 +280,18 @@ int Cart::sendToPos( unsigned long pPosNumber )
     {
         barcodesRow = (Barcodes*)iterator->first;
         qty = iterator->second ;
-        for (unsigned long repetitions = 0; repetitions < qty; repetitions++ )
-        {
-            scanInFile << "04;" << barcodesRow->getCode() << ";" << "0.00" << date_stream.str() << endl;
-        }
+		if (qty > 0)
+		{
+			for (long repetitions = 0; repetitions < qty; repetitions++ )
+			{
+				scanInFile << "04;" << barcodesRow->getCode() << ";" << "0.00" << ";" << date_stream.str() << endl;
+			}
+		}
     }
     
     scanInFile.close() ;
+
+	boost::filesystem::rename(scanInTmpFileName.c_str(), scanInFileName);
     return RC_OK ;
 }
 

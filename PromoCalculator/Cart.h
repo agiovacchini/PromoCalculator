@@ -46,7 +46,7 @@ public:
     unsigned long getNextRequestId() ;
     int printCart() ;
     int persist( ) ;
-    int sendToPos( unsigned long pPosNumber ) ;
+	int sendToPos(unsigned long pPosNumber, string pScanInPath);
     int close( ) ;
     
     //const volatile Cart&& operator=(Cart&) volatile const && ;

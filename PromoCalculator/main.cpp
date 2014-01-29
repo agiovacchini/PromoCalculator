@@ -93,8 +93,6 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
     { 
         SvcReportEvent(TEXT("StartServiceCtrlDispatcher")); 
     } 
-	
-	//	BaseSystem bs = BaseSystem(argv[1]);
 
 } 
 
@@ -244,7 +242,7 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
 
     // TO_DO: Perform work until service stops.
-	//BaseSystem bs = BaseSystem("d:\\Listati\\Siti\\PromoCalculator\\PromoCalculator.deploy\\");
+	BaseSystem bs = BaseSystem("e:\\Giovacc\\PromoCalculator.deploy\\");
 
     while(1)
     {

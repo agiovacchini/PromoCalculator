@@ -85,6 +85,8 @@ void BaseSystem::loadConfiguration()
     configurationMap["NetworkPort"] = pt.get<std::string>("Network.Port") ;
     configurationMap["LoyCardPrefix"] = pt.get<std::string>("Loy.CardPrefix") ;
     configurationMap["BarcodesType01"] = pt.get<std::string>("Barcodes.Type") ;
+	configurationMap["SelfScanScanInDir"] = pt.get<std::string>("SelfScan.ScanInDir");
+	configurationMap["SelfScanScanOutDir"] = pt.get<std::string>("SelfScan.ScanOutDir");
     //configurationMap["NodeId"] = pt.get<std::string>("Node.Id") ;
     this->nodeId = pt.get<std::uint32_t>("Node.Id") ;
     //std::cout << pt.get<std::string>("Loy.CardPrefix") << std::endl;
@@ -579,7 +581,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 if (action.compare("sendToPos")==0)
                 {
                     posNumber = pt2.get<std::uint32_t> ("posNumber");
-                    rc = myCart->sendToPos( posNumber ) ;
+					rc = myCart->sendToPos(posNumber, this->configurationMap["SelfScanScanInDir"]);
                     tempStringStream << "{\"cartId\":" << strCartId << ",\"posNumber\":" << posNumber  << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"sendToPos\",\"status\":\"ok\"}\n" ;
 					sendRespMsg(pSock, tempStringStream.str() );
                 }
