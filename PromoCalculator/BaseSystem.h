@@ -52,7 +52,8 @@ public:
     string getBasePath() const ;
     void setBasePath( string pBasePath ) ;
     
-    void loadConfiguration() ;
+    int loadConfiguration() ;
+    int setConfigValue(string confMapKey, string treeSearchKey, boost::property_tree::ptree* configTree) ;
     void printConfiguration() ;
     void readDepartmentArchive( string pFileName ) ;
     void readItemArchive( string pFileName ) ;

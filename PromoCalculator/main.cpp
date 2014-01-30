@@ -50,12 +50,16 @@ using namespace std;
 
 const int max_length = 1024;
 
+string mainPath = "";
+
 #if !defined _WIN32
 int main(int argc, const char * argv[])
 {
-    //BaseSystem bs = BaseSystem("/Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/") ;
-	//BaseSystem bs = BaseSystem("d:\\Listati\\Siti\\PromoCalculator\\PromoCalculator.deploy\\");
-	BaseSystem bs = BaseSystem(argv[1]);
+    logging::add_file_log(std::string(argv[1]) + "PromoCalculator_%N.log");
+    logging::add_common_attributes();
+    
+    mainPath = argv[1] ;
+    BaseSystem bs = BaseSystem(mainPath);
 
 	return 0;
 }
@@ -72,6 +76,12 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
         DisplayUsage();
         return 0;
     }*/
+    
+    /*Visual Studio: Works only if in "Project settings | Configuration properties | General"
+     the setting "Character Set" is "Use Multi-Byte Character Set"
+     http://stackoverflow.com/questions/6006319/converting-tchar-to-string-in-c
+     */
+	mainPath = argv[1] ;
 	
     if( lstrcmpi( argv[1], TEXT("install")) == 0 )
     {
@@ -240,16 +250,16 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
     // Report running status when initialization is complete.
 
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
-
+    
     // TO_DO: Perform work until service stops.
-	BaseSystem bs = BaseSystem("e:\\Giovacc\\PromoCalculator.deploy\\");
-
+	BaseSystem bs = BaseSystem( mainPath );
+    
     while(1)
     {
         // Check whether to stop the service.
 		
         WaitForSingleObject(ghSvcStopEvent, INFINITE);
-
+        
         ReportSvcStatus( SERVICE_STOPPED, NO_ERROR, 0 );
         return;
     }

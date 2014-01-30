@@ -42,7 +42,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     itemsMap[&totalsMap[0]] = totalCartRow ;
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
     tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
-    std::cout << "\n" << cartFileName << " - " << tmpTransactionFileName << "\n" ;
+    BOOST_LOG_TRIVIAL(info) << "\n" << cartFileName << " - " << tmpTransactionFileName << "\n" ;
     
     switch (pAction)
     {
@@ -73,7 +73,7 @@ unsigned int Cart::getState() const {
 }
 
 void Cart::setState( unsigned int pState ) {
-    //std::cout << "Carrello: passaggio di stato da " << this->state << " a " << pState ;
+    //BOOST_LOG_TRIVIAL(info) << "Carrello: passaggio di stato da " << this->state << " a " << pState ;
     this->state = pState ;
 }
 
@@ -123,7 +123,7 @@ int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyI
 		tempStringStream.clear();
 		tempStringStream << this->getState();
 
-		std::cout << "Stato carrello: " << tempStringStream.str() ;
+		BOOST_LOG_TRIVIAL(info) << "Stato carrello: " << tempStringStream.str() << "\n" ;
         if (this->getState()==CART_STATE_READY_FOR_ITEM)
         {
 			tempStringStream.str(std::string());
@@ -145,12 +145,12 @@ int Cart::removeItemByBarcode( Item& pItem, Barcodes& pBarcode )
         
         if ((itemsMap.find(&pItem) == itemsMap.end()))
         {
-            std::cout << "Not found: " << pItem.getDescription() << "\n" ;
+            BOOST_LOG_TRIVIAL(info) << "Not found: " << pItem.getDescription() << "\n" ;
             return RC_ERR ;
         }
         else
         {
-            std::cout << "Found: " << pItem.getDescription() << "\n" ;
+            BOOST_LOG_TRIVIAL(info) << "Found: " << pItem.getDescription() << "\n" ;
             qtyItem = itemsMap[&pItem].quantity - 1 ;
             qtyBarcode = barcodesMap[&pBarcode] - 1 ;
             totalsMap[0].itemsNumber-- ;
@@ -162,7 +162,7 @@ int Cart::removeItemByBarcode( Item& pItem, Barcodes& pBarcode )
             
             if (qtyItem < 1)
             {
-                std::cout << "Erasing item\n" ;
+                BOOST_LOG_TRIVIAL(info) << "Erasing item\n" ;
                 itemsMap.erase(&pItem) ;
             } else
             {
@@ -195,34 +195,34 @@ int Cart::printCart()
     Item* itmRow ;
     //Totals* totalsRow ;
     
-    std::cout << "Cart #" << this->number <<  "print start\n" ;
+    BOOST_LOG_TRIVIAL(info) << "Cart #" << this->number <<  "print start\n" ;
     for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
         CartRow key = iterator->second ;
         switch (key.type) {
             case ITEM:
                 itmRow = (Item*)iterator->first;
-                std::cout << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity << "\n" ;
+                BOOST_LOG_TRIVIAL(info) << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity << "\n" ;
                 break;
             case DEPT:
                 break;
             case TOTAL:
                 //totalsRow = (Totals*)iterator->first;
-                //std::cout << "\nTotale: " << totalsRow->totalAmount << " Item Nr.: " << totalsRow->itemsNumber ;
+                //BOOST_LOG_TRIVIAL(info) << "\nTotale: " << totalsRow->totalAmount << " Item Nr.: " << totalsRow->itemsNumber ;
                 break;
             default:
                 break;
         }
-        //std::cout << "\nkey: " << key ;
+        //BOOST_LOG_TRIVIAL(info) << "\nkey: " << key ;
     }
-    std::cout << "State: " << this->getState() << "\n" ;
-    std::cout << "Totals start\n" ;
+    BOOST_LOG_TRIVIAL(info) << "State: " << this->getState() << "\n" ;
+    BOOST_LOG_TRIVIAL(info) << "Totals start\n" ;
     typedef std::map<unsigned long long, Totals>::iterator configurationRows;
     
     for(configurationRows iterator = totalsMap.begin(); iterator != totalsMap.end(); iterator++) {
-        std::cout << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber << "\n" ;
+        BOOST_LOG_TRIVIAL(info) << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber << "\n" ;
     }
-    std::cout << "Totals end\n" ;
-    std::cout << "Cart print end\n" ;
+    BOOST_LOG_TRIVIAL(info) << "Totals end\n" ;
+    BOOST_LOG_TRIVIAL(info) << "Cart print end\n" ;
     return RC_OK ;
 }
 
@@ -233,7 +233,7 @@ int Cart::persist( )
     Barcodes* barcodesRow ;
     long qty = 0 ;
     
-    std::cout << "cartFileName: " << cartFileName << "\n" ;
+    BOOST_LOG_TRIVIAL(info) << "cartFileName: " << cartFileName << "\n" ;
     
     std::ofstream cartFile( cartFileName.c_str() );
     
@@ -256,7 +256,7 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
     long qty = 0 ;
 	string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
 	string scanInFileName = (boost::format("%s/POS%03lu.IN") % pScanInPath % pPosNumber).str();
-	std::cout << "Sending to pos with file: " << cartFileName << "\n";
+	BOOST_LOG_TRIVIAL(info) << "Sending to pos with file: " << cartFileName << "\n";
     boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
     std::stringstream date_stream;
     date_stream.imbue(std::locale(date_stream.getloc(), facet));

@@ -44,27 +44,31 @@ BaseSystem::BaseSystem( string pBasePath )
     
     this->basePath = pBasePath ;
     
-    this->loadConfiguration() ;
-    this->printConfiguration() ;
-    
-    this->readArchives() ;
-    
-    this->loadCartsInProgress() ;
-    
-    std::cout << "System initialized.\n" ;
-    //}
-    
-    try
+    if ( this->loadConfiguration() == 0 )
     {
-        std::cout << "Server starting...\n" ;
-        using namespace std;
-        salesServer(io_service, atol(configurationMap["NetworkPort"].c_str()));
+        this->printConfiguration() ;
+        
+        this->readArchives() ;
+        
+        this->loadCartsInProgress() ;
+        
+        BOOST_LOG_SEV(my_logger::get(), info) << "System initialized." ;
+        //}
+        
+        try
+        {
+            BOOST_LOG_SEV(my_logger::get(), info) << "Server starting...";
+            
+            using namespace std;
+            salesServer(io_service, atol(configurationMap["NetworkPort"].c_str()));
+        }
+        catch (std::exception& e)
+        {
+            BOOST_LOG_SEV(my_logger::get(), fatal) << e.what() << endl ;
+        }
+    } else {
+        BOOST_LOG_SEV(my_logger::get(), fatal) << "Bad configuration error, aborting start" ;
     }
-    catch (std::exception& e)
-    {
-        std::cerr << "Exception: " << e.what() << "\n";
-    }
-    
 }
 
 string BaseSystem::getBasePath() const
@@ -77,33 +81,47 @@ void BaseSystem::setBasePath( string pBasePath )
     this->basePath = pBasePath ;
 }
 
-void BaseSystem::loadConfiguration()
+int BaseSystem::loadConfiguration()
 {
-    std::cout << "Config load start\n" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "Config load start" ;
     boost::property_tree::ptree pt;
-    boost::property_tree::ini_parser::read_ini(this->basePath + "PromoCalculator.ini", pt);
-    configurationMap["NetworkPort"] = pt.get<std::string>("Network.Port") ;
-    configurationMap["LoyCardPrefix"] = pt.get<std::string>("Loy.CardPrefix") ;
-    configurationMap["BarcodesType01"] = pt.get<std::string>("Barcodes.Type") ;
-	configurationMap["SelfScanScanInDir"] = pt.get<std::string>("SelfScan.ScanInDir");
-	configurationMap["SelfScanScanOutDir"] = pt.get<std::string>("SelfScan.ScanOutDir");
-    //configurationMap["NodeId"] = pt.get<std::string>("Node.Id") ;
-    this->nodeId = pt.get<std::uint32_t>("Node.Id") ;
-    //std::cout << pt.get<std::string>("Loy.CardPrefix") << std::endl;
-    //std::cout << pt.get<std::string>("Barcodes.Type") << std::endl;
-    std::cout << "Config load end\n" ;
+    int rc = 0 ;
+    
+    try {
+        boost::property_tree::ini_parser::read_ini(this->basePath + "PromoCalculator.ini", pt);
+        rc = rc + setConfigValue("NetworkPort", "Network.Port", &pt );
+        rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
+        rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
+        rc = rc + setConfigValue("LoyCardPrefix", "Loy.CardPrefix", &pt );
+        rc = rc + setConfigValue("BarcodesType01", "Barcodes.Type", &pt );
+        rc = rc + setConfigValue("NodeId", "Node.Id", &pt );
+        this->nodeId = pt.get<std::uint32_t>("Node.Id") ;
+    }
+    catch (std::exception const& e)
+    {
+        BOOST_LOG_SEV(my_logger::get(), fatal) << "Config error: " << e.what() ;
+        return 1 ;
+    }
+    BOOST_LOG_SEV(my_logger::get(), info) << "Config load end" ;
+    return rc ;
+}
+
+int BaseSystem::setConfigValue(string confMapKey, string treeSearchKey, boost::property_tree::ptree* configTree)
+{
+    configurationMap[confMapKey] = configTree->get<std::string>(treeSearchKey) ;
+    return 0 ;
 }
 
 void BaseSystem::printConfiguration()
 {
     typedef std::map<string, string>::iterator configurationRows;
     
-    std::cout << "Config print start\n" ;
-    std::cout << "\tNode Id: " << this->nodeId << "\n" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "Config print start" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "\tNode Id: " << this->nodeId ;
     for(configurationRows iterator = configurationMap.begin(); iterator != configurationMap.end(); iterator++) {
-        std::cout << "\tkey: " << iterator->first << ", value: " << iterator->second << "\n";
+        BOOST_LOG_SEV(my_logger::get(), info) << "\tkey: " << iterator->first << ", value: " << iterator->second ;
     }
-    std::cout << "Config print end\n" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "Config print end" ;
 }
 
 void BaseSystem::readDepartmentArchive( string pFileName )
@@ -120,10 +138,10 @@ void BaseSystem::readDepartmentArchive( string pFileName )
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "File " + archiveFileName + " not found\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        std::cout << "File " + archiveFileName + " found\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " found" ;
     }
     
     std::string line;
@@ -143,7 +161,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
         Department tempDepartment ;
         for (auto i : result)
         {
-            //std::cout << "ggg" << i << std::endl;
+            //BOOST_LOG_SEV(my_logger::get(), info) << "ggg" << i;
             switch (column)
             {
                 case 1:
@@ -157,14 +175,14 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             }
             column++ ;
         }
-        //std::cout << "\n" << tempItm.toStr() ;
+        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << tempItm.toStr() ;
         
         deparmentsMap[tempDepartment.getCode()] = tempDepartment ;
         
-        //std::cout << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
+        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
         
     }
-    std::cout << "Finished loading file " + pFileName + "\n" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "Finished loading file " << pFileName ;
     
 }
 
@@ -181,10 +199,10 @@ void BaseSystem::readItemArchive( string pFileName )
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "File " + archiveFileName + " not found\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        std::cout << "File " + archiveFileName + " found\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " found" ;
     }
     
     std::string line;
@@ -204,7 +222,7 @@ void BaseSystem::readItemArchive( string pFileName )
         Item tempItm ;
         for (auto i : result)
         {
-            //std::cout << "ggg" << i << std::endl;
+            //BOOST_LOG_SEV(my_logger::get(), info) << "ggg" << i << std::endl;
             switch (column)
             {
                 case 1:
@@ -225,14 +243,14 @@ void BaseSystem::readItemArchive( string pFileName )
             }
             column++ ;
         }
-        //std::cout << "\n" << tempItm.toStr() ;
+        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << tempItm.toStr() ;
         tempItm.setQuantity(0) ;
         itemsMap[tempItm.getCode()] = tempItm ;
         
-        //std::cout << "\n" << itemsMap[tempItm.getCode()].toStr();
+        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << itemsMap[tempItm.getCode()].toStr();
         
     }
-    std::cout << "Finished loading file " + pFileName + "\n" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "Finished loading file " << pFileName << endl ;
 }
 
 void BaseSystem::readBarcodesArchive( string pFileName )
@@ -249,10 +267,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 	
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        std::cout << "File " + archiveFileName + " not found\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        std::cout << "File " + archiveFileName + " loaded\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " loaded" ;
     }
     
     std::string line;
@@ -294,10 +312,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
                         } else {
                             tmpBcd = bcdWrk ;
                         }
-                        //std::cout << "(" << tmpBcd << ") - " ;
+                        //BOOST_LOG_SEV(my_logger::get(), info) << "(" << tmpBcd << ") - " ;
                         tempBarcode.setCode( tmpBcd ) ;
                     }
-                    //std::cout << i.c_str() << "\n";
+                    //BOOST_LOG_SEV(my_logger::get(), info) << i.c_str() << "\n";
                     break;
                 case 2:
                     tempBarcode.setItemCode(atoll(i.c_str())) ;
@@ -305,13 +323,13 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             }
             column++ ;
         }
-        //std::cout << "Barcode.getcode: " << tempBarcode.getCode() << " type: " << bCodeType << "\n" ;
+        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode.getcode: " << tempBarcode.getCode() << " type: " << bCodeType << "\n" ;
         barcodesMap[tempBarcode.getCode()] = tempBarcode ;
         //barcodesMap.emplace( std::piecewise_construct, std::make_tuple(tempBarcode.getCode()), std::make_tuple(tempBarcode) ) ;
-		//std::cout << "toStr: " << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
+		//BOOST_LOG_SEV(my_logger::get(), info) << "toStr: " << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
         
     }
-    std::cout << "Finished loading file " + pFileName + "\n" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "Finished loading file " << pFileName ;
 }
 
 void BaseSystem::readArchives()
@@ -340,13 +358,13 @@ void BaseSystem::loadCartsInProgress()
     
     if (!fs::exists(this->basePath + "CARTS"))
     {
-        std::cout << "No CARTS subfolder found\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "No CARTS subfolder found" ;
         exit(-1);
     }
     
     if (fs::is_directory(this->basePath + "CARTS"))
     {
-        std::cout << "CARTS subfolder found\n" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "CARTS subfolder found" ;
         fs::recursive_directory_iterator it(this->basePath + "CARTS");
         fs::recursive_directory_iterator endit;
         while(it != endit)
@@ -355,7 +373,7 @@ void BaseSystem::loadCartsInProgress()
             rCode = 0 ;
             rQty = 0 ;
             //Cart* tmpCart = nullptr ;
-            //std::cout << "\nFile: " << it->path().filename() << "\n" ;
+            //BOOST_LOG_SEV(my_logger::get(), info) << "\nFile: " << it->path().filename() << "\n" ;
             if (fs::is_regular_file(*it) && it->path().extension() == ".transaction_in_progress")
             {
                 //ret.push_back(it->path().filename());
@@ -364,8 +382,8 @@ void BaseSystem::loadCartsInProgress()
                 //nextCartNumber is saved and then restored to avoid problems with the max cart number when leaving this function in case of sorting problems of filenames from filesystem
                 nextCartNumberTmp = nextCartNumber ;
                 nextCartNumber = currentTmpCartNumber ;
-                std::cout << "==================================\n" ;
-                std::cout << "File tmpTrans: " << it->path().filename() << " num: " << currentTmpCartNumber << " next: " << nextCartNumber << "\n";
+                BOOST_LOG_SEV(my_logger::get(), info) << "==================================" ;
+                BOOST_LOG_SEV(my_logger::get(), info) << "File tmpTrans: " << it->path().filename() << " num: " << currentTmpCartNumber << " next: " << nextCartNumber ;
                 
                 newCart( GEN_CART_LOAD ) ;
                 
@@ -378,12 +396,12 @@ void BaseSystem::loadCartsInProgress()
                     myCart = &(itCarts->second) ;
                     //cout << "Carico carrello\n" ;
                 }
-                //std::cout << "Cart nr: " << myCart->getNumber() << "\n" ;
+                //BOOST_LOG_SEV(my_logger::get(), info) << "Cart nr: " << myCart->getNumber() << "\n" ;
                 std::ifstream tmpTransactonFileToLoad( this->basePath + "CARTS/" + it->path().filename().string() );
                 
                 while( std::getline(tmpTransactonFileToLoad, line) )
                 {
-                    //std::cout << "\n" << line ;
+                    //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << line ;
                     std::istringstream is_line(line);
                     std::string::const_iterator s_begin = line.begin();
                     std::string::const_iterator s_end = line.end();
@@ -401,15 +419,15 @@ void BaseSystem::loadCartsInProgress()
                                 //timeStamp
                                 break;
                             case 1:
-                                //std::cout << "Action: " << i << "\n" ;
+                                //BOOST_LOG_SEV(my_logger::get(), info) << "Action: " << i << "\n" ;
                                 rAction = i[0] ;
                                 break;
                             case 2:
-                                //std::cout << "Barcode: " << i << "\n"  ;
+                                //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode: " << i << "\n"  ;
                                 rCode = atoll(i.c_str()) ;
                                 break;
                             case 3:
-                                //std::cout << "Qty: " << i  << "\n" ;
+                                //BOOST_LOG_SEV(my_logger::get(), info) << "Qty: " << i  << "\n" ;
                                 rQty = atoll(i.c_str()) ;
                                 break;
                             default:
@@ -418,7 +436,7 @@ void BaseSystem::loadCartsInProgress()
                         column++ ;
                     }
                     
-                    std::cout << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() << "\n";
+                    BOOST_LOG_SEV(my_logger::get(), info) << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() ;
                     
                     switch (rAction)
                     {
@@ -430,7 +448,7 @@ void BaseSystem::loadCartsInProgress()
                             myCart->removeItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode]) ;
                             break;
                         default:
-                            std::cout << "Row action not recognized" ;
+                            BOOST_LOG_SEV(my_logger::get(), info) << "Row action not recognized" ;
                             break;
                     }
                 }
@@ -463,10 +481,10 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
     tempStringStream.str( std::string() ) ;
 	tempStringStream.clear() ;
 	tempStringStream << pBarcode ;
-	//std::cout << "Barcode: ---" << tempStringStream.str() << "---\n" ;
+	//BOOST_LOG_SEV(my_logger::get(), info) << "Barcode: ---" << tempStringStream.str() << "---\n" ;
     if (regex_match( tempStringStream.str(), loyCard ) )
     {
-        //std::cout << "Barcode type: Loyalty Card\n" ;
+        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: Loyalty Card\n" ;
         return BCODE_LOYCARD ;
     }
     
@@ -474,35 +492,35 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
     {
         if (regex_match( tempStringStream.str(), ean13PriceReq ) )
         {
-            //std::cout << "Barcode type: EAN13 with price\n" ;
+            //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: EAN13 with price\n" ;
             return BCODE_EAN13_PRICE_REQ ;
         } else {
-            //std::cout << "Barcode type: EAN13\n" ;
+            //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: EAN13\n" ;
             return BCODE_EAN13 ;
         }
     }
     
     if (regex_match( tempStringStream.str(), upc ) )
     {
-        //std::cout << "Barcode type: UPC\n" ;
+        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: UPC\n" ;
         return BCODE_UPC ;
     }
     
     if (regex_match( tempStringStream.str(), ean8 ) )
     {
-        //std::cout << "Barcode type: EAN8\n" ;
+        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: EAN8\n" ;
         return BCODE_EAN8 ;
     }
     
     
     
-    //std::cout << "Barcode type: not recognized\n" ;
+    //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: not recognized\n" ;
     return BCODE_NOT_RECOGNIZED ;
 }
 void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
     boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
-    std::cout << "pMsg: " << pMsg << ", size: " << pMsg.size() << "\n" ;
+    BOOST_LOG_SEV(my_logger::get(), info) << "pMsg: " << pMsg << ", size: " << pMsg.size() << endl ;
 }
 
 void BaseSystem::salesSession(socket_ptr pSock)
@@ -533,134 +551,145 @@ void BaseSystem::salesSession(socket_ptr pSock)
             size_t length = pSock->read_some(boost::asio::buffer(data), error);
             if (error == boost::asio::error::eof)
             {
-                std::cout << "Connection reset by peer\n" ;
+                BOOST_LOG_SEV(my_logger::get(), info) << "Connection reset by peer" << endl ;
                 break; // Connection closed cleanly by peer.
             } else if (error)
             {
-                std::cout << "Oh my God! There's been a bad fault on socket!\n" ;
+                BOOST_LOG_SEV(my_logger::get(), info) << "Oh my God! There's been a bad fault on socket!" << endl ;
                 throw boost::system::system_error(error); // Some other error.
             }
             ptree pt2;
             std::istringstream is (data);
             
-            read_json (is, pt2);
-            
-            std::string action = pt2.get<std::string> ("action");
-            if (action.compare("init")==0)
-            {
-                cartId = this->newCart( GEN_CART_NEW ) ;
-				tempStringStream << "{\"cartId\":" << cartId << ",\"rc\":" << rc << "}\n" ;
-                sendRespMsg(pSock, tempStringStream.str() ) ;
-            } else {
-                cartId = pt2.get<std::uint64_t> ("cartId");
+            try {
+                read_json (is, pt2);
             }
-            
-            mainIterator = cartsMap.find(cartId);
-            Cart* myCart = nullptr;
-            
-			streamCartId.str( std::string() ) ;
-			streamCartId.clear() ;
-			streamCartId << cartId ;
-			std::string strCartId = streamCartId.str() ;
-            unsigned long posNumber = 0 ;
-            
-			if (mainIterator != cartsMap.end()) {
-				myCart = &(mainIterator->second);
-            }
-            
-            if ( (myCart != nullptr) && (myCart->getState() != CART_NOT_INITIALIZED) && (myCart->getState() != CART_STATE_CLOSED) )
+            catch (std::exception const& e)
             {
-                requestId = myCart->getNextRequestId() ;
-                if (action.compare("save")==0)
+                std::cerr << "Sales session JSON read error: " << e.what() << endl;
+            }
+            try {
+                std::string action = pt2.get<std::string> ("action");
+                if (action.compare("init")==0)
                 {
-                    rc = myCart->persist() ;
-                    tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"save\",\"status\":\"ok\"}\n" ;
-					sendRespMsg(pSock, tempStringStream.str() );
+                    cartId = this->newCart( GEN_CART_NEW ) ;
+                    tempStringStream << "{\"cartId\":" << cartId << ",\"rc\":" << rc << "}" << endl ;
+                    sendRespMsg(pSock, tempStringStream.str() ) ;
+                } else {
+                    cartId = pt2.get<std::uint64_t> ("cartId");
                 }
                 
-                if (action.compare("sendToPos")==0)
-                {
-                    posNumber = pt2.get<std::uint32_t> ("posNumber");
-					rc = myCart->sendToPos(posNumber, this->configurationMap["SelfScanScanInDir"]);
-                    tempStringStream << "{\"cartId\":" << strCartId << ",\"posNumber\":" << posNumber  << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"sendToPos\",\"status\":\"ok\"}\n" ;
-					sendRespMsg(pSock, tempStringStream.str() );
+                mainIterator = cartsMap.find(cartId);
+                Cart* myCart = nullptr;
+                
+                streamCartId.str( std::string() ) ;
+                streamCartId.clear() ;
+                streamCartId << cartId ;
+                std::string strCartId = streamCartId.str() ;
+                unsigned long posNumber = 0 ;
+                
+                if (mainIterator != cartsMap.end()) {
+                    myCart = &(mainIterator->second);
                 }
                 
-                if (action.compare("add")==0)
+                if ( (myCart != nullptr) && (myCart->getState() != CART_NOT_INITIALIZED) && (myCart->getState() != CART_STATE_CLOSED) )
                 {
-                    barcode = pt2.get<std::uint64_t> ("barcode");
-                    qty = pt2.get<std::int32_t> ("qty");
-                    
-                    bCodeType = checkBarcodeType( barcode ) ;
-                    
-                    if ( ( bCodeType != BCODE_NOT_RECOGNIZED ) )
+                    requestId = myCart->getNextRequestId() ;
+                    if (action.compare("save")==0)
                     {
-                        if (bCodeType != BCODE_LOYCARD)
-                        {
-                            if (bCodeType == BCODE_EAN13_PRICE_REQ)
-                            {
-								tempStringStream.str( std::string() ) ;
-								tempStringStream.clear() ;
-								tempStringStream << barcode ;
-                                strcpy( tmp, tempStringStream.str().c_str() );
-                                tmp[7] = '0' ;
-                                tmp[8] = '0' ;
-                                tmp[9] = '0' ;
-                                tmp[10] = '0' ;
-                                tmp[11] = '0' ;
-                                tmp[12] = '0' ;
-                                barcodeWrk = strtoull(tmp, nullptr, 10) ;
-                            } else {
-                                barcodeWrk = barcode ;
-                            }
-                            std::cout << "barcodeWrk: " << barcodeWrk << "\n" ;
-                            rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
-                        } else {
-                            rc = RC_OK ;
-                        }
-                    } else {
-                        rc = RC_ERR ;
+                        rc = myCart->persist() ;
+                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"save\",\"status\":\"ok\"}" << endl ;
+                        sendRespMsg(pSock, tempStringStream.str() );
                     }
-                    tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" << barcode << "}\n" ;
-                    sendRespMsg(pSock, tempStringStream.str() ) ;
-                    //myCart->printCart() ;
-                }
-                //std::cout << "\noooo1y\n" ;
-                if (action.compare("remove")==0)
-                {
-                    barcode = pt2.get<std::uint64_t> ("barcode");
-                    rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
-                    tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" << barcode << "}\n" ;
-                    sendRespMsg(pSock, tempStringStream.str() ) ;
                     
-                    //myCart->printCart() ;
-                }
-                
-                if (action.compare("print")==0)
-                {
-                    rc = myCart->printCart() ;
-					tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"print\",\"status\":\"ok\"}\n" ;
-                    sendRespMsg(pSock, tempStringStream.str()) ;
-                }
-                
-                if (action.compare("close")==0)
-                {
-                    rc = myCart->close() ;
-					tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"close\",\"status\":\"ok\"}\n" ;
-                    sendRespMsg(pSock, tempStringStream.str() ) ;
+                    if (action.compare("sendToPos")==0)
+                    {
+                        posNumber = pt2.get<std::uint32_t> ("posNumber");
+                        rc = myCart->sendToPos(posNumber, this->configurationMap["SelfScanScanInDir"]);
+                        tempStringStream << "{\"cartId\":" << strCartId << ",\"posNumber\":" << posNumber  << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"sendToPos\",\"status\":\"ok\"}" << endl ;
+                        sendRespMsg(pSock, tempStringStream.str() );
+                    }
                     
+                    if (action.compare("add")==0)
+                    {
+                        barcode = pt2.get<std::uint64_t> ("barcode");
+                        qty = pt2.get<std::int32_t> ("qty");
+                        
+                        bCodeType = checkBarcodeType( barcode ) ;
+                        
+                        if ( ( bCodeType != BCODE_NOT_RECOGNIZED ) )
+                        {
+                            if (bCodeType != BCODE_LOYCARD)
+                            {
+                                if (bCodeType == BCODE_EAN13_PRICE_REQ)
+                                {
+                                    tempStringStream.str( std::string() ) ;
+                                    tempStringStream.clear() ;
+                                    tempStringStream << barcode ;
+                                    strcpy( tmp, tempStringStream.str().c_str() );
+                                    tmp[7] = '0' ;
+                                    tmp[8] = '0' ;
+                                    tmp[9] = '0' ;
+                                    tmp[10] = '0' ;
+                                    tmp[11] = '0' ;
+                                    tmp[12] = '0' ;
+                                    barcodeWrk = strtoull(tmp, nullptr, 10) ;
+                                } else {
+                                    barcodeWrk = barcode ;
+                                }
+                                BOOST_LOG_SEV(my_logger::get(), info) << "barcodeWrk: " << barcodeWrk << endl ;
+                                rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
+                            } else {
+                                rc = RC_OK ;
+                            }
+                        } else {
+                            rc = RC_ERR ;
+                        }
+                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" << barcode << "}" << endl ;
+                        sendRespMsg(pSock, tempStringStream.str() ) ;
+                        //myCart->printCart() ;
+                    }
+                    //BOOST_LOG_SEV(my_logger::get(), info) << "\noooo1y\n" ;
+                    if (action.compare("remove")==0)
+                    {
+                        barcode = pt2.get<std::uint64_t> ("barcode");
+                        rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
+                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" << barcode << "}" << endl ;
+                        sendRespMsg(pSock, tempStringStream.str() ) ;
+                        
+                        //myCart->printCart() ;
+                    }
+                    
+                    if (action.compare("print")==0)
+                    {
+                        rc = myCart->printCart() ;
+                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"print\",\"status\":\"ok\"}" << endl ;
+                        sendRespMsg(pSock, tempStringStream.str()) ;
+                    }
+                    
+                    if (action.compare("close")==0)
+                    {
+                        rc = myCart->close() ;
+                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"close\",\"status\":\"ok\"}" << endl ;
+                        sendRespMsg(pSock, tempStringStream.str() ) ;
+                        
+                    }
+                }
+                else
+                {
+                    BOOST_LOG_SEV(my_logger::get(), info) << "Invalid cart state\n" ;
                 }
             }
-            else
+            catch (std::exception const& e)
             {
-                std::cout << "Invalid cart state\n" ;
+                std::cerr << "Sales session error: " << e.what() << endl ;
             }
             
         }
     }
     catch (std::exception& e)
     {
-        std::cerr << "Exception in thread: " << e.what() << "\n";
+        std::cerr << "Exception in thread: " << e.what() << endl ;
     }
 }
 
@@ -670,7 +699,7 @@ void BaseSystem::salesServer(boost::asio::io_service& io_service, short port)
     for (;;)
     {
         socket_ptr sock(new tcp::socket(io_service));
-        std::cout << "Server started" ;
+        BOOST_LOG_SEV(my_logger::get(), info) << "Server started" << endl ;
         tcpAcceptor.accept(*sock);
         boost::thread newThread(boost::bind(&BaseSystem::salesSession, this, sock));
     }

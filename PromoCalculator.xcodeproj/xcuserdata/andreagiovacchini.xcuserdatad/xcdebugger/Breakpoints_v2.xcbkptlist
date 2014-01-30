@@ -72,11 +72,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "381"
-            endingLineNumber = "381"
+            startingLineNumber = "399"
+            endingLineNumber = "399"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -88,11 +88,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "378"
-            endingLineNumber = "378"
+            startingLineNumber = "396"
+            endingLineNumber = "396"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -109,6 +109,64 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "19"
             endingLineNumber = "19">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "std::__1::pair&lt;std::__1::__map_iterator&lt;std::__1::__tree_iterator&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, std::__1::__tree_node&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, void*&gt;*, long&gt; &gt;, bool&gt; std::__1::map&lt;unsigned long long, Cart, std::__1::less&lt;unsigned long long&gt;, std::__1::allocator&lt;std::__1::pair&lt;unsigned long long const, Cart&gt; &gt; &gt;::emplace&lt;std::__1::piecewise_construct_t const&amp;, std::__1::tuple&lt;unsigned long long&gt;, std::__1::tuple&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, unsigned long long, unsigned int&gt; &gt;(std::__1::piecewise_construct_t const&amp;&amp;&amp;, std::__1::tuple&lt;unsigned long long&gt;&amp;&amp;, std::__1::tuple&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, unsigned long long, unsigned int&gt;&amp;&amp;)"
+                  moduleName = "PromoCalculator"
+                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
+                  timestampString = "412733787.326882"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "84">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "std::__1::pair&lt;std::__1::__map_iterator&lt;std::__1::__tree_iterator&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, std::__1::__tree_node&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, void*&gt;*, long&gt; &gt;, bool&gt; std::__1::map&lt;unsigned long long, Cart, std::__1::less&lt;unsigned long long&gt;, std::__1::allocator&lt;std::__1::pair&lt;unsigned long long const, Cart&gt; &gt; &gt;::emplace&lt;std::__1::piecewise_construct_t const&amp;, std::__1::tuple&lt;unsigned long long&gt;, std::__1::tuple&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, unsigned long long, unsigned int&gt; &gt;(std::__1::piecewise_construct_t const&amp;&amp;&amp;, std::__1::tuple&lt;unsigned long long&gt;&amp;&amp;, std::__1::tuple&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, unsigned long long, unsigned int&gt;&amp;&amp;)"
+                  moduleName = "PromoCalculator"
+                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
+                  timestampString = "412733787.327208"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "146">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "std::__1::__tree&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, std::__1::__map_value_compare&lt;unsigned long long, Cart, std::__1::less&lt;unsigned long long&gt;, true&gt;, std::__1::allocator&lt;std::__1::pair&lt;unsigned long long, Cart&gt; &gt; &gt;::destroy(std::__1::__tree_node&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, void*&gt;*)"
+                  moduleName = "PromoCalculator"
+                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
+                  timestampString = "412733787.327476"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "41">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "std::__1::__tree&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, std::__1::__map_value_compare&lt;unsigned long long, Cart, std::__1::less&lt;unsigned long long&gt;, true&gt;, std::__1::allocator&lt;std::__1::pair&lt;unsigned long long, Cart&gt; &gt; &gt;::destroy(std::__1::__tree_node&lt;std::__1::pair&lt;unsigned long long, Cart&gt;, void*&gt;*)"
+                  moduleName = "PromoCalculator"
+                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.h"
+                  timestampString = "412733787.327773"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "103">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -118,11 +176,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "383"
-            endingLineNumber = "383"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -134,11 +192,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "308"
-            endingLineNumber = "308"
+            startingLineNumber = "326"
+            endingLineNumber = "326"
             landmarkName = "BaseSystem::readBarcodesArchive( string pFileName )"
             landmarkType = "5">
          </BreakpointContent>
@@ -150,11 +208,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "355"
-            endingLineNumber = "355"
+            startingLineNumber = "373"
+            endingLineNumber = "373"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -166,13 +224,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
-            landmarkName = "BaseSystem::loadCartsInProgress()"
-            landmarkType = "5">
+            startingLineNumber = "341"
+            endingLineNumber = "341">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -214,11 +270,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "441"
-            endingLineNumber = "441"
+            startingLineNumber = "459"
+            endingLineNumber = "459"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -230,11 +286,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412635434.282397"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "442"
-            endingLineNumber = "442"
+            startingLineNumber = "460"
+            endingLineNumber = "460"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -246,11 +302,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412672751.031703"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "579"
-            endingLineNumber = "579"
+            startingLineNumber = "603"
+            endingLineNumber = "603"
             landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
             landmarkType = "5">
          </BreakpointContent>
@@ -262,11 +318,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412672798.60847"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "443"
-            endingLineNumber = "443"
+            startingLineNumber = "461"
+            endingLineNumber = "461"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -278,11 +334,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412672852.135307"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "531"
-            endingLineNumber = "531"
+            startingLineNumber = "549"
+            endingLineNumber = "549"
             landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
             landmarkType = "5">
          </BreakpointContent>
@@ -294,11 +350,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "412672872.296619"
+            timestampString = "412730751.391594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "546"
-            endingLineNumber = "546"
+            startingLineNumber = "566"
+            endingLineNumber = "566"
             landmarkName = "BaseSystem::salesSession(socket_ptr pSock)"
             landmarkType = "5">
          </BreakpointContent>

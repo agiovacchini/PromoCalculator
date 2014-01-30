@@ -8,26 +8,42 @@
 
 #ifndef PromoCalculator_BaseTypes_h
 
+#define BOOST_ALL_DYN_LINK
+
+//https://groups.google.com/forum/#!topic/cpp-netlib/gZ280gQbqcM
+#define BOOST_SPIRIT_USE_PHOENIX_V3
+
+#include <boost/log/attributes/named_scope.hpp>
+#include <boost/log/attributes/timer.hpp>
+#include <boost/log/common.hpp>
+#include <boost/log/expressions.hpp>
+#include <boost/log/sources/channel_feature.hpp>
+#include <boost/log/sources/channel_logger.hpp>
+#include <boost/log/sources/logger.hpp>
+#include <boost/log/sources/record_ostream.hpp>
+#include <boost/log/sources/severity_logger.hpp>
+#include <boost/log/support/date_time.hpp>
+#include <boost/log/trivial.hpp>
+#include <boost/log/utility/exception_handler.hpp>
+#include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/setup/console.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/thread/shared_mutex.hpp>
+
+
+namespace logging = boost::log;
+namespace sinks = boost::log::sinks;
+namespace attrs = boost::log::attributes;
+namespace src = boost::log::sources;
+namespace expr = boost::log::expressions;
+namespace keywords = boost::log::keywords;
+
 #if defined _WIN32
 	#define WIN32_LEAN_AND_MEAN
 	#include <winsock2.h>
 #include <winbase.h>
 #include <aclapi.h>
 #include <sddl.h>
-	/*typedef struct _TRUSTEE {
-	  PTRUSTEE                   pMultipleTrustee;
-	  MULTIPLE_TRUSTEE_OPERATION MultipleTrusteeOperation;
-	  TRUSTEE_FORM               TrusteeForm;
-	  TRUSTEE_TYPE               TrusteeType;
-	  LPTSTR                     ptstrName;
-	} TRUSTEE, *PTRUSTEE;
-
-	typedef struct _EXPLICIT_ACCESS {
-	  DWORD       grfAccessPermissions;
-	  ACCESS_MODE grfAccessMode;
-	  DWORD       grfInheritance;
-	  TRUSTEE     Trustee;
-	} EXPLICIT_ACCESS, *PEXPLICIT_ACCESS;*/
 
 #endif 
 
@@ -81,5 +97,76 @@ typedef Totals Totals ;
 
 #define BCODE_LOYCARD       0x80
 #define BCODE_NOT_RECOGNIZED    0xff
+
+
+
+/**
+ * Global logger - Start
+ * http://www.boost.org/doc/libs/1_54_0/libs/log/doc/html/log/detailed/sources.html
+*/
+
+enum severity_level
+{
+    info,
+    normal,
+    warning,
+    error,
+    fatal
+};
+
+struct my_handler
+{
+    typedef void result_type;
+    
+    void operator() (std::runtime_error const& e) const
+    {
+        std::cout << "std::runtime_error: " << e.what() << std::endl;
+    }
+    void operator() (std::logic_error const& e) const
+    {
+        std::cout << "std::logic_error: " << e.what() << std::endl;
+        throw;
+    }
+};
+    
+
+// A logger class that allows to intercept exceptions and supports severity level
+class my_logger_mt :
+public src::basic_composite_logger<
+    char
+    ,my_logger_mt
+    ,src::multi_thread_model< boost::shared_mutex >
+    ,src::features<
+        src::severity< severity_level >
+        ,src::exception_handler
+    >
+>
+{
+    BOOST_LOG_FORWARD_LOGGER_MEMBERS(my_logger_mt)
+};
+
+
+BOOST_LOG_INLINE_GLOBAL_LOGGER_INIT(my_logger, my_logger_mt)
+{
+    my_logger_mt lg (keywords::format =
+                     (
+                      expr::stream
+                      << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
+                      << ": <" << logging::trivial::severity
+                      << "> " << expr::smessage
+                      )
+                     );
+    
+    // Set up exception handler: all exceptions that occur while
+    // logging through this logger, will be suppressed
+    lg.set_exception_handler(logging::make_exception_suppressor());
+    
+    return lg;
+}
+
+/**
+ * Global logger - End
+ */
+
 
 #endif
