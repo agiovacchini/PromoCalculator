@@ -314,7 +314,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 							tempStringStream.clear() ;
 							tempStringStream << bcdWrk ;
 							tmp = tempStringStream.str().substr(0,7) + "000000" ;
-                            tmpBcd = atol(tmp.c_str()) ;
+                            tmpBcd = atoll(tmp.c_str()) ;
                         } else {
                             tmpBcd = bcdWrk ;
                         }
@@ -650,8 +650,21 @@ void BaseSystem::salesSession(socket_ptr pSock)
                                 }
                                 
                                 BOOST_LOG_SEV(my_logger_bs, lt::info) << "barcodeWrk: " << barcodeWrk << endl ;
-                                
-                                rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcodeWrk], qty) ;
+								try {
+									unsigned long long tItemCode = barcodesMap[barcodeWrk].getItemCode();
+									map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
+									if (it!=itemsMap.end())
+									{
+										rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcodeWrk], qty) ;
+									}
+									else {
+										rc = BCODE_ITEM_NOT_FOUND;
+									}
+								}
+								catch (std::exception const& e)
+								{
+									std::cerr << "Sales session error: " << e.what() << endl;
+								}
                             } else {
                                 if (myCart->getLoyCardsNumber() < atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()))
                                 {
@@ -673,8 +686,23 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     if (action.compare("remove")==0)
                     {
                         barcode = pt2.get<std::uint64_t> ("barcode");
-                        rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
-                        tempStringStream.str( std::string() ) ;
+						try {
+							unsigned long long tItemCode = barcodesMap[barcodeWrk].getItemCode();
+							map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
+							if (it != itemsMap.end())
+							{
+								rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]);
+							}
+							else {
+								rc = BCODE_ITEM_NOT_FOUND;
+							}
+							
+						}
+						catch (std::exception const& e)
+						{
+							std::cerr << "Sales session error: " << e.what() << endl;
+							}
+						tempStringStream.str( std::string() ) ;
                         tempStringStream.clear() ;
                         tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" << barcode << "}" << endl ;
                         sendRespMsg(pSock, tempStringStream.str() ) ;

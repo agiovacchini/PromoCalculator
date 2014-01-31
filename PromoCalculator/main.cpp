@@ -71,7 +71,7 @@ void init(string pMainPath)
 
 }
 
-#if !defined _WIN32
+//#if !defined _WIN32
 int main(int argc, const char * argv[])
 {
     mainPath = argv[1] ;
@@ -85,9 +85,10 @@ int main(int argc, const char * argv[])
 
 	return 0;
 }
-#endif
+//#endif
 
-#if defined _WIN32
+
+#if !defined _WIN32
 int __cdecl _tmain(int argc, TCHAR *argv[]) 
 { 
     // If command-line parameter is "install", install the service. 
@@ -273,7 +274,7 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
     
-    init();
+	init( mainPath );
     logging::add_common_attributes();
     
 	BaseSystem bs = BaseSystem( mainPath );

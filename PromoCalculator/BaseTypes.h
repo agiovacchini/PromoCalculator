@@ -104,6 +104,7 @@ typedef Totals Totals ;
 #define BCODE_CODE39        0x04
 #define BCODE_CODE128       0x05
 
+#define BCODE_ITEM_NOT_FOUND 0x70
 #define BCODE_LOYCARD       0x80
 #define BCODE_NOT_RECOGNIZED    0xff
 
