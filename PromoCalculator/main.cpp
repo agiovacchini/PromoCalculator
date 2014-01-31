@@ -52,13 +52,15 @@ const int max_length = 1024;
 
 string mainPath = "" ;
 
+
 #if !defined _WIN32
 int main(int argc, const char * argv[])
 {
 
-    logging::add_common_attributes();
+    
+    //logging::add_common_attributes();
 
-    logging::add_file_log(std::string(argv[1]) + "PromoCalculator_%N.log");
+    //logging::add_file_log(std::string(argv[1]) + "PromoCalculator_%N.log");
     mainPath = argv[1] ;
     BaseSystem bs = BaseSystem(mainPath);
 

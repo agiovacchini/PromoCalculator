@@ -32,6 +32,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
+
 #include <boost/thread/shared_mutex.hpp>
 
 
@@ -103,13 +104,13 @@ typedef Totals Totals ;
 #define BCODE_LOYCARD       0x80
 #define BCODE_NOT_RECOGNIZED    0xff
 
-
+namespace lt = boost::log::trivial;
 /**
  * Global logger - Start
  * http://www.boost.org/doc/libs/1_54_0/libs/log/doc/html/log/detailed/sources.html
 */
 
-
+/*
 enum severity_level
 {
     info,
@@ -168,7 +169,8 @@ BOOST_LOG_INLINE_GLOBAL_LOGGER_INIT(my_logger, my_logger_mt)
     
     return lg;
 }
-
+*/
+ 
 /**
  * Global logger - End
  */

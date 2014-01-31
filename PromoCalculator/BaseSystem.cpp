@@ -32,6 +32,7 @@ static unsigned long nextCartNumber ;
 
 namespace qi = boost::spirit::qi;
 namespace fs = boost::filesystem;
+
 qi::rule<std::string::const_iterator, std::string()> quoted_string = '"' >> *(qi::char_ - '"') >> '"';
 qi::rule<std::string::const_iterator, std::string()> valid_characters = qi::char_ - '"' - ',';
 qi::rule<std::string::const_iterator, std::string()> item = *(quoted_string | valid_characters );
@@ -41,7 +42,14 @@ using namespace std;
 
 BaseSystem::BaseSystem( string pBasePath )
 {
+    
     boost::asio::io_service io_service;
+    
+    init() ;
+    
+    logging::add_common_attributes();
+    
+    using namespace logging::trivial;
     
     this->basePath = pBasePath ;
     
@@ -53,22 +61,22 @@ BaseSystem::BaseSystem( string pBasePath )
         
         this->loadCartsInProgress() ;
         
-        BOOST_LOG_SEV(my_logger::get(), info) << "System initialized." ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "System initialized." ;
         //}
         
         try
         {
-            BOOST_LOG_SEV(my_logger::get(), info) << "Server starting...";
+            BOOST_LOG_SEV(my_logger, lt::info) << "Server starting...";
             
             using namespace std;
             salesServer(io_service, atol(configurationMap["NetworkPort"].c_str()));
         }
         catch (std::exception& e)
         {
-            BOOST_LOG_SEV(my_logger::get(), fatal) << e.what() << endl ;
+            BOOST_LOG_SEV(my_logger, fatal) << e.what() << endl ;
         }
     } else {
-        BOOST_LOG_SEV(my_logger::get(), fatal) << "Bad configuration error, aborting start" ;
+        BOOST_LOG_SEV(my_logger, fatal) << "Bad configuration error, aborting start" ;
     }
 }
 
@@ -84,7 +92,7 @@ void BaseSystem::setBasePath( string pBasePath )
 
 int BaseSystem::loadConfiguration()
 {
-    BOOST_LOG_SEV(my_logger::get(), info) << "Config load start" ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "Config load start" ;
     boost::property_tree::ptree pt;
     int rc = 0 ;
     
@@ -102,10 +110,10 @@ int BaseSystem::loadConfiguration()
     }
     catch (std::exception const& e)
     {
-        BOOST_LOG_SEV(my_logger::get(), fatal) << "Config error: " << e.what() ;
+        BOOST_LOG_SEV(my_logger, lt::fatal) << "Config error: " << e.what() ;
         return 1 ;
     }
-    BOOST_LOG_SEV(my_logger::get(), info) << "Config load end" ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "Config load end" ;
     return rc ;
 }
 
@@ -119,12 +127,12 @@ void BaseSystem::printConfiguration()
 {
     typedef std::map<string, string>::iterator configurationRows;
     
-    BOOST_LOG_SEV(my_logger::get(), info) << "Config print start" ;
-    BOOST_LOG_SEV(my_logger::get(), info) << "\tNode Id: " << this->nodeId ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "Config print start" ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "\tNode Id: " << this->nodeId ;
     for(configurationRows iterator = configurationMap.begin(); iterator != configurationMap.end(); iterator++) {
-        BOOST_LOG_SEV(my_logger::get(), info) << "\tkey: " << iterator->first << ", value: " << iterator->second ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "\tkey: " << iterator->first << ", value: " << iterator->second ;
     }
-    BOOST_LOG_SEV(my_logger::get(), info) << "Config print end" ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "Config print end" ;
 }
 
 void BaseSystem::readDepartmentArchive( string pFileName )
@@ -141,10 +149,10 @@ void BaseSystem::readDepartmentArchive( string pFileName )
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " not found" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "File " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " found" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "File " + archiveFileName + " found" ;
     }
     
     std::string line;
@@ -164,7 +172,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
         Department tempDepartment ;
         for (auto i : result)
         {
-            //BOOST_LOG_SEV(my_logger::get(), info) << "ggg" << i;
+            //BOOST_LOG_SEV(my_logger, lt::info) << "ggg" << i;
             switch (column)
             {
                 case 1:
@@ -178,14 +186,14 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             }
             column++ ;
         }
-        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << tempItm.toStr() ;
+        //BOOST_LOG_SEV(my_logger, lt::info) << "\n" << tempItm.toStr() ;
         
         deparmentsMap[tempDepartment.getCode()] = tempDepartment ;
         
-        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
+        //BOOST_LOG_SEV(my_logger, lt::info) << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
         
     }
-    BOOST_LOG_SEV(my_logger::get(), info) << "Finished loading file " << pFileName ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "Finished loading file " << pFileName ;
     
 }
 
@@ -202,10 +210,10 @@ void BaseSystem::readItemArchive( string pFileName )
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " not found" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "File " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " found" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "File " + archiveFileName + " found" ;
     }
     
     std::string line;
@@ -225,7 +233,7 @@ void BaseSystem::readItemArchive( string pFileName )
         Item tempItm ;
         for (auto i : result)
         {
-            //BOOST_LOG_SEV(my_logger::get(), info) << "ggg" << i << std::endl;
+            //BOOST_LOG_SEV(my_logger, lt::info) << "ggg" << i << std::endl;
             switch (column)
             {
                 case 1:
@@ -246,14 +254,14 @@ void BaseSystem::readItemArchive( string pFileName )
             }
             column++ ;
         }
-        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << tempItm.toStr() ;
+        //BOOST_LOG_SEV(my_logger, lt::info) << "\n" << tempItm.toStr() ;
         tempItm.setQuantity(0) ;
         itemsMap[tempItm.getCode()] = tempItm ;
         
-        //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << itemsMap[tempItm.getCode()].toStr();
+        //BOOST_LOG_SEV(my_logger, lt::info) << "\n" << itemsMap[tempItm.getCode()].toStr();
         
     }
-    BOOST_LOG_SEV(my_logger::get(), info) << "Finished loading file " << pFileName << endl ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "Finished loading file " << pFileName << endl ;
 }
 
 void BaseSystem::readBarcodesArchive( string pFileName )
@@ -270,10 +278,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 	
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
-        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " not found" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "File " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        BOOST_LOG_SEV(my_logger::get(), info) << "File " + archiveFileName + " loaded" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "File " + archiveFileName + " loaded" ;
     }
     
     std::string line;
@@ -315,10 +323,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
                         } else {
                             tmpBcd = bcdWrk ;
                         }
-                        //BOOST_LOG_SEV(my_logger::get(), info) << "(" << tmpBcd << ") - " ;
+                        //BOOST_LOG_SEV(my_logger, lt::info) << "(" << tmpBcd << ") - " ;
                         tempBarcode.setCode( tmpBcd ) ;
                     }
-                    //BOOST_LOG_SEV(my_logger::get(), info) << i.c_str() << "\n";
+                    //BOOST_LOG_SEV(my_logger, lt::info) << i.c_str() << "\n";
                     break;
                 case 2:
                     tempBarcode.setItemCode(atoll(i.c_str())) ;
@@ -326,13 +334,13 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             }
             column++ ;
         }
-        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode.getcode: " << tempBarcode.getCode() << " type: " << bCodeType << "\n" ;
+        //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode.getcode: " << tempBarcode.getCode() << " type: " << bCodeType << "\n" ;
         barcodesMap[tempBarcode.getCode()] = tempBarcode ;
         //barcodesMap.emplace( std::piecewise_construct, std::make_tuple(tempBarcode.getCode()), std::make_tuple(tempBarcode) ) ;
-		//BOOST_LOG_SEV(my_logger::get(), info) << "toStr: " << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
+		//BOOST_LOG_SEV(my_logger, lt::info) << "toStr: " << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
         
     }
-    BOOST_LOG_SEV(my_logger::get(), info) << "Finished loading file " << pFileName ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "Finished loading file " << pFileName ;
 }
 
 void BaseSystem::readArchives()
@@ -361,13 +369,13 @@ void BaseSystem::loadCartsInProgress()
     
     if (!fs::exists(this->basePath + "CARTS"))
     {
-        BOOST_LOG_SEV(my_logger::get(), info) << "No CARTS subfolder found" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "No CARTS subfolder found" ;
         exit(-1);
     }
     
     if (fs::is_directory(this->basePath + "CARTS"))
     {
-        BOOST_LOG_SEV(my_logger::get(), info) << "CARTS subfolder found" ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "CARTS subfolder found" ;
         fs::recursive_directory_iterator it(this->basePath + "CARTS");
         fs::recursive_directory_iterator endit;
         while(it != endit)
@@ -376,7 +384,7 @@ void BaseSystem::loadCartsInProgress()
             rCode = 0 ;
             rQty = 0 ;
             //Cart* tmpCart = nullptr ;
-            //BOOST_LOG_SEV(my_logger::get(), info) << "\nFile: " << it->path().filename() << "\n" ;
+            //BOOST_LOG_SEV(my_logger, lt::info) << "\nFile: " << it->path().filename() << "\n" ;
             if (fs::is_regular_file(*it) && it->path().extension() == ".transaction_in_progress")
             {
                 //ret.push_back(it->path().filename());
@@ -385,8 +393,8 @@ void BaseSystem::loadCartsInProgress()
                 //nextCartNumber is saved and then restored to avoid problems with the max cart number when leaving this function in case of sorting problems of filenames from filesystem
                 nextCartNumberTmp = nextCartNumber ;
                 nextCartNumber = currentTmpCartNumber ;
-                BOOST_LOG_SEV(my_logger::get(), info) << "==================================" ;
-                BOOST_LOG_SEV(my_logger::get(), info) << "File tmpTrans: " << it->path().filename() << " num: " << currentTmpCartNumber << " next: " << nextCartNumber ;
+                BOOST_LOG_SEV(my_logger, lt::info) << "==================================" ;
+                BOOST_LOG_SEV(my_logger, lt::info) << "File tmpTrans: " << it->path().filename() << " num: " << currentTmpCartNumber << " next: " << nextCartNumber ;
                 
                 newCart( GEN_CART_LOAD ) ;
                 
@@ -399,12 +407,12 @@ void BaseSystem::loadCartsInProgress()
                     myCart = &(itCarts->second) ;
                     //cout << "Carico carrello\n" ;
                 }
-                //BOOST_LOG_SEV(my_logger::get(), info) << "Cart nr: " << myCart->getNumber() << "\n" ;
+                //BOOST_LOG_SEV(my_logger, lt::info) << "Cart nr: " << myCart->getNumber() << "\n" ;
                 std::ifstream tmpTransactonFileToLoad( this->basePath + "CARTS/" + it->path().filename().string() );
                 
                 while( std::getline(tmpTransactonFileToLoad, line) )
                 {
-                    //BOOST_LOG_SEV(my_logger::get(), info) << "\n" << line ;
+                    //BOOST_LOG_SEV(my_logger, lt::info) << "\n" << line ;
                     std::istringstream is_line(line);
                     std::string::const_iterator s_begin = line.begin();
                     std::string::const_iterator s_end = line.end();
@@ -422,15 +430,15 @@ void BaseSystem::loadCartsInProgress()
                                 //timeStamp
                                 break;
                             case 1:
-                                //BOOST_LOG_SEV(my_logger::get(), info) << "Action: " << i << "\n" ;
+                                //BOOST_LOG_SEV(my_logger, lt::info) << "Action: " << i << "\n" ;
                                 rAction = i[0] ;
                                 break;
                             case 2:
-                                //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode: " << i << "\n"  ;
+                                //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode: " << i << "\n"  ;
                                 rCode = atoll(i.c_str()) ;
                                 break;
                             case 3:
-                                //BOOST_LOG_SEV(my_logger::get(), info) << "Qty: " << i  << "\n" ;
+                                //BOOST_LOG_SEV(my_logger, lt::info) << "Qty: " << i  << "\n" ;
                                 rQty = atoll(i.c_str()) ;
                                 break;
                             default:
@@ -439,7 +447,7 @@ void BaseSystem::loadCartsInProgress()
                         column++ ;
                     }
                     
-                    BOOST_LOG_SEV(my_logger::get(), info) << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() ;
+                    BOOST_LOG_SEV(my_logger, lt::info) << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() ;
                     
                     switch (rAction)
                     {
@@ -451,7 +459,7 @@ void BaseSystem::loadCartsInProgress()
                             myCart->removeItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode]) ;
                             break;
                         default:
-                            BOOST_LOG_SEV(my_logger::get(), info) << "Row action not recognized" ;
+                            BOOST_LOG_SEV(my_logger, lt::info) << "Row action not recognized" ;
                             break;
                     }
                 }
@@ -484,10 +492,10 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
     tempStringStream.str( std::string() ) ;
 	tempStringStream.clear() ;
 	tempStringStream << pBarcode ;
-	//BOOST_LOG_SEV(my_logger::get(), info) << "Barcode: ---" << tempStringStream.str() << "---\n" ;
+	//BOOST_LOG_SEV(my_logger, lt::info) << "Barcode: ---" << tempStringStream.str() << "---\n" ;
     if (regex_match( tempStringStream.str(), loyCard ) )
     {
-        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: Loyalty Card\n" ;
+        //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode type: Loyalty Card\n" ;
         return BCODE_LOYCARD ;
     }
     
@@ -495,36 +503,36 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
     {
         if (regex_match( tempStringStream.str(), ean13PriceReq ) )
         {
-            //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: EAN13 with price\n" ;
+            //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode type: EAN13 with price\n" ;
             return BCODE_EAN13_PRICE_REQ ;
         } else {
-            //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: EAN13\n" ;
+            //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode type: EAN13\n" ;
             return BCODE_EAN13 ;
         }
     }
     
     if (regex_match( tempStringStream.str(), upc ) )
     {
-        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: UPC\n" ;
+        //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode type: UPC\n" ;
         return BCODE_UPC ;
     }
     
     if (regex_match( tempStringStream.str(), ean8 ) )
     {
-        //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: EAN8\n" ;
+        //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode type: EAN8\n" ;
         return BCODE_EAN8 ;
     }
     
     
     
-    //BOOST_LOG_SEV(my_logger::get(), info) << "Barcode type: not recognized\n" ;
+    //BOOST_LOG_SEV(my_logger, lt::info) << "Barcode type: not recognized\n" ;
     return BCODE_NOT_RECOGNIZED ;
 }
 void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
     boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
     std::cout << "pMsg: " << pMsg ;
-    BOOST_LOG_SEV(my_logger::get(), info) << "pMsg: " << pMsg << ", size: " << pMsg.size() << endl ;
+    BOOST_LOG_SEV(my_logger, lt::info) << "pMsg: " << pMsg << ", size: " << pMsg.size() << endl ;
 }
 
 void BaseSystem::salesSession(socket_ptr pSock)
@@ -558,11 +566,11 @@ void BaseSystem::salesSession(socket_ptr pSock)
             
             if (error == boost::asio::error::eof)
             {
-                BOOST_LOG_SEV(my_logger::get(), info) << "Connection reset by peer" << endl ;
+                BOOST_LOG_SEV(my_logger, lt::info) << "Connection reset by peer" << endl ;
                 break; // Connection closed cleanly by peer.
             } else if (error)
             {
-                BOOST_LOG_SEV(my_logger::get(), info) << "Oh my God! There's been a bad fault on socket!" << endl ;
+                BOOST_LOG_SEV(my_logger, lt::info) << "Oh my God! There's been a bad fault on socket!" << endl ;
                 throw boost::system::system_error(error); // Some other error.
             }
             ptree pt2;
@@ -646,7 +654,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                                     barcodeWrk = barcode ;
                                 }
                                 
-                                BOOST_LOG_SEV(my_logger::get(), info) << "barcodeWrk: " << barcodeWrk << endl ;
+                                BOOST_LOG_SEV(my_logger, lt::info) << "barcodeWrk: " << barcodeWrk << endl ;
                                 
                                 rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcodeWrk], qty) ;
                             } else {
@@ -666,7 +674,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                         sendRespMsg(pSock, tempStringStream.str() ) ;
                         //myCart->printCart() ;
                     }
-                    //BOOST_LOG_SEV(my_logger::get(), info) << "\noooo1y\n" ;
+                    //BOOST_LOG_SEV(my_logger, lt::info) << "\noooo1y\n" ;
                     if (action.compare("remove")==0)
                     {
                         barcode = pt2.get<std::uint64_t> ("barcode");
@@ -700,7 +708,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 }
                 else
                 {
-                    BOOST_LOG_SEV(my_logger::get(), info) << "Invalid cart state\n" ;
+                    BOOST_LOG_SEV(my_logger, lt::info) << "Invalid cart state\n" ;
                 }
             }
             catch (std::exception const& e)
@@ -722,7 +730,7 @@ void BaseSystem::salesServer(boost::asio::io_service& io_service, short port)
     for (;;)
     {
         socket_ptr sock(new tcp::socket(io_service));
-        BOOST_LOG_SEV(my_logger::get(), info) << "Server started" << endl ;
+        BOOST_LOG_SEV(my_logger, lt::info) << "Server started" << endl ;
         tcpAcceptor.accept(*sock);
         boost::thread newThread(boost::bind(&BaseSystem::salesSession, this, sock));
     }
