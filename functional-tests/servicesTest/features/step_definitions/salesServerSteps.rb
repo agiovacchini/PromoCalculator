@@ -55,12 +55,14 @@ Then(/^salesServer should return RC (\d+) and my cart id$/) do |expectedRc|
   respRc.should == expectedRc.to_i
 end
 
-Given(/^request to add "(.*?)" quantity of item "(.*?)" to cart$/) do |arg1, arg2|
-  result = salesServer.AddItem arg1, arg2, cartId
+Given(/^request to add "(.*?)" quantity of item "(.*?)" to cart$/) do |pQty, pItm|
+  result = salesServer.AddItem pQty, pItm, cartId
   respCartId = result["cartId"]
   respReqId = result["reqId"]
   respRc = result["rc"]
-  puts respRc
+  itemDescription = result["description"]
+  puts "descr: #{itemDescription}"
+  puts "respRc: #{respRc}"
   sleep sleepTime
 end
 

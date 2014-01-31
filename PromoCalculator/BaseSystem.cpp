@@ -15,6 +15,7 @@
 #include <fstream>
 #include <boost/regex.hpp>
 #include <boost/tokenizer.hpp>
+#include <stdlib.h>
 
 #include <boost/spirit/include/qi.hpp>
 #include <boost/property_tree/ini_parser.hpp>
@@ -93,8 +94,10 @@ int BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
         rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
         rc = rc + setConfigValue("LoyCardPrefix", "Loy.CardPrefix", &pt );
+        rc = rc + setConfigValue("LoyMaxCardsPerTransaction", "MaxCardsPerTransaction", &pt );
         rc = rc + setConfigValue("BarcodesType01", "Barcodes.Type", &pt );
         rc = rc + setConfigValue("NodeId", "Node.Id", &pt );
+        
         this->nodeId = pt.get<std::uint32_t>("Node.Id") ;
     }
     catch (std::exception const& e)
@@ -520,6 +523,7 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
 void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
     boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
+    std::cout << "pMsg: " << pMsg ;
     BOOST_LOG_SEV(my_logger::get(), info) << "pMsg: " << pMsg << ", size: " << pMsg.size() << endl ;
 }
 
@@ -533,7 +537,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
 	std::ostringstream tempStringStream ;
 	std::ostringstream streamCartId ;
 	
-    char tmp[13] ;
+    string tmp = "" ;
     
     int rc = 0 ;
     unsigned long requestId = 0 ;
@@ -549,6 +553,9 @@ void BaseSystem::salesSession(socket_ptr pSock)
 			
             boost::system::error_code error;
             size_t length = pSock->read_some(boost::asio::buffer(data), error);
+            
+            //std::cout << std::string(data) ;
+            
             if (error == boost::asio::error::eof)
             {
                 BOOST_LOG_SEV(my_logger::get(), info) << "Connection reset by peer" << endl ;
@@ -573,6 +580,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 if (action.compare("init")==0)
                 {
                     cartId = this->newCart( GEN_CART_NEW ) ;
+                    tempStringStream.str( std::string() ) ;
+                    tempStringStream.clear() ;
                     tempStringStream << "{\"cartId\":" << cartId << ",\"rc\":" << rc << "}" << endl ;
                     sendRespMsg(pSock, tempStringStream.str() ) ;
                 } else {
@@ -581,11 +590,11 @@ void BaseSystem::salesSession(socket_ptr pSock)
                 
                 mainIterator = cartsMap.find(cartId);
                 Cart* myCart = nullptr;
-                
                 streamCartId.str( std::string() ) ;
                 streamCartId.clear() ;
                 streamCartId << cartId ;
                 std::string strCartId = streamCartId.str() ;
+                
                 unsigned long posNumber = 0 ;
                 
                 if (mainIterator != cartsMap.end()) {
@@ -598,6 +607,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     if (action.compare("save")==0)
                     {
                         rc = myCart->persist() ;
+                        tempStringStream.str( std::string() ) ;
+                        tempStringStream.clear() ;
                         tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"save\",\"status\":\"ok\"}" << endl ;
                         sendRespMsg(pSock, tempStringStream.str() );
                     }
@@ -606,6 +617,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     {
                         posNumber = pt2.get<std::uint32_t> ("posNumber");
                         rc = myCart->sendToPos(posNumber, this->configurationMap["SelfScanScanInDir"]);
+                        tempStringStream.str( std::string() ) ;
+                        tempStringStream.clear() ;
                         tempStringStream << "{\"cartId\":" << strCartId << ",\"posNumber\":" << posNumber  << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"sendToPos\",\"status\":\"ok\"}" << endl ;
                         sendRespMsg(pSock, tempStringStream.str() );
                     }
@@ -621,31 +634,35 @@ void BaseSystem::salesSession(socket_ptr pSock)
                         {
                             if (bCodeType != BCODE_LOYCARD)
                             {
+                                
                                 if (bCodeType == BCODE_EAN13_PRICE_REQ)
                                 {
                                     tempStringStream.str( std::string() ) ;
                                     tempStringStream.clear() ;
                                     tempStringStream << barcode ;
-                                    strcpy( tmp, tempStringStream.str().c_str() );
-                                    tmp[7] = '0' ;
-                                    tmp[8] = '0' ;
-                                    tmp[9] = '0' ;
-                                    tmp[10] = '0' ;
-                                    tmp[11] = '0' ;
-                                    tmp[12] = '0' ;
-                                    barcodeWrk = strtoull(tmp, nullptr, 10) ;
+                                    tmp = tempStringStream.str().substr(0,7) + "000000" ;
+                                    barcodeWrk = atoll(tmp.c_str()) ;
                                 } else {
                                     barcodeWrk = barcode ;
                                 }
+                                
                                 BOOST_LOG_SEV(my_logger::get(), info) << "barcodeWrk: " << barcodeWrk << endl ;
-                                rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode], qty) ;
+                                
+                                rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcodeWrk], qty) ;
                             } else {
-                                rc = RC_OK ;
+                                if (myCart->getLoyCardsNumber() < atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()))
+                                {
+                                    rc = myCart->addLoyCard(barcode) ;
+                                } else {
+                                    rc = RC_LOY_MAX_CARD_NUMBER ;
+                                }
                             }
                         } else {
                             rc = RC_ERR ;
                         }
-                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" << barcode << "}" << endl ;
+                        tempStringStream.str( std::string() ) ;
+                        tempStringStream.clear() ;
+                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" << barcode << ",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\"}" << endl ;
                         sendRespMsg(pSock, tempStringStream.str() ) ;
                         //myCart->printCart() ;
                     }
@@ -654,6 +671,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     {
                         barcode = pt2.get<std::uint64_t> ("barcode");
                         rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcodesMap[barcode]) ;
+                        tempStringStream.str( std::string() ) ;
+                        tempStringStream.clear() ;
                         tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" << barcode << "}" << endl ;
                         sendRespMsg(pSock, tempStringStream.str() ) ;
                         
@@ -663,6 +682,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     if (action.compare("print")==0)
                     {
                         rc = myCart->printCart() ;
+                        tempStringStream.str( std::string() ) ;
+                        tempStringStream.clear() ;
                         tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"print\",\"status\":\"ok\"}" << endl ;
                         sendRespMsg(pSock, tempStringStream.str()) ;
                     }
@@ -670,6 +691,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     if (action.compare("close")==0)
                     {
                         rc = myCart->close() ;
+                        tempStringStream.str( std::string() ) ;
+                        tempStringStream.clear() ;
                         tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"close\",\"status\":\"ok\"}" << endl ;
                         sendRespMsg(pSock, tempStringStream.str() ) ;
                         

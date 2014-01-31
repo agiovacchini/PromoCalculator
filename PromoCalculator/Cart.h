@@ -20,11 +20,13 @@
 
 class Cart {
     //Totals totals ;
+    std::map <unsigned int, unsigned long long> loyCardsMap ;
     std::map <void*, CartRow> itemsMap ;
     std::map <void*, long> barcodesMap ;
     std::map <unsigned long long, Totals> totalsMap ;
     unsigned long number ;
     unsigned long itemsNumber ;
+    unsigned int loyCardsNumber ;
     unsigned long nextRequestId ;
     unsigned int state ;
     string basePath = "./" ;
@@ -41,9 +43,11 @@ public:
     int addItemByBarcode(Item& pItem, Barcodes& pBarcode) ;
     int addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem ) ;
     int removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
+    int addLoyCard( unsigned long long pLoyCardNumber) ;
     unsigned int getState() const ;
     void setState( unsigned int pState ) ;
     unsigned long getNextRequestId() ;
+    unsigned int getLoyCardsNumber() const ;
     int printCart() ;
     int persist( ) ;
 	int sendToPos(unsigned long pPosNumber, string pScanInPath);

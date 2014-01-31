@@ -31,6 +31,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     number = pNumber ;
     itemsNumber = 0 ;
     nextRequestId = 0 ;
+    loyCardsNumber = 0 ;
     basePath = pBasePath ;
     
     
@@ -83,6 +84,10 @@ unsigned long Cart::getNextRequestId()
     return this->nextRequestId ;
 }
 
+unsigned int Cart::getLoyCardsNumber() const
+{
+    return this->loyCardsNumber ;
+}
 /*Totals Cart::addItemByBarcode(unsigned long long pBarcode)
  {
  //bs.itemsMap[6945339]
@@ -132,6 +137,13 @@ int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyI
 			this->writeTransactionRow(tempStringStream.str() );
         }
     }
+    return RC_OK ;
+}
+
+int Cart::addLoyCard( unsigned long long pLoyCardNumber )
+{
+    loyCardsMap[loyCardsNumber] = pLoyCardNumber ;
+    loyCardsNumber++ ;
     return RC_OK ;
 }
 

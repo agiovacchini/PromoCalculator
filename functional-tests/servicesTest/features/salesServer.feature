@@ -18,7 +18,7 @@ Feature: Test kStore Servlet
     Given request to add "1" quantity of item "8004225032442" to cart
     Then salesServer should return RC 0 and my cart id
 
-    #Given request to add "1" quantity of item "2071775003426" to cart
+    Given request to add "1" quantity of item "2071775003426" to cart
     #Then salesServer should return RC 0 and my cart id
 
     Given request to add "5" quantity of item "8004225032442" to cart
@@ -73,6 +73,7 @@ Feature: Test kStore Servlet
     Given request to close connection
     Then salesServer should return RC 0 and my cart id
 
+
   Scenario: Send existing cart to POS
 
     Given request to initialize a new session
@@ -94,4 +95,22 @@ Feature: Test kStore Servlet
     Given I use existing cart "2"
 
     Given request to send to POS "1"
+    Then salesServer should return RC 0 and my cart id
+
+  Scenario: Simple shopping on existing cart
+
+    Given request to initialize a new session
+
+    Given I use existing cart "1"
+
+    Given request to add "1" quantity of item "260177500349" to cart
+    Then salesServer should return RC 0 and my cart id
+
+    Given request to add "1" quantity of item "260177500349" to cart
+    Then salesServer should return RC 0 and my cart id
+
+    Given request to add "1" quantity of item "260177500349" to cart
+    Then salesServer should return RC 0 and my cart id
+
+    Given request to add "1" quantity of item "260177500349" to cart
     Then salesServer should return RC 0 and my cart id

@@ -86,7 +86,8 @@ typedef Totals Totals ;
 #define GEN_CART_LOAD      0x02
 
 #define RC_OK              0x00
-#define RC_ERR             0x1
+#define RC_ERR             0x01
+#define RC_LOY_MAX_CARD_NUMBER 0x100
 
 #define BCODE_EAN13         0x00
 #define BCODE_EAN13_PRICE_REQ         0x01
