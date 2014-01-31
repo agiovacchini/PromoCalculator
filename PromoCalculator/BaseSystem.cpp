@@ -94,7 +94,7 @@ int BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
         rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
         rc = rc + setConfigValue("LoyCardPrefix", "Loy.CardPrefix", &pt );
-        rc = rc + setConfigValue("LoyMaxCardsPerTransaction", "MaxCardsPerTransaction", &pt );
+        rc = rc + setConfigValue("LoyMaxCardsPerTransaction", "Loy.MaxCardsPerTransaction", &pt );
         rc = rc + setConfigValue("BarcodesType01", "Barcodes.Type", &pt );
         rc = rc + setConfigValue("NodeId", "Node.Id", &pt );
         

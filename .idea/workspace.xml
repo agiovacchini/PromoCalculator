@@ -2,17 +2,74 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c53156f1-7971-4283-8b65-6fcac891fa91" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000002.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000002.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000003.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000003.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000004.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000004.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000005.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000005.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000006.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000006.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000007.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000007.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000008.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000008.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000009.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000009.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000010.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000010.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000011.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000011.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000012.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000012.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000013.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000013.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000014.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000014.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000015.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000015.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000016.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000016.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000017.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000017.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000018.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000018.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000019.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000019.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000020.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000020.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000021.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000021.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000022.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000022.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000023.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000023.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000024.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000024.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000025.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000025.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000026.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000026.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000027.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000027.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000028.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000028.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000029.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000029.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000030.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000034.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000035.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000036.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000036.transaction_in_progress" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000037.cart" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000037.transaction_in_progress" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000001.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000001.cart" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000001.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000001.transaction_in_progress" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseTypes.h" afterPath="$PROJECT_DIR$/PromoCalculator/BaseTypes.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Cart.h" afterPath="$PROJECT_DIR$/PromoCalculator/Cart.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculator.ini" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculator.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/main.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/main.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PromoCalculator.iws" />
