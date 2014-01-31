@@ -1,23 +1,7 @@
-g++ -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o main.o main.cpp
-main.cpp: In function 'void DoUpdateSvcDacl()':
-main.cpp:699:23: error: cannot convert '_SECURITY_DESCRIPTOR**' to 'PSECURITY_DESCRIPTOR {aka _SECURITY_DESCRIPTOR*}' for argument '3' to 'BOOL QueryServiceObjectSecurity(SC_HANDLE, SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, DWORD, LPDWORD)'
-         &dwBytesNeeded))
-                       ^
-main.cpp: In function 'BOOL StopDependentServices()':
-main.cpp:1020:17: error: expected 'catch' before '__finally'
-                 __finally 
-                 ^
-main.cpp:1020:17: error: expected '(' before '__finally'
-main.cpp:1020:17: error: expected type-specifier before '__finally'
-main.cpp:1021:17: error: expected ')' before '{' token
-                 {
-                 ^
-main.cpp:1027:9: error: expected 'catch' before '__finally'
-         __finally 
-         ^
-main.cpp:1027:9: error: expected '(' before '__finally'
-main.cpp:1027:9: error: expected type-specifier before '__finally'
-main.cpp:1028:9: error: expected ')' before '{' token
-         {
-         ^
-make: *** [main.o] Error 1
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Barcodes.o Barcodes.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Cart.o Cart.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Department.o Department.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Item.o Item.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o main.o main.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o stdafx.o stdafx.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710 -o promoCalculator Barcodes.o BaseSystem.o Cart.o Department.o Item.o main.o stdafx.o -lws2_32 -lboost_log-mgw48-mt-d-1_55 -lboost_date_time-mgw48-mt-d-1_55 -lboost_regex-mgw48-mt-d-1_55 -lboost_log_setup-mgw48-mt-d-1_55 -lboost_chrono-mgw48-mt-d-1_55 -lboost_system-mgw48-mt-d-1_55 -lboost_filesystem-mgw48-mt-d-1_55 -lboost_iostreams-mgw48-mt-d-1_55 -lboost_thread-mgw48-mt-d-1_55

@@ -253,6 +253,9 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
     
     // TO_DO: Perform work until service stops.
+	logging::add_common_attributes();
+
+	logging::add_file_log(std::string(mainPath) + "PromoCalculator_%N.log");
 	BaseSystem bs = BaseSystem( mainPath );
     
     while(1)

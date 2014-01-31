@@ -7,7 +7,7 @@
 //
 
 #ifndef PromoCalculator_BaseTypes_h
-
+#undef __STRICT_ANSI__ 
 #define BOOST_ALL_DYN_LINK
 
 //https://groups.google.com/forum/#!topic/cpp-netlib/gZ280gQbqcM
@@ -100,11 +100,11 @@ typedef Totals Totals ;
 #define BCODE_NOT_RECOGNIZED    0xff
 
 
-
 /**
  * Global logger - Start
  * http://www.boost.org/doc/libs/1_54_0/libs/log/doc/html/log/detailed/sources.html
 */
+
 
 enum severity_level
 {
