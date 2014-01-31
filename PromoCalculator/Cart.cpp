@@ -128,7 +128,7 @@ int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyI
 		tempStringStream.clear();
 		tempStringStream << this->getState();
 
-		BOOST_LOG_TRIVIAL(info) << "Stato carrello: " << tempStringStream.str() << "\n" ;
+		BOOST_LOG_SEV(my_logger_bs, lt::info) << "Stato carrello: " << tempStringStream.str() << "\n" ;
         if (this->getState()==CART_STATE_READY_FOR_ITEM)
         {
 			tempStringStream.str(std::string());

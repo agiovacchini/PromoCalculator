@@ -7,6 +7,9 @@
 //
 
 #ifndef PromoCalculator_BaseTypes_h
+#define PromoCalculator_BaseTypes_h
+
+
 #undef __STRICT_ANSI__ 
 
 #if !defined _WIN32
@@ -56,7 +59,7 @@ namespace keywords = boost::log::keywords;
 #include <sstream>
 
 
-#define PromoCalculator_BaseTypes_h
+
 
 struct Totals {
     long itemsNumber ;
@@ -174,6 +177,5 @@ BOOST_LOG_INLINE_GLOBAL_LOGGER_INIT(my_logger, my_logger_mt)
 /**
  * Global logger - End
  */
-
 
 #endif

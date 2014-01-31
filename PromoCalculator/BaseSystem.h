@@ -37,7 +37,7 @@ using boost::property_tree::write_json;
 class BaseSystem {
     string basePath ;
     unsigned long nodeId ;
-    src::severity_logger< boost::log::trivial::severity_level > my_logger;
+    src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_bs;
     
 public:
     std::map <string, string> configurationMap ;
@@ -70,23 +70,5 @@ public:
     
     Item getItemByIntCode( unsigned long long pIntcode ) ;
 };
-
-void init()
-{
-    logging::add_file_log
-    (
-     keywords::file_name = "PromoCalculator_%N.log",
-     // This makes the sink to write log records that look like this:
-     // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message
-     // YYYY-MM-DD HH:MI:SS: <error> An error severity message
-     keywords::format =
-     (
-      expr::stream
-      << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
-      << ": <" << logging::trivial::severity
-      << "> " << expr::smessage
-      )
-     );
-}
 
 #endif /* defined(__PromoCalculator__BaseSystem__) */
