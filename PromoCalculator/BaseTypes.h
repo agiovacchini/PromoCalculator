@@ -8,7 +8,11 @@
 
 #ifndef PromoCalculator_BaseTypes_h
 #undef __STRICT_ANSI__ 
-#define BOOST_ALL_DYN_LINK
+
+#if !defined _WIN32
+	#define BOOST_ALL_DYN_LINK
+	#define BOOST_LOG_DYN_LINK
+#endif
 
 //https://groups.google.com/forum/#!topic/cpp-netlib/gZ280gQbqcM
 #define BOOST_SPIRIT_USE_PHOENIX_V3
