@@ -52,16 +52,35 @@ const int max_length = 1024;
 
 string mainPath = "" ;
 
+void init(string pMainPath)
+{
+    logging::add_file_log
+    (
+     keywords::file_name = pMainPath + "PromoCalculator_%N.log",
+     // This makes the sink to write log records that look like this:
+     // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message
+     // YYYY-MM-DD HH:MI:SS: <error> An error severity message
+     keywords::format =
+     (
+      expr::stream
+      << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
+      << ": <" << logging::trivial::severity
+      << "> " << expr::smessage
+      )
+     );
+
+}
 
 #if !defined _WIN32
 int main(int argc, const char * argv[])
 {
-
+    mainPath = argv[1] ;
+    init(mainPath);
     
-    //logging::add_common_attributes();
+    logging::add_common_attributes();
 
     //logging::add_file_log(std::string(argv[1]) + "PromoCalculator_%N.log");
-    mainPath = argv[1] ;
+    
     BaseSystem bs = BaseSystem(mainPath);
 
 	return 0;
@@ -254,10 +273,9 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
     
-    // TO_DO: Perform work until service stops.
-	logging::add_common_attributes();
-
-	logging::add_file_log(std::string(mainPath) + "PromoCalculator_%N.log");
+    init();
+    logging::add_common_attributes();
+    
 	BaseSystem bs = BaseSystem( mainPath );
     
     while(1)

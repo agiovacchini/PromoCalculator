@@ -48,26 +48,6 @@ BaseSystem::BaseSystem( string pBasePath )
     
     this->basePath = pBasePath ;
     
-    logging::add_file_log
-    (
-     keywords::file_name = this->basePath + "PromoCalculator_%N.log",
-     // This makes the sink to write log records that look like this:
-     // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message
-     // YYYY-MM-DD HH:MI:SS: <error> An error severity message
-     keywords::format =
-     (
-      expr::stream
-      << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
-      << ": <" << logging::trivial::severity
-      << "> " << expr::smessage
-      )
-     );
-    
-    
-    logging::add_common_attributes();
-    
-
-    
     if ( this->loadConfiguration() == 0 )
     {
         this->printConfiguration() ;
