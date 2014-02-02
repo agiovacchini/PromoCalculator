@@ -68,7 +68,7 @@ BaseSystem::BaseSystem( string pBasePath )
         }
         catch (std::exception& e)
         {
-            BOOST_LOG_SEV(my_logger_bs, fatal) << e.what() << endl ;
+            BOOST_LOG_SEV(my_logger_bs, fatal) << e.what() ;
         }
     } else {
         BOOST_LOG_SEV(my_logger_bs, fatal) << "Bad configuration error, aborting start" ;
@@ -256,7 +256,7 @@ void BaseSystem::readItemArchive( string pFileName )
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "\n" << itemsMap[tempItm.getCode()].toStr();
         
     }
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "Finished loading file " << pFileName << endl ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "Finished loading file " << pFileName ;
 }
 
 void BaseSystem::readBarcodesArchive( string pFileName )
@@ -526,8 +526,8 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
 void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
     boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
-    std::cout << "pMsg: " << pMsg ;
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "pMsg: " << pMsg << ", size: " << pMsg.size() << endl ;
+    //std::cout << "pMsg: " << pMsg ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "pMsg: " << pMsg << ", size: " << pMsg.size() ;
 }
 
 void BaseSystem::salesSession(socket_ptr pSock)
@@ -561,11 +561,11 @@ void BaseSystem::salesSession(socket_ptr pSock)
             
             if (error == boost::asio::error::eof)
             {
-                BOOST_LOG_SEV(my_logger_bs, lt::info) << "Connection reset by peer" << endl ;
+                BOOST_LOG_SEV(my_logger_bs, lt::info) << "Connection reset by peer" ;
                 break; // Connection closed cleanly by peer.
             } else if (error)
             {
-                BOOST_LOG_SEV(my_logger_bs, lt::info) << "Oh my God! There's been a bad fault on socket!" << endl ;
+                BOOST_LOG_SEV(my_logger_bs, lt::info) << "Oh my God! There's been a bad fault on socket!" ;
                 throw boost::system::system_error(error); // Some other error.
             }
             ptree pt2;
@@ -576,7 +576,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
             }
             catch (std::exception const& e)
             {
-                std::cerr << "Sales session JSON read error: " << e.what() << endl;
+				BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales JSON parse error: " << e.what();
             }
             try {
                 std::string action = pt2.get<std::string> ("action");
@@ -585,7 +585,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                     cartId = this->newCart( GEN_CART_NEW ) ;
                     tempStringStream.str( std::string() ) ;
                     tempStringStream.clear() ;
-                    tempStringStream << "{\"cartId\":" << cartId << ",\"rc\":" << rc << "}" << endl ;
+                    tempStringStream << "{\"cartId\":" << cartId << ",\"rc\":" << rc << "}" ;
                     sendRespMsg(pSock, tempStringStream.str() ) ;
                 } else {
                     cartId = pt2.get<std::uint64_t> ("cartId");
@@ -649,7 +649,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
                                     barcodeWrk = barcode ;
                                 }
                                 
-                                BOOST_LOG_SEV(my_logger_bs, lt::info) << "barcodeWrk: " << barcodeWrk << endl ;
+                                BOOST_LOG_SEV(my_logger_bs, lt::info) << "barcodeWrk: " << barcodeWrk ;
 								try {
 									unsigned long long tItemCode = barcodesMap[barcodeWrk].getItemCode();
 									map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
@@ -663,7 +663,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
 								}
 								catch (std::exception const& e)
 								{
-									std::cerr << "Sales session error: " << e.what() << endl;
+									BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what(); 
 								}
                             } else {
                                 if (myCart->getLoyCardsNumber() < atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()))
@@ -700,8 +700,8 @@ void BaseSystem::salesSession(socket_ptr pSock)
 						}
 						catch (std::exception const& e)
 						{
-							std::cerr << "Sales session error: " << e.what() << endl;
-							}
+							BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
+						}
 						tempStringStream.str( std::string() ) ;
                         tempStringStream.clear() ;
                         tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" << barcode << "}" << endl ;
@@ -736,14 +736,14 @@ void BaseSystem::salesSession(socket_ptr pSock)
             }
             catch (std::exception const& e)
             {
-                std::cerr << "Sales session error: " << e.what() << endl ;
+				BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
             }
             
         }
     }
     catch (std::exception& e)
     {
-        std::cerr << "Exception in thread: " << e.what() << endl ;
+		BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
     }
 }
 
@@ -753,7 +753,7 @@ void BaseSystem::salesServer(boost::asio::io_service& io_service, short port)
     for (;;)
     {
         socket_ptr sock(new tcp::socket(io_service));
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "Server started" << endl ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "Server started" ;
         tcpAcceptor.accept(*sock);
         boost::thread newThread(boost::bind(&BaseSystem::salesSession, this, sock));
     }

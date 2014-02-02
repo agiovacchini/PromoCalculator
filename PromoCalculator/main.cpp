@@ -56,7 +56,7 @@ void init(string pMainPath)
 {
     logging::add_file_log
     (
-     keywords::file_name = pMainPath + "PromoCalculator_%N.log",
+     keywords::file_name = pMainPath + "LOGS/PromoCalculator_%N.log",
      // This makes the sink to write log records that look like this:
      // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message
      // YYYY-MM-DD HH:MI:SS: <error> An error severity message
@@ -71,24 +71,22 @@ void init(string pMainPath)
 
 }
 
-//#if !defined _WIN32
+#if !defined _WIN32
 int main(int argc, const char * argv[])
 {
     mainPath = argv[1] ;
-    init(mainPath);
-    
+
+	init(mainPath);
     logging::add_common_attributes();
 
-    //logging::add_file_log(std::string(argv[1]) + "PromoCalculator_%N.log");
-    
     BaseSystem bs = BaseSystem(mainPath);
 
 	return 0;
 }
-//#endif
+#endif
 
 
-#if !defined _WIN32
+#if defined _WIN32
 int __cdecl _tmain(int argc, TCHAR *argv[]) 
 { 
     // If command-line parameter is "install", install the service. 
@@ -274,8 +272,8 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
     
-	init( mainPath );
-    logging::add_common_attributes();
+	init(mainPath);
+	logging::add_common_attributes();
     
 	BaseSystem bs = BaseSystem( mainPath );
     
