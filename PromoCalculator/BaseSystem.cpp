@@ -23,10 +23,15 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/filesystem.hpp>
 
+#include "reply.hpp"
+#include "request.hpp"
+#include "request_parser.hpp"
+#include "request_handler.hpp"
+
 
 #include "BaseSystem.h"
 
-const int max_length = 256;
+const int max_length = 8192;
 int bCodeType = 0 ;
 static unsigned long nextCartNumber ;
 
@@ -59,7 +64,7 @@ BaseSystem::BaseSystem( string pBasePath )
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "System initialized." ;
         //}
         
-        try
+        /*try
         {
             BOOST_LOG_SEV(my_logger_bs, lt::info) << "Server starting...";
             
@@ -69,10 +74,15 @@ BaseSystem::BaseSystem( string pBasePath )
         catch (std::exception& e)
         {
             BOOST_LOG_SEV(my_logger_bs, fatal) << e.what() ;
-        }
+        }*/
     } else {
         BOOST_LOG_SEV(my_logger_bs, fatal) << "Bad configuration error, aborting start" ;
     }
+}
+
+string BaseSystem::getConfigValue( string pParamName )
+{
+    return configurationMap[pParamName] ;
 }
 
 string BaseSystem::getBasePath() const
@@ -100,6 +110,9 @@ int BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("LoyMaxCardsPerTransaction", "Loy.MaxCardsPerTransaction", &pt );
         rc = rc + setConfigValue("BarcodesType01", "Barcodes.Type", &pt );
         rc = rc + setConfigValue("NodeId", "Node.Id", &pt );
+        rc = rc + setConfigValue("WebAddress", "Web.Address", &pt );
+        rc = rc + setConfigValue("WebPort", "Web.Port", &pt );
+        rc = rc + setConfigValue("WebThreads", "Web.Threads", &pt );
         
         this->nodeId = pt.get<std::uint32_t>("Node.Id") ;
     }
@@ -476,7 +489,7 @@ void BaseSystem::loadCartsInProgress()
 int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
 {
 	using namespace boost;
-    int type = 0 ;
+    //int type = 0 ;
     regex ean13( "\\d{13}" ) ;
 	regex ean13PriceReq( "2\\d{12}" ) ;
 	regex upc( "\\d{12}" ) ;
@@ -556,8 +569,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
 			
             boost::system::error_code error;
             size_t length = pSock->read_some(boost::asio::buffer(data), error);
-            
-            //std::cout << std::string(data) ;
+
             
             if (error == boost::asio::error::eof)
             {

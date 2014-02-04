@@ -35,6 +35,8 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
+#include <boost/spirit/include/qi.hpp>
+
 
 #include <boost/thread/shared_mutex.hpp>
 
@@ -109,74 +111,25 @@ typedef Totals Totals ;
 #define BCODE_NOT_RECOGNIZED    0xff
 
 namespace lt = boost::log::trivial;
-/**
- * Global logger - Start
- * http://www.boost.org/doc/libs/1_54_0/libs/log/doc/html/log/detailed/sources.html
-*/
 
-/*
-enum severity_level
-{
-    info,
-    normal,
-    warning,
-    error,
-    fatal
-};
 
-struct my_handler
+namespace qi = boost::spirit::qi;
+
+template <typename Iterator>
+struct keys_and_values
+: qi::grammar<Iterator, std::map<std::string, std::string>()>
 {
-    typedef void result_type;
-    
-    void operator() (std::runtime_error const& e) const
+    keys_and_values()
+    : keys_and_values::base_type(query)
     {
-        std::cout << "std::runtime_error: " << e.what() << std::endl;
+        query =  pair >> *((qi::lit(';') | '&' ) >> pair);
+        pair  =  key >> -('=' >> value);
+        key   =  qi::char_("a-zA-Z_") >> *qi::char_("a-zA-Z_0-9");
+        value = +qi::char_("a-zA-Z_0-9");
     }
-    void operator() (std::logic_error const& e) const
-    {
-        std::cout << "std::logic_error: " << e.what() << std::endl;
-        throw;
-    }
+    qi::rule<Iterator, std::map<std::string, std::string>()> query;
+    qi::rule<Iterator, std::pair<std::string, std::string>()> pair;
+    qi::rule<Iterator, std::string()> key, value;
 };
-    
-
-// A logger class that allows to intercept exceptions and supports severity level
-class my_logger_mt :
-public src::basic_composite_logger<
-    char
-    ,my_logger_mt
-    ,src::multi_thread_model< boost::shared_mutex >
-    ,src::features<
-        src::severity< severity_level >
-        ,src::exception_handler
-    >
->
-{
-    BOOST_LOG_FORWARD_LOGGER_MEMBERS(my_logger_mt)
-};
-
-
-BOOST_LOG_INLINE_GLOBAL_LOGGER_INIT(my_logger, my_logger_mt)
-{
-    my_logger_mt lg (keywords::format =
-                     (
-                      expr::stream
-                      << expr::format_date_time< boost::posix_time::ptime >("TimeStamp", "%Y-%m-%d %H:%M:%S")
-                      << ": <" << logging::trivial::severity
-                      << "> " << expr::smessage
-                      )
-                     );
-    
-    // Set up exception handler: all exceptions that occur while
-    // logging through this logger, will be suppressed
-    lg.set_exception_handler(logging::make_exception_suppressor());
-    
-    return lg;
-}
-*/
- 
-/**
- * Global logger - End
- */
 
 #endif

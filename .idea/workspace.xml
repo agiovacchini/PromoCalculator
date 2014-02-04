@@ -2,76 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c53156f1-7971-4283-8b65-6fcac891fa91" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000019.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000019.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000020.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000020.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000021.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000021.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000022.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000022.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000023.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000023.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000024.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000024.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000025.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000025.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000026.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000026.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000027.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000027.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000028.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000028.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000029.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000029.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000030.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000034.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000035.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000036.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000036.transaction_in_progress" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000037.cart" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000037.transaction_in_progress" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/connection.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/connection.hpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/header.hpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/mime_types.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/mime_types.hpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/reply.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/reply.hpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/request.hpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/request_handler.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/request_handler.hpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/request_parser.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/request_parser.hpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/server.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator/server.hpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000002.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000002.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000002.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000002.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000003.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000003.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000003.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000003.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000004.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000004.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000004.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000004.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000005.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000005.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000005.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000005.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000006.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000006.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000006.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000006.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000007.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000007.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000007.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000007.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000008.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000008.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000008.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000008.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000009.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000009.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000009.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000009.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000010.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000010.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000010.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000010.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000011.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000011.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000011.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000011.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000012.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000012.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000012.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000012.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000013.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000013.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000013.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000013.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000014.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000014.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000014.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000014.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000015.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000015.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000015.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000015.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000016.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000016.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000016.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000016.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000017.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000017.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000017.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000017.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000018.cart" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000018.cart" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000018.transaction_in_progress" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/CARTS/0000000018.transaction_in_progress" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseTypes.h" afterPath="$PROJECT_DIR$/PromoCalculator/BaseTypes.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/main.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.pbxproj" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcschemes/xcschememanagement.plist" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcschemes/xcschememanagement.plist" />
     </list>
     <ignored path="PromoCalculator.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391168059889" ignored="false" />
+    <file path="/Dummy.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391504406964" ignored="false" />
     <file path="/config.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391008460178" ignored="false" />
     <file path="/env.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715334158" ignored="false" />
     <file path="/kStore.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389714005173" ignored="false" />
@@ -85,14 +41,15 @@
     <file path="/salesServer.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391168395723" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/functional-tests/kWalletWebServicesTests/features/kStore.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389856679709" ignored="false" />
     <file path="/Rake.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389964030973" ignored="false" />
-    <file path="/buildForTest.sh" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389965511191" ignored="false" />
-    <file path="$PROJECT_DIR$/../../../workspace/kWallet/functional-tests/buildForTest.sh" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389965511191" ignored="false" />
+    <file path="/buildForTest.sh" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391505702383" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../workspace/kWallet/functional-tests/buildForTest.sh" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391505702383" ignored="false" />
     <file path="/a.dummy" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389967626422" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build-ibm.properties" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968750997" ignored="false" />
     <file path="/build-ibm.properties" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968750997" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/bin/proguard.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/gen/com/cne/kWallet/R.java" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/gen/com/cne/kWallet/Manifest.java" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
+    <file path="$PROJECT_DIR$/../../../workspace/kWallet/build-ci.properties" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391505931660" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +90,7 @@
       <file leaf-file-name="salesServer.feature" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="49" column="4" selection-start="1815" selection-end="1815" vertical-scroll-proportion="0.49723756">
+            <state line="4" column="45" selection-start="116" selection-end="116" vertical-scroll-proportion="0.092449926">
               <folding />
             </state>
           </provider>
@@ -160,7 +117,7 @@
       <file leaf-file-name="config.yml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="5" selection-start="117" selection-end="117" vertical-scroll-proportion="0.0">
+            <state line="5" column="5" selection-start="66" selection-end="66" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -204,10 +161,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1634" />
-    <option name="y" value="508" />
+    <option name="x" value="1372" />
+    <option name="y" value="349" />
     <option name="width" value="1400" />
-    <option name="height" value="1028" />
+    <option name="height" value="774" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -543,7 +500,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1634" y="508" width="1400" height="1028" extended-state="6" />
+    <frame x="1372" y="349" width="1400" height="774" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -551,7 +508,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1971935" sideWeight="0.6706056" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2001477" sideWeight="0.6706056" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -708,7 +665,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="5" selection-start="117" selection-end="117" vertical-scroll-proportion="0.0">
+        <state line="5" column="5" selection-start="66" selection-end="66" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -722,7 +679,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="49" column="4" selection-start="1815" selection-end="1815" vertical-scroll-proportion="0.49723756">
+        <state line="4" column="45" selection-start="116" selection-end="116" vertical-scroll-proportion="0.092449926">
           <folding />
         </state>
       </provider>

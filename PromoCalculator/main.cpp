@@ -10,8 +10,23 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
-#include <thread>
+//#include <thread>
 #include <sstream>
+
+
+
+
+
+
+#include <boost/asio.hpp>
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+#include "server.hpp"
+
+
+
+
 
 //#include "gmock/gmock.h"
 
@@ -71,6 +86,74 @@ void init(string pMainPath)
 
 }
 
+#if !defined(_WIN32)
+
+#include <pthread.h>
+#include <signal.h>
+
+
+int main(int argc, char* argv[])
+{
+    try
+    {
+        // Check command line arguments.
+        if (argc != 2)
+        {
+            std::cerr << "Usage: http_server <address> <port> <threads> <doc_root>\n";
+            std::cerr << "  For IPv4, try:\n";
+            std::cerr << "    receiver 0.0.0.0 80 1 .\n";
+            std::cerr << "  For IPv6, try:\n";
+            std::cerr << "    receiver 0::0 80 1 .\n";
+            return 1;
+        }
+        
+        
+        // Block all signals for background thread.
+        sigset_t new_mask;
+        sigfillset(&new_mask);
+        sigset_t old_mask;
+        pthread_sigmask(SIG_BLOCK, &new_mask, &old_mask);
+        
+        mainPath = argv[1] ;
+        std::cout << mainPath << endl ;
+        init(mainPath);
+        logging::add_common_attributes();
+        BaseSystem bs = BaseSystem(mainPath);
+        
+        // Run server in background thread.
+        std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
+        
+        http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/" , num_threads);
+        boost::thread t(boost::bind(&http::server3::server::run, &s));
+        
+        // Restore previous signals.
+        pthread_sigmask(SIG_SETMASK, &old_mask, 0);
+        
+        // Wait for signal indicating time to shut down.
+        sigset_t wait_mask;
+        sigemptyset(&wait_mask);
+        sigaddset(&wait_mask, SIGINT);
+        sigaddset(&wait_mask, SIGQUIT);
+        sigaddset(&wait_mask, SIGTERM);
+        pthread_sigmask(SIG_BLOCK, &wait_mask, 0);
+        int sig = 0;
+        sigwait(&wait_mask, &sig);
+        
+        // Stop the server.
+        //s.stop();
+        //t.join();
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "exception: " << e.what() << "\n";
+    }
+    
+    return 0;
+}
+
+#endif // !defined(_WIN32)
+
+/*
 #if !defined _WIN32
 int main(int argc, const char * argv[])
 {
@@ -84,7 +167,7 @@ int main(int argc, const char * argv[])
 	return 0;
 }
 #endif
-
+*/
 
 #if defined _WIN32
 int __cdecl _tmain(int argc, TCHAR *argv[]) 
