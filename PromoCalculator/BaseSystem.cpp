@@ -536,12 +536,54 @@ int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: not recognized\n" ;
     return BCODE_NOT_RECOGNIZED ;
 }
+
 void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
     boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
     //std::cout << "pMsg: " << pMsg ;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "pMsg: " << pMsg << ", size: " << pMsg.size() ;
 }
+
+string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap)
+{
+    std::uint64_t cartId = 0 ;
+    std::string resp = "Ciao" ;
+    std::ostringstream streamCartId ;
+    Cart* myCart = nullptr;
+    int rc = 0 ;
+    
+    if (pAction==WEBI_SESSION_INIT)
+    {
+        cartId = this->newCart( GEN_CART_NEW ) ;
+        resp = "InitResp" ;
+        std::cout << endl << "InitResp - Che figata" << endl ;
+    } else {
+        
+        streamCartId.str( std::string() ) ;
+        streamCartId.clear() ;
+        streamCartId << pUrlParamsMap["devSessId"] ;
+        std::string strCartId = streamCartId.str() ;
+        mainIterator = cartsMap.find(atoll(strCartId.c_str()));
+        unsigned long posNumber = 0 ;
+        std::cout << endl << "InitResp - pos: " << pUrlParamsMap["payStationID"] << " sess: " << strCartId << endl ;
+        if (mainIterator != cartsMap.end()) {
+            myCart = &(mainIterator->second);
+            
+            if (pAction==WEBI_SESSION_END)
+            {
+                rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                std::cout << endl << "InitResp - Che figata - rc:" << rc << endl ;
+            }
+            
+        }
+    }
+    
+
+
+    return resp ;
+
+}
+
 
 void BaseSystem::salesSession(socket_ptr pSock)
 {

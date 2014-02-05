@@ -43,6 +43,9 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     itemsMap[&totalsMap[0]] = totalCartRow ;
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
     tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
+    tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
+    tmpTransactionFile.close() ;
+
     BOOST_LOG_SEV(my_logger_ca, lt::info) << "\n" << cartFileName << " - " << tmpTransactionFileName << "\n" ;
     
     switch (pAction)

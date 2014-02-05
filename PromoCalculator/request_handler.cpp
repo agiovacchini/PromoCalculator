@@ -26,8 +26,8 @@
 namespace http {
     namespace server3 {
         
-        request_handler::request_handler(const std::string& doc_root)
-        : doc_root_(doc_root)
+        request_handler::request_handler(const std::string& doc_root, BaseSystem& pBaseSystem)
+        : doc_root_(doc_root), baseSystem(pBaseSystem)
         {
         }
         
@@ -101,7 +101,8 @@ namespace http {
                 
                 std::cout << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
             }
-            
+            std::stringstream  ciccio ;
+            ciccio << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
             
             
             //std::string input("key1=value1&key3=value3");  // input to parse
@@ -115,9 +116,27 @@ namespace http {
             std::cout << "Url params:" ;
             for(urlParamRows iterator = urlParamsMap.begin(); iterator != urlParamsMap.end(); iterator++) {
                 std::cout << "\t" << iterator->first << " " << iterator->second << std::endl ;
+                ciccio << "\t" << iterator->first << " " << iterator->second << std::endl ;
             }
             
+            int actionBS = -1 ;
             
+            if (servletFunctionAction.compare("initSession")==0)
+            {
+                actionBS = WEBI_SESSION_INIT ;
+            }
+
+            if (servletFunctionAction.compare("endSession")==0)
+            {
+                actionBS = WEBI_SESSION_END ;
+            }
+            
+            if (actionBS > 0)
+            {
+                baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap);
+            }
+            
+            rep.content.append(ciccio.str()) ;
             
             // Fill out the reply to be sent to the client.
             rep.status = reply::ok;
@@ -126,7 +145,6 @@ namespace http {
             //while (is.read(buf, sizeof(buf)).gcount() > 0)
                 //rep.content.append(buf, is.gcount());
             
-            rep.content.append("CiaoCiao");
             rep.headers.resize(2);
             rep.headers[0].name = "Content-Length";
             rep.headers[0].value = boost::lexical_cast<std::string>(rep.content.size());

@@ -110,6 +110,14 @@ typedef Totals Totals ;
 #define BCODE_LOYCARD       0x80
 #define BCODE_NOT_RECOGNIZED    0xff
 
+#define WEBI_SESSION_INIT   0x01
+#define WEBI_SESSION_END    0x02
+#define WEBI_ADD_CUSTOMER   0x10
+#define WEBI_ITEM_ADD       0x20
+#define WEBI_ITEM_VOID      0x21
+#define WEBI_GET_TOTALS     0x30
+
+
 namespace lt = boost::log::trivial;
 
 

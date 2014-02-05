@@ -13,6 +13,7 @@
 
 #include <string>
 #include <boost/noncopyable.hpp>
+#include "BaseSystem.h"
 
 namespace http {
     namespace server3 {
@@ -26,7 +27,7 @@ namespace http {
         {
         public:
             /// Construct with a directory containing files to be served.
-            explicit request_handler(const std::string& doc_root);
+            explicit request_handler(const std::string& doc_root, BaseSystem& pBaseSystem);
             
             /// Handle a request and produce a reply.
             void handle_request(const request& req, reply& rep);
@@ -34,7 +35,7 @@ namespace http {
         private:
             /// The directory containing the files to be served.
             std::string doc_root_;
-            
+            BaseSystem& baseSystem;
             /// Perform URL-decoding on a string. Returns false if the encoding was
             /// invalid.
             static bool url_decode(const std::string& in, std::string& out);

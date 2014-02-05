@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
         // Run server in background thread.
         std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
         
-        http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/" , num_threads);
+        http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/" , num_threads, bs);
         boost::thread t(boost::bind(&http::server3::server::run, &s));
         
         // Restore previous signals.
