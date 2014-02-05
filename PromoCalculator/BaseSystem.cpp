@@ -467,6 +467,8 @@ void BaseSystem::loadCartsInProgress()
                         case 'R':
                             myCart->removeItemByBarcode(itemsMap[barcodesMap[rCode].getItemCode()], barcodesMap[rCode]) ;
                             break;
+                        case 'L':
+                            myCart->addLoyCard( rCode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()) ) ;
                         default:
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "Row action not recognized" ;
                             break;
@@ -554,6 +556,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     std::ostringstream tempStringStream ;
     unsigned long requestId = 0, qty = 0 ;
     unsigned long long barcode = 0, barcodeWrk = 0 ;
+    std::map <unsigned long long, Totals> tmpTotalsMap ;
     std::string barcodeWrkStr = "" ;
     Cart* myCart = nullptr;
     int rc = 0 ;
@@ -596,7 +599,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     {
                         if (bCodeType != BCODE_LOYCARD)
                         {
-                            
+                            std::cout << endl << "WEBI_ITEM_ADD - Cool - rc:" << rc << endl ;
                             if (bCodeType == BCODE_EAN13_PRICE_REQ)
                             {
                                 tempStringStream.str( std::string() ) ;
@@ -615,9 +618,16 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 if (it!=itemsMap.end())
                                 {
                                     rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcodeWrk], qty) ;
+                                    tmpTotalsMap = myCart->getTotals();
+                                    tempStringStream.str( std::string() ) ;
+                                    tempStringStream.clear() ;
+                                    tempStringStream << tmpTotalsMap[0].totalAmount ;
+                                    std::cout << "Totale:" << tmpTotalsMap[0].totalAmount << " decs: " << tempStringStream.str().substr(0,tempStringStream.str().size()-2) << "." << tempStringStream.str().substr(tempStringStream.str().size()-2,tempStringStream.str().size()) << endl ;
+                                    respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalsResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << tmpTotalsMap[0].totalAmount << ",\"totalDiscounts\":0.0,\"amountToPay\":" << tmpTotalsMap[0].totalAmount << "}}" ;
                                 }
                                 else {
                                     rc = BCODE_ITEM_NOT_FOUND;
+                                    respStringStream << "{Articolo non trovato}" ;
                                 }
                             }
                             catch (std::exception const& e)
@@ -625,20 +635,20 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
                             }
                         } else {
-                            if (myCart->getLoyCardsNumber() < atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()))
+                            std::cout << endl << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc << endl ;
+                            rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
+                            if (rc==RC_OK)
                             {
-                                rc = myCart->addLoyCard(barcode) ;
+                                respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}" ;
                             } else {
-                                rc = RC_LOY_MAX_CARD_NUMBER ;
+                                respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"errorCode\":\"\",\"errorMessage\":\"\",\"resultExtension\":[]}" ;
                             }
                         }
                     } else {
                         rc = RC_ERR ;
+                        respStringStream << "{Tipo barcode non riconosciuto}" ;
                     }
 
-                    respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}" ;
-
-                    std::cout << endl << "WEBI_ITEM_ADD - Cool - rc:" << rc << endl ;
                     break;
                 case WEBI_REMOVE_CUSTOMER:
                     std::cout << endl << "WEBI_REMOVE_CUSTOMER - Cool - rc:" << rc << endl ;
@@ -653,7 +663,9 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         if (it != itemsMap.end())
                         {
                             rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcode]);
-                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":-1,\"itemType\":\"NormalSaleItem\"}" ;
+                            tmpTotalsMap = myCart->getTotals();
+                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":-1,\"itemType\":\"NormalSaleItem\"},\"getTotalsResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << tmpTotalsMap[0].totalAmount << ",\"totalDiscounts\":0.0,\"amountToPay\":" << tmpTotalsMap[0].totalAmount << "}}" ;
+
                         }
                         else {
                             rc = BCODE_ITEM_NOT_FOUND;
@@ -668,6 +680,8 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     break;
                 case WEBI_GET_TOTALS:
                     //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                    tmpTotalsMap = myCart->getTotals();
+                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << tmpTotalsMap[0].totalAmount << ",\"totalDiscounts\":0.0,\"amountToPay\":" << tmpTotalsMap[0].totalAmount << "}";
                     std::cout << endl << "WEBI_GET_TOTALS - Cool - rc:" << rc << endl ;
                     break;
                 case WEBI_SESSION_END:
@@ -820,12 +834,7 @@ void BaseSystem::salesSession(socket_ptr pSock)
 									BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what(); 
 								}
                             } else {
-                                if (myCart->getLoyCardsNumber() < atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()))
-                                {
-                                    rc = myCart->addLoyCard(barcode) ;
-                                } else {
-                                    rc = RC_LOY_MAX_CARD_NUMBER ;
-                                }
+                                rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
                             }
                         } else {
                             rc = RC_ERR ;

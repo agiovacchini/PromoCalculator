@@ -44,7 +44,7 @@ public:
     int addItemByBarcode(Item& pItem, Barcodes& pBarcode) ;
     int addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem ) ;
     int removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
-    int addLoyCard( unsigned long long pLoyCardNumber) ;
+    int addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxLoyCards ) ;
     unsigned int getState() const ;
     void setState( unsigned int pState ) ;
     unsigned long getRequestId() ;
@@ -54,6 +54,7 @@ public:
     int persist( ) ;
 	int sendToPos(unsigned long pPosNumber, string pScanInPath);
     int close( ) ;
+    std::map <unsigned long long, Totals> getTotals() ;
     
     //const volatile Cart&& operator=(Cart&) volatile const && ;
     

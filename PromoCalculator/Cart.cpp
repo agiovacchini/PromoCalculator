@@ -148,10 +148,29 @@ int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyI
     return RC_OK ;
 }
 
-int Cart::addLoyCard( unsigned long long pLoyCardNumber )
+int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNumber )
 {
-    loyCardsMap[loyCardsNumber] = pLoyCardNumber ;
-    loyCardsNumber++ ;
+    if (this->loyCardsNumber < maxCardNumber )
+    {
+        if (this->getState()==CART_STATE_READY_FOR_ITEM)
+        {
+            std::cout << "{Loy card" << pLoyCardNumber << " aggiunta}" ;
+            loyCardsMap[loyCardsNumber] = pLoyCardNumber ;
+            tempStringStream.str(std::string());
+            tempStringStream.clear();
+            tempStringStream << "L," << pLoyCardNumber << "," << "1" ;
+            this->writeTransactionRow(tempStringStream.str() );
+            this->loyCardsNumber++ ;
+            return RC_OK ;
+        } else {
+            return RC_CART_NOT_READY ;
+        }
+        //respStringStream << "{Loy card" << barcode << " aggiunta}" ;
+
+    } else {
+        return RC_LOY_MAX_CARD_NUMBER ;
+        //respStringStream << "{Numero massimo di carte fedelta superato}" ;
+    }    
     return RC_OK ;
 }
 
@@ -315,6 +334,10 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
     return RC_OK ;
 }
 
+std::map <unsigned long long, Totals> Cart::getTotals()
+{
+    return totalsMap ;
+}
 
 int Cart::close()
 {
