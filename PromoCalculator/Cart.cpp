@@ -30,7 +30,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
 {
     number = pNumber ;
     itemsNumber = 0 ;
-    nextRequestId = 0 ;
+    nextRequestId = 1 ;
     loyCardsNumber = 0 ;
     basePath = pBasePath ;
     

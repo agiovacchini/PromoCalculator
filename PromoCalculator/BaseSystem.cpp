@@ -457,6 +457,7 @@ void BaseSystem::loadCartsInProgress()
                     
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() ;
                     
+                    myCart->getNextRequestId() ;
                     switch (rAction)
                     {
                             
@@ -575,7 +576,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
         std::cout << endl << "InitResp - pos: " << pUrlParamsMap["payStationID"] << " sess: " << strCartId << endl ;
         if (mainIterator != cartsMap.end()) {
             myCart = &(mainIterator->second);
-            requestId = myCart->getRequestId();
+            requestId = myCart->getNextRequestId() ;
             switch (pAction)
             {
                 case WEBI_ADD_CUSTOMER:
@@ -635,25 +636,44 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         rc = RC_ERR ;
                     }
 
-                    respStringStream << "{\"addItemResponse\":{\"status\":0,\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}" ;
+                    respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}" ;
 
-                    std::cout << endl << "WEBI_ITEM_ADD - Che figata - rc:" << rc << endl ;
+                    std::cout << endl << "WEBI_ITEM_ADD - Cool - rc:" << rc << endl ;
                     break;
                 case WEBI_REMOVE_CUSTOMER:
-                    //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
-                    std::cout << endl << "WEBI_REMOVE_CUSTOMER - Che figata - rc:" << rc << endl ;
+                    std::cout << endl << "WEBI_REMOVE_CUSTOMER - Cool - rc:" << rc << endl ;
                     break;
                 case WEBI_ITEM_VOID:
-                    //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
-                    std::cout << endl << "WEBI_ITEM_VOID - Che figata - rc:" << rc << endl ;
+                    barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
+                    barcodeWrk = barcode ;
+                    qty = -1 ;
+                    try {
+                        unsigned long long tItemCode = barcodesMap[barcode].getItemCode();
+                        map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
+                        if (it != itemsMap.end())
+                        {
+                            rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcode]);
+                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":-1,\"itemType\":\"NormalSaleItem\"}" ;
+                        }
+                        else {
+                            rc = BCODE_ITEM_NOT_FOUND;
+                            respStringStream << "{Orrore}" ;
+                        }
+                        std::cout << endl << "WEBI_ITEM_VOID - Cool - rc:" << rc << endl ;
+                    }
+                    catch (std::exception const& e)
+                    {
+                        BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
+                    }
                     break;
                 case WEBI_GET_TOTALS:
                     //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
-                    std::cout << endl << "WEBI_GET_TOTALS - Che figata - rc:" << rc << endl ;
+                    std::cout << endl << "WEBI_GET_TOTALS - Cool - rc:" << rc << endl ;
                     break;
                 case WEBI_SESSION_END:
                     rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
-                    std::cout << endl << "WEBI_SESSION_END - Che figata - rc:" << rc << endl ;
+                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
+                    std::cout << endl << "WEBI_SESSION_END - Cool - rc:" << rc << endl ;
                     break;
                 default:
                     std::cout << endl << "Web action not recognized :(" ;
