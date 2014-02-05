@@ -549,39 +549,119 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     std::uint64_t cartId = 0 ;
     std::string resp = "Ciao" ;
     std::ostringstream streamCartId ;
+    std::ostringstream respStringStream ;
+    std::ostringstream tempStringStream ;
+    unsigned long requestId = 0, qty = 0 ;
+    unsigned long long barcode = 0, barcodeWrk = 0 ;
+    std::string barcodeWrkStr = "" ;
     Cart* myCart = nullptr;
     int rc = 0 ;
+    respStringStream.str( std::string() ) ;
+    respStringStream.clear() ;
     
     if (pAction==WEBI_SESSION_INIT)
     {
         cartId = this->newCart( GEN_CART_NEW ) ;
-        resp = "InitResp" ;
+        respStringStream << "{\"status\":0,\"deviceReqId\":1,\"sessionId\":" << cartId << "}" ;
         std::cout << endl << "InitResp - Che figata" << endl ;
     } else {
-        
         streamCartId.str( std::string() ) ;
         streamCartId.clear() ;
         streamCartId << pUrlParamsMap["devSessId"] ;
         std::string strCartId = streamCartId.str() ;
+        
         mainIterator = cartsMap.find(atoll(strCartId.c_str()));
         unsigned long posNumber = 0 ;
         std::cout << endl << "InitResp - pos: " << pUrlParamsMap["payStationID"] << " sess: " << strCartId << endl ;
         if (mainIterator != cartsMap.end()) {
             myCart = &(mainIterator->second);
-            
-            if (pAction==WEBI_SESSION_END)
+            requestId = myCart->getRequestId();
+            switch (pAction)
             {
-                rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
-                std::cout << endl << "InitResp - Che figata - rc:" << rc << endl ;
+                case WEBI_ADD_CUSTOMER:
+                case WEBI_ITEM_ADD:
+                    //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                    barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
+                    qty = 1 ;
+                    //atoll(pUrlParamsMap["qty"].c_str()) ;
+                    std::cout << endl << "barcode: " << barcode ;
+                    std::cout << endl << "qty: "  << qty ;
+                    
+                    bCodeType = checkBarcodeType( barcode ) ;
+                    std::cout << endl << "bCodeType: "  << bCodeType ;
+                    
+                    
+                    if ( ( bCodeType != BCODE_NOT_RECOGNIZED ) )
+                    {
+                        if (bCodeType != BCODE_LOYCARD)
+                        {
+                            
+                            if (bCodeType == BCODE_EAN13_PRICE_REQ)
+                            {
+                                tempStringStream.str( std::string() ) ;
+                                tempStringStream.clear() ;
+                                tempStringStream << barcode ;
+                                barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
+                                barcodeWrk = atoll(barcodeWrkStr.c_str()) ;
+                            } else {
+                                barcodeWrk = barcode ;
+                            }
+                            
+                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "barcodeWrk: " << barcodeWrk ;
+                            try {
+                                unsigned long long tItemCode = barcodesMap[barcodeWrk].getItemCode();
+                                map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
+                                if (it!=itemsMap.end())
+                                {
+                                    rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcodesMap[barcodeWrk], qty) ;
+                                }
+                                else {
+                                    rc = BCODE_ITEM_NOT_FOUND;
+                                }
+                            }
+                            catch (std::exception const& e)
+                            {
+                                BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
+                            }
+                        } else {
+                            if (myCart->getLoyCardsNumber() < atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()))
+                            {
+                                rc = myCart->addLoyCard(barcode) ;
+                            } else {
+                                rc = RC_LOY_MAX_CARD_NUMBER ;
+                            }
+                        }
+                    } else {
+                        rc = RC_ERR ;
+                    }
+
+                    respStringStream << "{\"addItemResponse\":{\"status\":0,\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getPrice() << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}" ;
+
+                    std::cout << endl << "WEBI_ITEM_ADD - Che figata - rc:" << rc << endl ;
+                    break;
+                case WEBI_REMOVE_CUSTOMER:
+                    //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                    std::cout << endl << "WEBI_REMOVE_CUSTOMER - Che figata - rc:" << rc << endl ;
+                    break;
+                case WEBI_ITEM_VOID:
+                    //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                    std::cout << endl << "WEBI_ITEM_VOID - Che figata - rc:" << rc << endl ;
+                    break;
+                case WEBI_GET_TOTALS:
+                    //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                    std::cout << endl << "WEBI_GET_TOTALS - Che figata - rc:" << rc << endl ;
+                    break;
+                case WEBI_SESSION_END:
+                    rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                    std::cout << endl << "WEBI_SESSION_END - Che figata - rc:" << rc << endl ;
+                    break;
+                default:
+                    std::cout << endl << "Web action not recognized :(" ;
             }
             
         }
     }
-    
-
-
-    return resp ;
-
+    return respStringStream.str() ;
 }
 
 

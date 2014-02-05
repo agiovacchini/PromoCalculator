@@ -81,6 +81,11 @@ void Cart::setState( unsigned int pState ) {
     this->state = pState ;
 }
 
+unsigned long Cart::getRequestId()
+{
+    return this->nextRequestId ;
+}
+
 unsigned long Cart::getNextRequestId()
 {
     this->nextRequestId++ ;

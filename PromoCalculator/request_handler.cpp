@@ -119,6 +119,8 @@ namespace http {
                 ciccio << "\t" << iterator->first << " " << iterator->second << std::endl ;
             }
             
+            //rep.content.append(ciccio.str()) ;
+            
             int actionBS = -1 ;
             
             if (servletFunctionAction.compare("initSession")==0)
@@ -131,12 +133,32 @@ namespace http {
                 actionBS = WEBI_SESSION_END ;
             }
             
-            if (actionBS > 0)
+            if (servletFunctionAction.compare("addCustomer")==0)
             {
-                baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap);
+                actionBS = WEBI_ADD_CUSTOMER ;
             }
             
-            rep.content.append(ciccio.str()) ;
+            if (servletFunctionAction.compare("addItem")==0)
+            {
+                actionBS = WEBI_ITEM_ADD ;
+            }
+            
+            if (servletFunctionAction.compare("voidItem")==0)
+            {
+                actionBS = WEBI_ITEM_VOID ;
+            }
+            
+            if (servletFunctionAction.compare("getTotals")==0)
+            {
+                actionBS = WEBI_GET_TOTALS ;
+            }
+            
+            if (actionBS > 0)
+            {
+                rep.content.append(baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap));
+            }
+            
+            
             
             // Fill out the reply to be sent to the client.
             rep.status = reply::ok;
