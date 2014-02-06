@@ -114,39 +114,6 @@ int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode )
     return addItemByBarcode(pItem,pBarcode,pQtyItem) ;
 }
 
-int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem )
-{
-    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
-    {
-        
-        long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
-        long qtyBarcode = barcodesMap[&pBarcode] + pQtyItem ;
-        
-        totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
-        totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
-        totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
-        totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
-        
-        itemsNumber = itemsNumber + pQtyItem ;
-        
-        itemsMap[&pItem] = { ITEM, qtyItem } ;
-        barcodesMap[&pBarcode] = qtyBarcode ;
-		
-		tempStringStream.str(std::string());
-		tempStringStream.clear();
-		tempStringStream << this->getState();
-
-		BOOST_LOG_SEV(my_logger_ca, lt::info) << "Stato carrello: " << tempStringStream.str() << "\n" ;
-        if (this->getState()==CART_STATE_READY_FOR_ITEM)
-        {
-			tempStringStream.str(std::string());
-			tempStringStream.clear();
-			tempStringStream << "A," << pBarcode.getCode() << "," << pQtyItem ;
-			this->writeTransactionRow(tempStringStream.str() );
-        }
-    }
-    return RC_OK ;
-}
 
 int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNumber )
 {
@@ -171,6 +138,40 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
         return RC_LOY_MAX_CARD_NUMBER ;
         //respStringStream << "{Numero massimo di carte fedelta superato}" ;
     }    
+    return RC_OK ;
+}
+
+int Cart::addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem )
+{
+    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
+    {
+        
+        long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
+        long qtyBarcode = barcodesMap[&pBarcode] + pQtyItem ;
+        
+        totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
+        totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
+        totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
+        totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pItem.getPrice() * pQtyItem ) ;
+        
+        itemsNumber = itemsNumber + pQtyItem ;
+        
+        itemsMap[&pItem] = { ITEM, qtyItem } ;
+        barcodesMap[&pBarcode] = qtyBarcode ;
+		
+		tempStringStream.str(std::string());
+		tempStringStream.clear();
+		tempStringStream << this->getState();
+        
+		BOOST_LOG_SEV(my_logger_ca, lt::info) << "Stato carrello: " << tempStringStream.str() << "\n" ;
+        if (this->getState()==CART_STATE_READY_FOR_ITEM)
+        {
+			tempStringStream.str(std::string());
+			tempStringStream.clear();
+			tempStringStream << "A," << pBarcode.getCode() << "," << pQtyItem ;
+			this->writeTransactionRow(tempStringStream.str() );
+        }
+    }
     return RC_OK ;
 }
 

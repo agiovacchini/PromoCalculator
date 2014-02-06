@@ -16,7 +16,7 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
-#include <boost/spirit/include/qi.hpp>.
+#include <boost/spirit/include/qi.hpp>
 #include <boost/fusion/include/std_pair.hpp>
 #include "mime_types.hpp"
 #include "reply.hpp"

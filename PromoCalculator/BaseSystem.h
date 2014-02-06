@@ -72,6 +72,7 @@ public:
     int checkBarcodeType( unsigned long long  pBarcode ) ;
     
     Item getItemByIntCode( unsigned long long pIntcode ) ;
+    std::string fromLongToStringWithDecimals( unsigned long long pValue ) ;
 };
 
 #endif /* defined(__PromoCalculator__BaseSystem__) */
