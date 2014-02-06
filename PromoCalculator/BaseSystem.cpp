@@ -721,6 +721,11 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
                     std::cout << endl << "WEBI_SESSION_END - Cool - rc:" << rc << endl ;
                     break;
+                case WEBI_SESSION_VOID:
+                    rc = 0 ;
+                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << "}" ;
+                    std::cout << endl << "WEBI_SESSION_END - Cool - rc:" << rc << endl ;
+                    break;
                 default:
                     std::cout << endl << "Web action not recognized :(" ;
             }

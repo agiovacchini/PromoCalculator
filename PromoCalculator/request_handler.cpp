@@ -127,10 +127,15 @@ namespace http {
             {
                 actionBS = WEBI_SESSION_INIT ;
             }
-
+            
             if (servletFunctionAction.compare("endSession")==0)
             {
                 actionBS = WEBI_SESSION_END ;
+            }
+            
+            if (servletFunctionAction.compare("voidTransaction")==0)
+            {
+                actionBS = WEBI_SESSION_VOID ;
             }
             
             if (servletFunctionAction.compare("addCustomer")==0)
@@ -147,7 +152,7 @@ namespace http {
             {
                 actionBS = WEBI_ITEM_VOID ;
             }
-            
+
             if (servletFunctionAction.compare("getTotals")==0)
             {
                 actionBS = WEBI_GET_TOTALS ;
