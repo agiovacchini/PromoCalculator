@@ -61,8 +61,9 @@ public:
     void readBarcodesArchive( string pFileName ) ;
     void readArchives( ) ;
     void loadCartsInProgress( ) ;
-    void salesServer(boost::asio::io_service& io_service, short port) ;
-    void salesSession(socket_ptr sock) ;
+    ItemCodePrice decodeEan13(unsigned long long rCode);
+    //void salesServer(boost::asio::io_service& io_service, short port) ;
+    //void salesSession(socket_ptr sock) ;
     string salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap);
 
     void sendRespMsg( socket_ptr pSock, string pMsg ) ;

@@ -22,7 +22,7 @@ class Cart {
     //Totals totals ;
     std::map <unsigned int, unsigned long long> loyCardsMap ;
     std::map <void*, CartRow> itemsMap ;
-    std::map <void*, long> barcodesMap ;
+    std::map <unsigned long long, long> barcodesMap ;
     std::map <unsigned long long, Totals> totalsMap ;
     unsigned long number ;
     unsigned long itemsNumber ;
@@ -41,9 +41,9 @@ public:
     void setNumber( unsigned long pNumber ) ;
     
     void writeTransactionRow( string row ) ;
-    int addItemByBarcode(Item& pItem, Barcodes& pBarcode) ;
-    int addItemByBarcode( Item& pItem, Barcodes& pBarcode, unsigned long pQtyItem ) ;
-    int removeItemByBarcode( Item& pItem, Barcodes& pBarcode ) ;
+    int addItemByBarcode(Item& pItem, unsigned long long pBarcode, unsigned long long pPrice, unsigned int pBCodeType ) ;
+    int addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long long pPrice, unsigned int pBCodeType ) ;
+    int removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long long pPrice, unsigned int pBCodeType ) ;
     int addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxLoyCards ) ;
     unsigned int getState() const ;
     void setState( unsigned int pState ) ;

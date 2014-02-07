@@ -73,6 +73,12 @@ struct CartRow {
     long quantity ;
 };
 
+struct ItemCodePrice {
+    unsigned long long code ;
+    unsigned long long price ;
+    unsigned int type ;
+};
+
 typedef Totals Totals ;
 
 
@@ -98,6 +104,7 @@ typedef Totals Totals ;
 #define RC_OK              0x00
 #define RC_ERR             0x01
 #define RC_CART_NOT_READY  0x02
+#define RC_LOY_CARD_ALREADY_PRESENT 0x99
 #define RC_LOY_MAX_CARD_NUMBER 0x100
 
 #define BCODE_EAN13         0x00
@@ -110,6 +117,7 @@ typedef Totals Totals ;
 #define BCODE_ITEM_NOT_FOUND 0x03
 #define BCODE_LOYCARD       0x80
 #define BCODE_NOT_RECOGNIZED    0xff
+
 
 #define WEBI_SESSION_INIT   0x01
 #define WEBI_SESSION_END    0x02
