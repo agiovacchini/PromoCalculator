@@ -1,15 +1,16 @@
-CXX		=	g++.exe
-CXXFLAGS	=	-g -w -std=c++11 -Wall -L/lib -I/usr/local/include 
-NLIB		=	-lboost_system -lboost_filesystem -lboost_iostreams -lboost_thread
-#NLIBW		=	/lib/libboost_thread-mt.dll.a /lib/libboost_iostreams-mt.dll.a /lib/libboost_filesystem-mt.dll.a /lib/libboost_system-mt.dll.a
+CXX		=	g++
+CXXFLAGS	=	-g -w -std=c++11 -Wall -L/lib -I/usr/include 
+NLIB		=	-lboost_system-mt -lboost_filesystem-mt -lboost_iostreams-mt -lboost_thread-mt -lboost_log-mt -lboost_date_time-mt -lboost_regex-mt -lboost_log_setup-mt -lboost_chrono-mt
 
 BIN=promoCalculator
 
 SRC=$(wildcard *.cpp)
-OBJ=$(SRC:%.cpp=%.o)
+SRC-FILES=$(filter-out stdafx.cpp, $(SRC))
+
+OBJ=$(SRC-FILES:%.cpp=%.o)
 
 all: $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN) $(NLIBW) $^
+	$(CXX) $(CXXFLAGS) -o $(BIN) $^  $(NLIB)
 
 %.o: %.c
 	$(CXX) $@ -c $<
