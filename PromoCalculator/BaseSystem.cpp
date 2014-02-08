@@ -1034,7 +1034,10 @@ unsigned long BaseSystem::newCart( unsigned int pAction )
 {
     unsigned long long thisCartNumber = nextCartNumber ;
     
-    cartsMap.emplace( std::piecewise_construct, std::make_tuple(thisCartNumber), std::make_tuple(this->basePath,thisCartNumber,pAction) ) ;
+    Cart newCart(this->basePath,thisCartNumber,pAction);
+    
+    cartsMap.insert({thisCartNumber, std::move(newCart)}) ;
+    //cartsMap.emplace( std::piecewise_construct, std::make_tuple(thisCartNumber), std::make_tuple(this->basePath,thisCartNumber,pAction) ) ;
     
     nextCartNumber++;
     return thisCartNumber ;
