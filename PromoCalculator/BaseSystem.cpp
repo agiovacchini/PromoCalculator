@@ -32,7 +32,7 @@
 #include "BaseSystem.h"
 
 const int max_length = 8192;
-int bCodeType = 0 ;
+
 static unsigned long nextCartNumber ;
 
 namespace qi = boost::spirit::qi;
@@ -276,6 +276,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
     
+    ItemCodePrice itmCodePrice ;
     // Tokenizer
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
@@ -318,22 +319,9 @@ void BaseSystem::readBarcodesArchive( string pFileName )
                 case 1:
 					tmp = std::string(i);
                     bcdWrk = atoll(tmp.c_str()) ;
-                    bCodeType = checkBarcodeType( bcdWrk ) ;
-                    if (bcdWrk > 0 ) {
-                        if (bCodeType == BCODE_EAN13_PRICE_REQ)
-                        {
-                            //strcpy( tmp, std::to_string(bcdWrk).c_str() );
-                            tempStringStream.str( std::string() ) ;
-							tempStringStream.clear() ;
-							tempStringStream << bcdWrk ;
-							tmp = tempStringStream.str().substr(0,7) + "000000" ;
-                            tmpBcd = atoll(tmp.c_str()) ;
-                        } else {
-                            tmpBcd = bcdWrk ;
-                        }
-                        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "(" << tmpBcd << ") - " ;
-                        tempBarcode.setCode( tmpBcd ) ;
-                    }
+                    itmCodePrice = decodeBarcode( bcdWrk ) ;
+                    tempBarcode.setCode(itmCodePrice.barcode) ;
+
                     //BOOST_LOG_SEV(my_logger_bs, lt::info) << i.c_str() << "\n";
                     break;
                 case 2:
@@ -358,35 +346,80 @@ void BaseSystem::readArchives()
     this->readBarcodesArchive( "BARCODES.CSV" ) ;
 }
 
-ItemCodePrice BaseSystem::decodeEan13(unsigned long long rCode)
+ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
 {
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr = "" ;
-    unsigned long long barcodeWrk = 0 ;
-    ItemCodePrice rValues ;
-    unsigned int bCodeType = checkBarcodeType( rCode ) ;
-    switch (bCodeType)
+    ItemCodePrice rValues = {0,0,0,0};
+    
+    using namespace boost;
+    //int type = 0 ;
+    regex ean13( "\\d{13}" ) ;
+	regex ean13PriceReq( "2\\d{12}" ) ;
+	regex upc( "\\d{12}" ) ;
+	regex ean8( "\\d{8}" ) ;
+	regex loyCard( "260\\d{9}") ;
+    regex loyCardNoCheck( "260\\d{8}") ;
+    
+    tempStringStream.str( std::string() ) ;
+	tempStringStream.clear() ;
+	tempStringStream << rCode ;
+
+    //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode: ---" << tempStringStream.str() << "---\n" ;
+    
+    //std::cout << tempStringStream.str() << endl ;
+    rValues.type = BCODE_NOT_RECOGNIZED ;
+   
+    if (regex_match( tempStringStream.str(), loyCard ) )
+    {
+        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: Loyalty Card\n" ;
+        rValues.type = BCODE_LOYCARD ;
+    } else {
+        if (regex_match( tempStringStream.str(), loyCardNoCheck ) )
+        {
+            //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: Loyalty Card\n" ;
+            rValues.type = BCODE_LOYCARD ;
+        } else {
+            if (regex_match( tempStringStream.str(), ean13 ) )
+            {
+                if (regex_match( tempStringStream.str(), ean13PriceReq ) )
+                {
+                    rValues.type = BCODE_EAN13_PRICE_REQ ;
+                } else {
+                    rValues.type = BCODE_EAN13 ;
+                }
+            } else {
+                if (regex_match( tempStringStream.str(), upc ) )
+                {
+                    rValues.type = BCODE_UPC ;
+                } else {
+                    if (regex_match( tempStringStream.str(), ean8 ) )
+                    {
+                        rValues.type = BCODE_EAN8 ;
+                    }
+                }
+            }
+        }
+    }
+    
+
+    switch (rValues.type)
     {
         case BCODE_EAN13_PRICE_REQ:
             tempStringStream.str( std::string() ) ;
             tempStringStream.clear() ;
             tempStringStream << rCode ;
             barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
-            barcodeWrk = atoll(barcodeWrkStr.c_str()) ;
-            rValues.code = barcodesMap[barcodeWrk].getItemCode() ;
+            rValues.barcode = atoll(barcodeWrkStr.c_str()) ;
+            rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
             rValues.price = atoll(tempStringStream.str().substr(7,5).c_str()) ;
             break;
-        case BCODE_EAN13:
-            barcodeWrk = rCode ;
-            rValues.code = barcodesMap[barcodeWrk].getItemCode() ;
+        default:
+            rValues.barcode = rCode ;
+            rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
             rValues.price = itemsMap[rValues.code].getPrice() ;
             break;
-        default:
-            rValues.code = barcodeWrk ;
-            rValues.price = 0 ;
-            break;
     }
-    rValues.type = bCodeType ;
     
     return rValues ;
 }
@@ -499,11 +532,11 @@ void BaseSystem::loadCartsInProgress()
                     {
                             
                         case 'A':
-                            itmCodePrice = decodeEan13( rCode ) ;
+                            itmCodePrice = decodeBarcode( rCode ) ;
                             myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price, itmCodePrice.type) ;
                             break;
                         case 'R':
-                            itmCodePrice = decodeEan13( rCode ) ;
+                            itmCodePrice = decodeBarcode( rCode ) ;
                             myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price, itmCodePrice.type) ;
                             break;
                         case 'L':
@@ -528,63 +561,6 @@ void BaseSystem::loadCartsInProgress()
     }
 }
 
-int BaseSystem::checkBarcodeType( unsigned long long pBarcode )
-{
-	using namespace boost;
-    //int type = 0 ;
-    regex ean13( "\\d{13}" ) ;
-	regex ean13PriceReq( "2\\d{12}" ) ;
-	regex upc( "\\d{12}" ) ;
-	regex ean8( "\\d{8}" ) ;
-	regex loyCard( "260\\d{9}") ;
-    regex loyCardNoCheck( "260\\d{8}") ;
-
-	std::stringstream tempStringStream ;
-    
-    tempStringStream.str( std::string() ) ;
-	tempStringStream.clear() ;
-	tempStringStream << pBarcode ;
-	//BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode: ---" << tempStringStream.str() << "---\n" ;
-    if (regex_match( tempStringStream.str(), loyCard ) )
-    {
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: Loyalty Card\n" ;
-        return BCODE_LOYCARD ;
-    }
-    
-    if (regex_match( tempStringStream.str(), ean13 ) )
-    {
-        if (regex_match( tempStringStream.str(), ean13PriceReq ) )
-        {
-            //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: EAN13 with price\n" ;
-            return BCODE_EAN13_PRICE_REQ ;
-        } else {
-            //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: EAN13\n" ;
-            return BCODE_EAN13 ;
-        }
-    }
-    
-    if (regex_match( tempStringStream.str(), upc ) )
-    {
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: UPC\n" ;
-        return BCODE_UPC ;
-    }
-    
-    if (regex_match( tempStringStream.str(), ean8 ) )
-    {
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: EAN8\n" ;
-        return BCODE_EAN8 ;
-    }
-    
-    if (regex_match( tempStringStream.str(), loyCardNoCheck ) )
-    {
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: Loyalty Card\n" ;
-        return BCODE_LOYCARD ;
-    }
-    
-    //BOOST_LOG_SEV(my_logger_bs, lt::info) << "Barcode type: not recognized\n" ;
-    return BCODE_NOT_RECOGNIZED ;
-}
-
 void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
     boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
@@ -600,7 +576,7 @@ std::string BaseSystem::fromLongToStringWithDecimals( unsigned long long pValue 
     returnStream.str( std::string() ) ;
     returnStream.clear() ;
     tempStringStream << pValue ;
-    std::cout << "Size tempStringStream: " << tempStringStream.str().size() << endl ;
+    //std::cout << "Size tempStringStream: " << tempStringStream.str().size() << endl ;
     if (tempStringStream.str().size()<3)
     {
         returnStream << "0." << tempStringStream.str() ;
@@ -618,11 +594,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     std::ostringstream streamCartId ;
     std::ostringstream respStringStream ;
     std::ostringstream tempStringStream ;
+    int bCodeType = 0 ;
     unsigned long requestId = 0, qty = 0 ;
-    unsigned long long barcode = 0, barcodeWrk = 0 ;
-    unsigned long long tItemCode = 0, itemPrice = 0 ;
+    unsigned long long barcode = 0 ;
     std::map <unsigned long long, Totals> tmpTotalsMap ;
-    std::string barcodeWrkStr = "" ;
     Cart* myCart = nullptr;
     ItemCodePrice itmCodePrice ;
     int rc = 0 ;
@@ -659,14 +634,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     }
                     qty = 1 ;
                     //atoll(pUrlParamsMap["qty"].c_str()) ;
-                    std::cout << endl << "barcode: " << barcode ;
-                    std::cout << endl << "qty: "  << qty ;
+                    std::cout << "barcode: " << barcode << endl ;
+                    std::cout << "qty: "  << qty << endl  ;
                     
-                    //bCodeType = checkBarcodeType( barcode ) ;
-                    
-                    itmCodePrice = decodeEan13( barcode ) ;
-                    
-                    std::cout << endl << "bCodeType: "  << itmCodePrice.type ;
+                    itmCodePrice = decodeBarcode( barcode ) ;
                     
                     if ( ( itmCodePrice.type != BCODE_NOT_RECOGNIZED ) )
                     {
@@ -674,25 +645,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         {
                             std::cout << endl << "WEBI_ITEM_ADD - Cool - rc:" << rc << endl ;
                             
-                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "barcodeWrk: " << barcodeWrk ;
+                            //BOOST_LOG_SEV(my_logger_bs, lt::info) << "barcodeWrk: " << barcodeWrk ;
                             try {
-                                if (itmCodePrice.type == BCODE_EAN13_PRICE_REQ)
-                                {
-                                    tempStringStream.str( std::string() ) ;
-                                    tempStringStream.clear() ;
-                                    tempStringStream << barcode ;
-                                    barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
-                                    barcodeWrk = atoll(barcodeWrkStr.c_str()) ;
-                                    tItemCode = barcodesMap[barcodeWrk].getItemCode() ;
-                                    //std::cout << "ooo " << tempStringStream.str().substr(7,5).c_str() << " ooo" << endl;
-                                    itemPrice = atoll(tempStringStream.str().substr(7,5).c_str()) ;
-                                } else {
-                                    barcodeWrk = barcode ;
-                                    tItemCode = barcodesMap[barcodeWrk].getItemCode() ;
-                                    itemPrice = itemsMap[tItemCode].getPrice() ;
-                                }
                                 
-                                map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
+                                map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
                                 if (it!=itemsMap.end())
                                 {
                                     //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
@@ -700,7 +656,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                     tmpTotalsMap = myCart->getTotals();
                                     //tempStringStream << tmpTotalsMap[0].totalAmount ;
 
-                                    respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itemPrice) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
+                                    respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
                                     //",\"promoResponse\":{\"promoValue\":0.0,\"promoQty\":0,\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}"
                                 }
                                 else {
@@ -736,30 +692,17 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     {
                         barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
                     }
+                    itmCodePrice = decodeBarcode( barcode ) ;
                     qty = -1 ;
                     try {
-                        if (bCodeType == BCODE_EAN13_PRICE_REQ)
-                        {
-                            tempStringStream.str( std::string() ) ;
-                            tempStringStream.clear() ;
-                            tempStringStream << barcode ;
-                            barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
-                            barcodeWrk = atoll(barcodeWrkStr.c_str()) ;
-                            tItemCode = barcodesMap[barcodeWrk].getItemCode() ;
-                            itemPrice = atoll(tempStringStream.str().substr(7,5).c_str()) ;
-                        } else {
-                            barcodeWrk = barcode ;
-                            tItemCode = barcodesMap[barcodeWrk].getItemCode() ;
-                            itemPrice = itemsMap[tItemCode].getPrice() ;
-                        }
-                        tItemCode = barcodesMap[barcodeWrk].getItemCode();
-                        map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
+                        //tItemCode = barcodesMap[barcodeWrk].getItemCode();
+                        map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
                         if (it != itemsMap.end())
                         {
                             //rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, itemPrice, bCodeType);
                             rc = myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], barcode, itmCodePrice.price, itmCodePrice.type) ;
                             tmpTotalsMap = myCart->getTotals();
-                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\",\"price\":0,\"extendedPrice\":" << fromLongToStringWithDecimals(itemPrice) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
+                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":0,\"extendedPrice\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
                                 //"},\"promoResponse\":{\"promoValue\":0.0,\"promoQty\":0,\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}"
 
                         }

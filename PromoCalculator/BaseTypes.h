@@ -76,6 +76,7 @@ struct CartRow {
 struct ItemCodePrice {
     unsigned long long code ;
     unsigned long long price ;
+    unsigned long long barcode ;
     unsigned int type ;
 };
 
@@ -150,5 +151,6 @@ struct keys_and_values
     qi::rule<Iterator, std::pair<std::string, std::string>()> pair;
     qi::rule<Iterator, std::string()> key, value;
 };
+
 
 #endif

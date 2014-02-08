@@ -61,7 +61,7 @@ public:
     void readBarcodesArchive( string pFileName ) ;
     void readArchives( ) ;
     void loadCartsInProgress( ) ;
-    ItemCodePrice decodeEan13(unsigned long long rCode);
+    ItemCodePrice decodeBarcode(unsigned long long rCode);
     //void salesServer(boost::asio::io_service& io_service, short port) ;
     //void salesSession(socket_ptr sock) ;
     string salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap);
@@ -70,7 +70,6 @@ public:
     unsigned long newCart( unsigned int pAction ) ;
     Cart* getCart( unsigned long pCartNumber ) ;
     bool persistCarts( ) ;
-    int checkBarcodeType( unsigned long long  pBarcode ) ;
     
     Item getItemByIntCode( unsigned long long pIntcode ) ;
     std::string fromLongToStringWithDecimals( unsigned long long pValue ) ;

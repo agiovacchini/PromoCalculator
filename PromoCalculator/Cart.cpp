@@ -152,31 +152,35 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
 {
     if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
-        
-        long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
-        long qtyBarcode = barcodesMap[pBarcode] + pQtyItem ;
-        
-        totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
-        totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pPrice * pQtyItem ) ;
-        totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
-        totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pPrice * pQtyItem ) ;
-        
-        itemsNumber = itemsNumber + pQtyItem ;
-        
-        itemsMap[&pItem] = { ITEM, qtyItem } ;
-        barcodesMap[pBarcode] = qtyBarcode ;
-		
-		tempStringStream.str(std::string());
-		tempStringStream.clear();
-		tempStringStream << this->getState();
-        
-		BOOST_LOG_SEV(my_logger_ca, lt::info) << "Stato carrello: " << tempStringStream.str() << "\n" ;
-        if (this->getState()==CART_STATE_READY_FOR_ITEM)
+        try {
+            long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
+            long qtyBarcode = barcodesMap[pBarcode] + pQtyItem ;
+            
+            totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
+            totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pPrice * pQtyItem ) ;
+            totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
+            totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pPrice * pQtyItem ) ;
+            
+            itemsNumber = itemsNumber + pQtyItem ;
+            
+            itemsMap[&pItem] = { ITEM, qtyItem } ;
+            barcodesMap[pBarcode] = qtyBarcode ;
+            
+            tempStringStream.str(std::string());
+            tempStringStream.clear();
+            tempStringStream << this->getState();
+            
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << "Cart state " << tempStringStream.str() << "\n" ;
+            if (this->getState()==CART_STATE_READY_FOR_ITEM)
+            {
+                tempStringStream.str(std::string());
+                tempStringStream.clear();
+                tempStringStream << "A," << pBarcode << "," << pQtyItem ;
+                this->writeTransactionRow(tempStringStream.str() );
+            }
+        } catch (std::exception const& e)
         {
-			tempStringStream.str(std::string());
-			tempStringStream.clear();
-			tempStringStream << "A," << pBarcode << "," << pQtyItem ;
-			this->writeTransactionRow(tempStringStream.str() );
+            BOOST_LOG_SEV(my_logger_ca, lt::error) << "Cart addItemBarcode error: " << e.what();
         }
     }
     return RC_OK ;
@@ -299,6 +303,10 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
     typedef std::map<unsigned long long, long>::iterator barcodesRows;
+    
+    tempStringStream.str(std::string());
+    tempStringStream.clear();
+
     unsigned long long rowBarcode ;
     long qty = 0 ;
 	string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
@@ -308,19 +316,21 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
     std::stringstream date_stream;
     date_stream.imbue(std::locale(date_stream.getloc(), facet));
     date_stream << boost::posix_time::microsec_clock::universal_time();
-    
     std::ofstream scanInFile( scanInTmpFileName.c_str() );
+    
+    tempStringStream << loyCardsMap.begin()->second ;
+    
     scanInFile << "03;" << date_stream.str() //tsInit
         << ";" << date_stream.str() //tsEnd
         << ";" << pPosNumber
-        << ";" << "60697808" //customerCode
+        << ";" << tempStringStream.str().substr(1,8) //customerCode
         << ";" << "11012" //serverId
         << ";" << this->number
         << ";" << "0"
         << ";" << this->itemsNumber
         << ";" << totalsMap[0].totalAmount
         << ";" << totalsMap[0].totalAmount
-        << ";" << "0260697808017"
+        << ";" << "0" << loyCardsMap.begin()->second
         << endl;
     
     for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
