@@ -33,7 +33,7 @@ class Cart {
     string cartFileName ;
     string tmpTransactionFileName ;
     src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_ca;
-    
+
 public:
     Cart( string pBasePath, unsigned long pNumber, unsigned int pAction ) ;
     

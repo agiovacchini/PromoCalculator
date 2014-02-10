@@ -23,11 +23,11 @@
 //static string basePath = "./" ;
 
 using namespace std;
-std::ofstream tmpTransactionFile;
-std::stringstream tempStringStream;
 
 Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
 {
+    std::stringstream tempStringStream;
+    std::ofstream tmpTransactionFile;
     number = pNumber ;
     itemsNumber = 0 ;
     nextRequestId = 1 ;
@@ -103,6 +103,7 @@ unsigned int Cart::getLoyCardsNumber() const
 
 void Cart::writeTransactionRow( string row )
 {
+    std::ofstream tmpTransactionFile;
     tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
 	tmpTransactionFile << boost::posix_time::to_iso_string(boost::posix_time::microsec_clock::universal_time()) << "," << row << "\n";
     tmpTransactionFile.close() ;
@@ -110,6 +111,7 @@ void Cart::writeTransactionRow( string row )
 
 int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNumber )
 {
+    std::stringstream tempStringStream;
     if (this->loyCardsNumber < maxCardNumber )
     {
         if ( (this->getState()==CART_STATE_READY_FOR_ITEM) || (this->getState()==CART_TMPFILE_LOADING) )
@@ -150,6 +152,7 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
 
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long long pPrice, unsigned int pBCodeType )
 {
+    std::stringstream tempStringStream;
     if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         try {
@@ -188,6 +191,7 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
 
 int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long long pPrice, unsigned int pBCodeType  )
 {
+    std::stringstream tempStringStream;
     if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         
@@ -303,6 +307,7 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
     typedef std::map<unsigned long long, long>::iterator barcodesRows;
+    std::stringstream tempStringStream;
     
     tempStringStream.str(std::string());
     tempStringStream.clear();
