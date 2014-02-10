@@ -152,5 +152,4 @@ struct keys_and_values
     qi::rule<Iterator, std::string()> key, value;
 };
 
-
 #endif

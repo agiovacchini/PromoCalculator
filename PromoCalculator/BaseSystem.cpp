@@ -424,6 +424,37 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
     return rValues ;
 }
 
+void BaseSystem::checkForVariationFiles()
+{
+    std::string varFolderName = "VARS" ;
+    std::string varFileName = "" ;
+    if (!fs::exists(this->basePath + varFolderName))
+    {
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "No " << varFolderName << " subfolder found" ;
+        exit(-1);
+    }
+    
+    if (fs::is_directory(this->basePath + varFolderName))
+    {
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << varFolderName << " subfolder found" ;
+        fs::recursive_directory_iterator it(this->basePath + varFolderName);
+        fs::recursive_directory_iterator endit;
+        while(it != endit)
+        {
+            if (fs::is_regular_file(*it) && it->path().extension() == ".var")
+            {
+                varFileName = it->path().stem().string() ;
+                std::cout << "Var file found : " << varFileName << endl ;
+                /*if (fs::is_regular_file(*it) && it->path().extension() == ".var")
+                {
+                    std::cout << "Var file flag found : " << it->path().stem().string().c_str() << endl ;
+                }*/
+            }
+        }
+    }
+    
+}
+
 void BaseSystem::loadCartsInProgress()
 {
     std::string line;
