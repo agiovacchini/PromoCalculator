@@ -46,7 +46,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
     tmpTransactionFile.close() ;
 
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "\n" << cartFileName << " - " << tmpTransactionFileName << "\n" ;
+    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART " << this->number << " - " << cartFileName << " - " << tmpTransactionFileName ;
     
     switch (pAction)
     {
@@ -116,7 +116,7 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
     {
         if ( (this->getState()==CART_STATE_READY_FOR_ITEM) || (this->getState()==CART_TMPFILE_LOADING) )
         {
-            std::cout << "{Loy card" << pLoyCardNumber << " aggiunta}" ;
+            //std::cout << "{Loy card" << pLoyCardNumber << " aggiunta}" ;
             typedef std::map<unsigned int, unsigned long long>::iterator it_type;
             for(it_type iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
                 if (iterator->second==pLoyCardNumber)
@@ -173,7 +173,7 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
             tempStringStream.clear();
             tempStringStream << this->getState();
             
-            BOOST_LOG_SEV(my_logger_ca, lt::info) << "Cart state " << tempStringStream.str() << "\n" ;
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " <<  "Cart state " << tempStringStream.str() ;
             if (this->getState()==CART_STATE_READY_FOR_ITEM)
             {
                 tempStringStream.str(std::string());
@@ -183,7 +183,7 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
             }
         } catch (std::exception const& e)
         {
-            BOOST_LOG_SEV(my_logger_ca, lt::error) << "Cart addItemBarcode error: " << e.what();
+            BOOST_LOG_SEV(my_logger_ca, lt::error) << " - CART# " << this->number << " - " << "Cart addItemBarcode error: " << e.what();
         }
     }
     return RC_OK ;
@@ -200,12 +200,12 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
         
         if ((itemsMap.find(&pItem) == itemsMap.end()))
         {
-            BOOST_LOG_SEV(my_logger_ca, lt::info) << "Not found: " << pItem.getDescription() << "\n" ;
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Not found: " << pItem.getDescription() ;
             return RC_ERR ;
         }
         else
         {
-            BOOST_LOG_SEV(my_logger_ca, lt::info) << "Found: " << pItem.getDescription() << "\n" ;
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Found: " << pItem.getDescription() ;
             qtyItem = itemsMap[&pItem].quantity - 1 ;
             qtyBarcode = barcodesMap[pBarcode] - 1 ;
             totalsMap[0].itemsNumber-- ;
@@ -217,7 +217,7 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
             
             if (qtyItem < 1)
             {
-                BOOST_LOG_SEV(my_logger_ca, lt::info) << "Erasing item\n" ;
+                BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Erasing item" ;
                 itemsMap.erase(&pItem) ;
             } else
             {
@@ -250,13 +250,13 @@ int Cart::printCart()
     Item* itmRow ;
     //Totals* totalsRow ;
     
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "Cart #" << this->number <<  "print start\n" ;
+    BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Print start" ;
     for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
         CartRow key = iterator->second ;
         switch (key.type) {
             case ITEM:
                 itmRow = (Item*)iterator->first;
-                BOOST_LOG_SEV(my_logger_ca, lt::info) << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity << "\n" ;
+                BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity ;
                 break;
             case DEPT:
                 break;
@@ -269,15 +269,15 @@ int Cart::printCart()
         }
         //BOOST_LOG_SEV(my_logger_ca, lt::info) << "\nkey: " << key ;
     }
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "State: " << this->getState() << "\n" ;
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "Totals start\n" ;
+    BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "State: " << this->getState();
+    BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Totals start" ;
     typedef std::map<unsigned long long, Totals>::iterator configurationRows;
     
     for(configurationRows iterator = totalsMap.begin(); iterator != totalsMap.end(); iterator++) {
-        BOOST_LOG_SEV(my_logger_ca, lt::info) << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber << "\n" ;
+        BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber ;
     }
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "Totals end\n" ;
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "Cart print end\n" ;
+    BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Totals end" ;
+    BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Cart print end" ;
     return RC_OK ;
 }
 
@@ -288,7 +288,7 @@ int Cart::persist( )
     unsigned long long rowBarcode ;
     long qty = 0 ;
     
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "cartFileName: " << cartFileName << "\n" ;
+    BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "cartFileName: " << cartFileName ;
     
     std::ofstream cartFile( cartFileName.c_str() );
     
@@ -316,7 +316,7 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
     long qty = 0 ;
 	string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
 	string scanInFileName = (boost::format("%s/POS%03lu.IN") % pScanInPath % pPosNumber).str();
-	BOOST_LOG_SEV(my_logger_ca, lt::info) << "Sending to pos with file: " << cartFileName << "\n";
+	BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - " << "Sending to pos with file: " << cartFileName ;
     boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
     std::stringstream date_stream;
     date_stream.imbue(std::locale(date_stream.getloc(), facet));
