@@ -435,7 +435,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "453"
             endingLineNumber = "453"
-            landmarkName = "BaseSystem::loadCartsInProgress()"
+            landmarkName = "BaseSystem::checkForVariationFiles()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -898,7 +898,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "745"
-            endingLineNumber = "745">
+            endingLineNumber = "745"
+            landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -912,7 +914,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "757"
-            endingLineNumber = "757">
+            endingLineNumber = "757"
+            landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
+            landmarkType = "5">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -1273,7 +1277,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "573"
             endingLineNumber = "573"
-            landmarkName = "BaseSystem::fromLongToStringWithDecimals( unsigned long long pValue )"
+            landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
