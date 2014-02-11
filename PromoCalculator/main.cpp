@@ -72,6 +72,7 @@ void init(string pMainPath)
     logging::add_file_log
     (
      keywords::file_name = pMainPath + "LOGS/PromoCalculator_%N.log",
+     keywords::auto_flush = true, 
      // This makes the sink to write log records that look like this:
      // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message
      // YYYY-MM-DD HH:MI:SS: <error> An error severity message

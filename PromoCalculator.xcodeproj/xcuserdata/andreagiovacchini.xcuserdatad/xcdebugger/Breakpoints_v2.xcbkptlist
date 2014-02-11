@@ -435,7 +435,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "453"
             endingLineNumber = "453"
-            landmarkName = "BaseSystem::loadCartsInProgress()"
+            landmarkName = "BaseSystem::checkForVariationFiles()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -864,11 +864,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413594698.112822"
+            timestampString = "413850145.675382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "797"
-            endingLineNumber = "797">
+            startingLineNumber = "798"
+            endingLineNumber = "798">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -898,7 +898,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "745"
-            endingLineNumber = "745">
+            endingLineNumber = "745"
+            landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -912,7 +914,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "757"
-            endingLineNumber = "757">
+            endingLineNumber = "757"
+            landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
+            landmarkType = "5">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -952,11 +956,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413594698.112822"
+            timestampString = "413850145.675382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "832"
-            endingLineNumber = "832">
+            startingLineNumber = "833"
+            endingLineNumber = "833">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -966,67 +970,67 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413594698.112822"
+            timestampString = "413850145.675382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "834"
-            endingLineNumber = "834">
+            startingLineNumber = "835"
+            endingLineNumber = "835">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.962785"
+                  urlString = "file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/iosfwd"
+                  timestampString = "413849664.438427"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
+                  startingLineNumber = "125"
+                  endingLineNumber = "125"
                   offsetFromSymbolStart = "10">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.963206"
+                  timestampString = "413849664.438803"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
-                  offsetFromSymbolStart = "54">
+                  startingLineNumber = "894"
+                  endingLineNumber = "894"
+                  offsetFromSymbolStart = "73">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.963651"
+                  timestampString = "413849664.439005"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
-                  offsetFromSymbolStart = "13">
+                  startingLineNumber = "894"
+                  endingLineNumber = "894"
+                  offsetFromSymbolStart = "10">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.963964"
+                  timestampString = "413849664.43918"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
-                  offsetFromSymbolStart = "57">
+                  startingLineNumber = "894"
+                  endingLineNumber = "894"
+                  offsetFromSymbolStart = "89">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1038,11 +1042,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413594698.112822"
+            timestampString = "413850145.675382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "811"
-            endingLineNumber = "811">
+            startingLineNumber = "812"
+            endingLineNumber = "812">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1052,11 +1056,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413594698.112822"
+            timestampString = "413850145.675382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "798"
-            endingLineNumber = "798">
+            startingLineNumber = "799"
+            endingLineNumber = "799">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1066,11 +1070,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413594698.112822"
+            timestampString = "413850145.675382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "814"
-            endingLineNumber = "814">
+            startingLineNumber = "815"
+            endingLineNumber = "815">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1112,11 +1116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/main.cpp"
-            timestampString = "413375022.219372"
+            timestampString = "413849664.356222"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "179"
-            endingLineNumber = "179"
+            startingLineNumber = "180"
+            endingLineNumber = "180"
             landmarkName = "_tmain(int argc, TCHAR *argv[])"
             landmarkType = "7">
          </BreakpointContent>
@@ -1273,7 +1277,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "573"
             endingLineNumber = "573"
-            landmarkName = "BaseSystem::fromLongToStringWithDecimals( unsigned long long pValue )"
+            landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1298,67 +1302,67 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413594698.112822"
+            timestampString = "413850145.675382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "870"
-            endingLineNumber = "870">
+            startingLineNumber = "871"
+            endingLineNumber = "871">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.964711"
+                  urlString = "file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/iosfwd"
+                  timestampString = "413849664.440129"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
+                  startingLineNumber = "125"
+                  endingLineNumber = "125"
                   offsetFromSymbolStart = "10">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.965075"
+                  timestampString = "413849664.440524"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
-                  offsetFromSymbolStart = "54">
+                  startingLineNumber = "894"
+                  endingLineNumber = "894"
+                  offsetFromSymbolStart = "73">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.965384"
+                  timestampString = "413849664.440891"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
-                  offsetFromSymbolStart = "13">
+                  startingLineNumber = "894"
+                  endingLineNumber = "894"
+                  offsetFromSymbolStart = "10">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to std::__1::basic_ifstream&lt;char, std::__1::char_traits&lt;char&gt; &gt;::~basic_ifstream()"
+                  symbolName = "non-virtual thunk to std::__1::basic_stringstream&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;::~basic_stringstream()"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
-                  timestampString = "413593413.965631"
+                  timestampString = "413849664.441455"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "1035"
-                  endingLineNumber = "1035"
-                  offsetFromSymbolStart = "57">
+                  startingLineNumber = "894"
+                  endingLineNumber = "894"
+                  offsetFromSymbolStart = "89">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -1770,225 +1774,29 @@
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::gregorian::bad_day_of_year&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.965974"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::gregorian::bad_day_of_year&gt;::~error_info_injector()"
+                  symbolName = "Cart::sendToPos(unsigned long, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.966502"
+                  timestampString = "413849664.442216"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
+                  startingLineNumber = "338"
+                  endingLineNumber = "338"
+                  offsetFromSymbolStart = "2459">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::gregorian::bad_month&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.967008"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::gregorian::bad_month&gt;::~error_info_injector()"
+                  symbolName = "Cart::sendToPos(unsigned long, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;)"
                   moduleName = "PromoCalculator"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.967386"
+                  timestampString = "413849664.442546"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::gregorian::bad_weekday&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.967814"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::gregorian::bad_weekday&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.968282"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;std::out_of_range&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.968718"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;std::out_of_range&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.969206"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::io::too_few_args&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.969685"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::io::too_few_args&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.970261"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::io::too_many_args&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.970714"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::io::too_many_args&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.97127"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::io::bad_format_string&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.971637"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;boost::io::bad_format_string&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.971815"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;std::runtime_error&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///usr/local/include/boost/exception/exception.hpp"
-                  timestampString = "413593413.97208"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "276"
-                  endingLineNumber = "276"
-                  offsetFromSymbolStart = "9">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "non-virtual thunk to boost::exception_detail::error_info_injector&lt;std::runtime_error&gt;::~error_info_injector()"
-                  moduleName = "PromoCalculator"
-                  urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/Cart.cpp"
-                  timestampString = "413593413.972396"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "331"
-                  endingLineNumber = "331"
-                  offsetFromSymbolStart = "32">
+                  startingLineNumber = "338"
+                  endingLineNumber = "338"
+                  offsetFromSymbolStart = "2565">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -2118,6 +1926,22 @@
             startingLineNumber = "373"
             endingLineNumber = "373"
             landmarkName = "BaseSystem::decodeBarcode( unsigned long long rCode )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PromoCalculator/BaseSystem.cpp"
+            timestampString = "413726074.994927"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "428"
+            endingLineNumber = "428"
+            landmarkName = "BaseSystem::checkForVariationFiles()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -424,6 +424,37 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
     return rValues ;
 }
 
+void BaseSystem::checkForVariationFiles()
+{
+    std::string varFolderName = "VARS" ;
+    std::string varFileName = "" ;
+    if (!fs::exists(this->basePath + varFolderName))
+    {
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "No " << varFolderName << " subfolder found" ;
+        exit(-1);
+    }
+    
+    if (fs::is_directory(this->basePath + varFolderName))
+    {
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << varFolderName << " subfolder found" ;
+        fs::recursive_directory_iterator it(this->basePath + varFolderName);
+        fs::recursive_directory_iterator endit;
+        while(it != endit)
+        {
+            if (fs::is_regular_file(*it) && it->path().extension() == ".var")
+            {
+                varFileName = it->path().stem().string() ;
+                std::cout << "Var file found : " << varFileName << endl ;
+                /*if (fs::is_regular_file(*it) && it->path().extension() == ".var")
+                {
+                    std::cout << "Var file flag found : " << it->path().stem().string().c_str() << endl ;
+                }*/
+            }
+        }
+    }
+    
+}
+
 void BaseSystem::loadCartsInProgress()
 {
     std::string line;
@@ -702,7 +733,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             //rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, itemPrice, bCodeType);
                             rc = myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], barcode, itmCodePrice.price, itmCodePrice.type) ;
                             tmpTotalsMap = myCart->getTotals();
-                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":0,\"extendedPrice\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
+                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
                                 //"},\"promoResponse\":{\"promoValue\":0.0,\"promoQty\":0,\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}"
 
                         }
@@ -739,6 +770,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
             
         }
     }
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << respStringStream.str() ;
     return respStringStream.str() ;
 }
 
