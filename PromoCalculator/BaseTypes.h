@@ -131,8 +131,6 @@ typedef Totals Totals ;
 
 
 namespace lt = boost::log::trivial;
-
-
 namespace qi = boost::spirit::qi;
 
 template <typename Iterator>
@@ -151,5 +149,8 @@ struct keys_and_values
     qi::rule<Iterator, std::pair<std::string, std::string>()> pair;
     qi::rule<Iterator, std::string()> key, value;
 };
+
+
+BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(my_logger, src::severity_logger_mt< >)
 
 #endif
