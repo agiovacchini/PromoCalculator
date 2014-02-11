@@ -83,7 +83,7 @@ namespace http {
                 return;
             }*/
             
-            std::cout << "request_path: " << request_path << std::endl ;
+            //std::cout << "request_path: " << request_path << std::endl ;
             std::string servlet = "" ;
             std::string servletFunction = "" ;
             std::string servletFunctionAction = "" ;
@@ -99,10 +99,10 @@ namespace http {
                 servletFunctionAction = std::string( what[6].first, what[6].second );
                 servletFunctionPar = std::string( what[8].first, what[8].second );
                 
-                std::cout << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
+                //std::cout << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
             }
-            std::stringstream  ciccio ;
-            ciccio << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
+            //std::stringstream  ciccio ;
+            //ciccio << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
             
             
             //std::string input("key1=value1&key3=value3");  // input to parse
@@ -113,11 +113,11 @@ namespace http {
             std::map<std::string, std::string> urlParamsMap;        // map to receive results
             bool result = qi::parse(begin, end, paramsParser, urlParamsMap);   // returns true if successful
             typedef std::map<std::string, std::string>::iterator urlParamRows;
-            std::cout << "Url params:" ;
-            for(urlParamRows iterator = urlParamsMap.begin(); iterator != urlParamsMap.end(); iterator++) {
-                std::cout << "\t" << iterator->first << " " << iterator->second << std::endl ;
-                ciccio << "\t" << iterator->first << " " << iterator->second << std::endl ;
-            }
+            //std::cout << "Url params:" ;
+            //for(urlParamRows iterator = urlParamsMap.begin(); iterator != urlParamsMap.end(); iterator++) {
+                //std::cout << "\t" << iterator->first << " " << iterator->second << std::endl ;
+                //ciccio << "\t" << iterator->first << " " << iterator->second << std::endl ;
+            //}
             
             //rep.content.append(ciccio.str()) ;
             

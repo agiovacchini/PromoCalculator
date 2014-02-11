@@ -103,6 +103,7 @@ int BaseSystem::loadConfiguration()
     
     try {
         boost::property_tree::ini_parser::read_ini(this->basePath + "PromoCalculator.ini", pt);
+        rc = rc + setConfigValue("MainArchivesDir", "Main.ArchivesDir", &pt );
         rc = rc + setConfigValue("NetworkPort", "Network.Port", &pt );
         rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
         rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
@@ -153,7 +154,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
-    string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
+    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName ;
     
     std::ifstream archiveFile( archiveFileName );
     if (!archiveFile) {
@@ -213,7 +214,7 @@ void BaseSystem::readItemArchive( string pFileName )
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
-    string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
+    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName ;
 	string tmp = "" ;
     
     std::ifstream archiveFile( archiveFileName );
@@ -281,7 +282,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
-    string archiveFileName = this->basePath + "ARCHIVES/" + pFileName ;
+    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName ;
 	string tmp = "";
 	std::stringstream tempStringStream ;
 	
