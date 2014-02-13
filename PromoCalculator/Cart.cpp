@@ -15,6 +15,7 @@
 #include <ctime>
 #include <locale>
 #include <fstream>
+#include <mutex>
 //#include <pcap.h>
 #include "boost/format.hpp"
 #include "boost/filesystem.hpp"

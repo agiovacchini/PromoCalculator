@@ -66,8 +66,9 @@ using namespace std;
 const int max_length = 1024;
 
 string mainPath = "" ;
+string iniFileName = "" ;
 
-void init(string pMainPath)
+void init(string pMainPath, string pIniFileName)
 {
     logging::add_file_log
     (
@@ -91,7 +92,7 @@ void init(string pMainPath)
     pthread_sigmask(SIG_BLOCK, &new_mask, &old_mask);
     
     logging::add_common_attributes();
-    BaseSystem bs = BaseSystem(mainPath);
+    BaseSystem bs = BaseSystem(pMainPath, pIniFileName);
     
     // Run server in background thread.
     std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
@@ -128,7 +129,7 @@ int main(int argc, char* argv[])
     try
     {
         // Check command line arguments.
-        if (argc != 2)
+        if (argc != 3)
         {
             std::cerr << "Usage: promoCalculator rootPath" << std::endl ;
             return 1;
@@ -137,8 +138,9 @@ int main(int argc, char* argv[])
         
 
         mainPath = argv[1] ;
+        iniFileName = argv[2] ;
         std::cout << mainPath << endl ;
-        init(mainPath);
+        init(mainPath, iniFileName);
     }
     catch (std::exception& e)
     {

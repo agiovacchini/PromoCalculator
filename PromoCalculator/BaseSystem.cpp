@@ -45,13 +45,14 @@ qi::rule<std::string::const_iterator, std::vector<std::string>()> csv_parser = i
 
 using namespace std;
 
-BaseSystem::BaseSystem( string pBasePath )
+BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
 {
     using namespace logging::trivial;
  
     boost::asio::io_service io_service;
     
     this->basePath = pBasePath ;
+    this->iniFileName = pIniFileName ;
     
     if ( this->loadConfiguration() == 0 )
     {
@@ -97,12 +98,13 @@ void BaseSystem::setBasePath( string pBasePath )
 
 int BaseSystem::loadConfiguration()
 {
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "Config file: " << this->basePath << this->iniFileName ;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "Config load start" ;
     boost::property_tree::ptree pt;
     int rc = 0 ;
     
     try {
-        boost::property_tree::ini_parser::read_ini(this->basePath + "PromoCalculator.ini", pt);
+        boost::property_tree::ini_parser::read_ini(this->basePath + this->iniFileName, pt);
         rc = rc + setConfigValue("MainArchivesDir", "Main.ArchivesDir", &pt );
         rc = rc + setConfigValue("MainStoreChannel", "Main.StoreChannel", &pt );
         rc = rc + setConfigValue("MainStoreLoyChannel", "Main.StoreLoyChannel", &pt );

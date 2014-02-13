@@ -36,6 +36,7 @@ using boost::property_tree::write_json;
 
 class BaseSystem {
     string basePath ;
+    string iniFileName ;
     unsigned long nodeId ;
     src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_bs;
     
@@ -48,7 +49,7 @@ public:
     typedef boost::shared_ptr<tcp::socket> socket_ptr;
 	std::map<unsigned long long, Cart>::iterator mainIterator ;
 
-    BaseSystem( string pBasePath ) ;
+    BaseSystem( string pBasePath, string pIniFileName ) ;
     string getBasePath() const ;
     void setBasePath( string pBasePath ) ;
     
