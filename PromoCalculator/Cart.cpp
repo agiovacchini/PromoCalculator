@@ -24,6 +24,8 @@
 
 using namespace std;
 
+std::mutex cart_sendtopos_mutex ;
+
 Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
 {
     std::stringstream tempStringStream;
@@ -303,8 +305,10 @@ int Cart::persist( )
     return RC_OK ;
 }
 
-int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
+int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStoreId )
 {
+    cart_sendtopos_mutex.lock() ;
+    
     typedef std::map<void*, CartRow>::iterator itemRows;
     typedef std::map<unsigned long long, long>::iterator barcodesRows;
     std::stringstream tempStringStream;
@@ -329,7 +333,7 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
         << ";" << date_stream.str() //tsEnd
         << ";" << pPosNumber
         << ";" << tempStringStream.str().substr(1,8) //customerCode
-        << ";" << "11012" //serverId
+        << ";" << pStoreId //serverId
         << ";" << this->number
         << ";" << "0"
         << ";" << this->itemsNumber
@@ -354,7 +358,62 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )
     scanInFile.close() ;
 
 	boost::filesystem::rename(scanInTmpFileName.c_str(), scanInFileName);
+    
+    cart_sendtopos_mutex.unlock() ;
+    
     return RC_OK ;
+}
+
+string Cart::getAllCartJson( )
+{
+    typedef std::map<void*, CartRow>::iterator itemRows ;
+    typedef std::map<unsigned long long, long>::iterator barcodesRows ;
+    typedef std::map<unsigned int, unsigned long long>::iterator loyCardRows ;
+    
+    std::stringstream tempStringStream;
+    
+    tempStringStream.str(std::string());
+    tempStringStream.clear();
+    
+    unsigned long long rowBarcode, rowCardCode ;
+    long qty = 0 ;
+    bool firstRow = true ;
+    
+	BOOST_LOG_SEV(my_logger_ca, lt::info) << " - CART# " << this->number << " - Getting full cart in JSON format" ;
+    
+    
+    tempStringStream << "{\"loyCards\":{" ;
+    firstRow = true ;
+    for(loyCardRows iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++)
+    {
+        rowCardCode = (unsigned long long)iterator->second;
+        tempStringStream << rowCardCode ;
+        firstRow = false ;
+    }
+    tempStringStream << "},\"items:\"{" ;
+    
+    firstRow = true ;
+    for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
+    {
+        rowBarcode = (unsigned long long)iterator->first;
+        qty = iterator->second ;
+		if (qty > 0)
+		{
+			for (long repetitions = 0; repetitions < qty; repetitions++ )
+			{
+                if (!firstRow)
+                {
+                    tempStringStream << "," ;
+                }
+				tempStringStream << "{\"barcode\":" << rowBarcode << "}" << endl;
+                firstRow = false ;
+			}
+		}
+    }
+    
+    tempStringStream << "}" ;
+    
+    return tempStringStream.str() ;
 }
 
 std::map <unsigned long long, Totals> Cart::getTotals()

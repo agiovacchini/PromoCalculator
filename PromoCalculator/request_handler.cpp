@@ -158,6 +158,11 @@ namespace http {
                 actionBS = WEBI_GET_TOTALS ;
             }
             
+            if (servletFunctionAction.compare("getAllCart")==0)
+            {
+                actionBS = WEBI_GET_ALL_CART ;
+            }
+            
             if (actionBS > 0)
             {
                 rep.content.append(baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap));

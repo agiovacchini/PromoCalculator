@@ -128,7 +128,7 @@ typedef Totals Totals ;
 #define WEBI_ITEM_ADD       0x20
 #define WEBI_ITEM_VOID      0x21
 #define WEBI_GET_TOTALS     0x30
-
+#define WEBI_GET_ALL_CART   0x40
 
 namespace lt = boost::log::trivial;
 namespace qi = boost::spirit::qi;
@@ -149,7 +149,6 @@ struct keys_and_values
     qi::rule<Iterator, std::pair<std::string, std::string>()> pair;
     qi::rule<Iterator, std::string()> key, value;
 };
-
 
 BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(my_logger, src::severity_logger_mt< >)
 

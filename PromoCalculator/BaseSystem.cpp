@@ -104,7 +104,10 @@ int BaseSystem::loadConfiguration()
     try {
         boost::property_tree::ini_parser::read_ini(this->basePath + "PromoCalculator.ini", pt);
         rc = rc + setConfigValue("MainArchivesDir", "Main.ArchivesDir", &pt );
-        rc = rc + setConfigValue("NetworkPort", "Network.Port", &pt );
+        rc = rc + setConfigValue("MainStoreChannel", "Main.StoreChannel", &pt );
+        rc = rc + setConfigValue("MainStoreLoyChannel", "Main.StoreLoyChannel", &pt );
+        rc = rc + setConfigValue("MainStoreId", "Main.StoreId", &pt );
+        //rc = rc + setConfigValue("NetworkPort", "Network.Port", &pt );
         rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
         rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
         rc = rc + setConfigValue("LoyCardPrefix", "Loy.CardPrefix", &pt );
@@ -756,9 +759,13 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << endl << "WEBI_GET_TOTALS - Cool - rc:" << rc ;
                     break;
                 case WEBI_SESSION_END:
-                    rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
+                    rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"], this->configurationMap["MainStoreId"]);
                     respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << endl << "WEBI_SESSION_END - Cool - rc:" << rc ;
+                    break;
+                case WEBI_GET_ALL_CART:
+                    respStringStream << myCart->getAllCartJson() ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << endl << "WEBI_SESSION_GET_ALL_CART - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_SESSION_VOID:
                     rc = 0 ;

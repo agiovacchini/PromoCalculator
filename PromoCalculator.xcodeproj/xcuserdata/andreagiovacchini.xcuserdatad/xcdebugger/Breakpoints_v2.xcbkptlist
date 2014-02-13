@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "413682048.279847"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
             landmarkName = "Cart::removeItemByBarcode( Item&amp; pItem, unsigned long long pBarcode, unsigned long long pPrice, unsigned int pBCodeType )"
             landmarkType = "5">
          </BreakpointContent>
@@ -72,11 +72,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "480"
-            endingLineNumber = "480"
+            startingLineNumber = "483"
+            endingLineNumber = "483"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -88,11 +88,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "477"
-            endingLineNumber = "477"
+            startingLineNumber = "480"
+            endingLineNumber = "480"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -414,11 +414,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "482"
-            endingLineNumber = "482"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -430,11 +430,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "454"
-            endingLineNumber = "454"
+            startingLineNumber = "457"
+            endingLineNumber = "457"
             landmarkName = "BaseSystem::checkForVariationFiles()"
             landmarkType = "5">
          </BreakpointContent>
@@ -446,11 +446,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "340"
-            endingLineNumber = "340"
+            startingLineNumber = "343"
+            endingLineNumber = "343"
             landmarkName = "BaseSystem::readBarcodesArchive( string pFileName )"
             landmarkType = "5">
             <Locations>
@@ -800,11 +800,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "413682048.279847"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "Cart::writeTransactionRow( string row )"
             landmarkType = "5">
          </BreakpointContent>
@@ -816,11 +816,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "413682048.279847"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "221"
+            endingLineNumber = "221"
             landmarkName = "Cart::removeItemByBarcode( Item&amp; pItem, unsigned long long pBarcode, unsigned long long pPrice, unsigned int pBCodeType )"
             landmarkType = "5">
          </BreakpointContent>
@@ -832,11 +832,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "545"
-            endingLineNumber = "545"
+            startingLineNumber = "548"
+            endingLineNumber = "548"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -848,11 +848,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "546"
-            endingLineNumber = "546"
+            startingLineNumber = "549"
+            endingLineNumber = "549"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -864,11 +864,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "799"
-            endingLineNumber = "799">
+            startingLineNumber = "806"
+            endingLineNumber = "806">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -878,11 +878,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "547"
-            endingLineNumber = "547"
+            startingLineNumber = "550"
+            endingLineNumber = "550"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -894,11 +894,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "746"
-            endingLineNumber = "746"
+            startingLineNumber = "749"
+            endingLineNumber = "749"
             landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
             landmarkType = "5">
          </BreakpointContent>
@@ -910,11 +910,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "758"
-            endingLineNumber = "758"
+            startingLineNumber = "761"
+            endingLineNumber = "761"
             landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
             landmarkType = "5">
             <Locations>
@@ -956,11 +956,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "834"
-            endingLineNumber = "834">
+            startingLineNumber = "841"
+            endingLineNumber = "841">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -970,11 +970,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "836"
-            endingLineNumber = "836">
+            startingLineNumber = "843"
+            endingLineNumber = "843">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -1042,11 +1042,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "813"
-            endingLineNumber = "813">
+            startingLineNumber = "820"
+            endingLineNumber = "820">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1056,11 +1056,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "800"
-            endingLineNumber = "800">
+            startingLineNumber = "807"
+            endingLineNumber = "807">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1070,11 +1070,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "816"
-            endingLineNumber = "816">
+            startingLineNumber = "823"
+            endingLineNumber = "823">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1084,11 +1084,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "319"
-            endingLineNumber = "319"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
             landmarkName = "BaseSystem::readBarcodesArchive( string pFileName )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1100,11 +1100,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "325"
-            endingLineNumber = "325"
+            startingLineNumber = "328"
+            endingLineNumber = "328"
             landmarkName = "BaseSystem::readBarcodesArchive( string pFileName )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1196,11 +1196,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/request_handler.cpp"
-            timestampString = "413380116.833217"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "169"
-            endingLineNumber = "169"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
             landmarkName = "request_handler::handle_request(const request&amp; req, reply&amp; rep)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1272,11 +1272,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
+            startingLineNumber = "577"
+            endingLineNumber = "577"
             landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
@@ -1288,11 +1288,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "413682048.279847"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "153"
-            endingLineNumber = "153">
+            startingLineNumber = "155"
+            endingLineNumber = "155">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1302,11 +1302,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "872"
-            endingLineNumber = "872">
+            startingLineNumber = "879"
+            endingLineNumber = "879">
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -1374,11 +1374,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "655"
-            endingLineNumber = "655"
+            startingLineNumber = "658"
+            endingLineNumber = "658"
             landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1390,11 +1390,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "413682048.279847"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "Cart::addItemByBarcode( Item&amp; pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long long pPrice, unsigned int pBCodeType )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1406,11 +1406,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "413682048.279847"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "Cart::addItemByBarcode( Item&amp; pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long long pPrice, unsigned int pBCodeType )"
             landmarkType = "5">
             <Locations>
@@ -1762,12 +1762,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/Cart.cpp"
-            timestampString = "413682048.279847"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
-            landmarkName = "Cart::sendToPos( unsigned long pPosNumber, string pScanInPath )"
+            startingLineNumber = "342"
+            endingLineNumber = "342"
+            landmarkName = "Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStoreId )"
             landmarkType = "5">
             <Locations>
                <Location
@@ -1808,11 +1808,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "652"
-            endingLineNumber = "652"
+            startingLineNumber = "655"
+            endingLineNumber = "655"
             landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1824,11 +1824,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "352"
-            endingLineNumber = "352"
+            startingLineNumber = "355"
+            endingLineNumber = "355"
             landmarkName = "BaseSystem::decodeBarcode( unsigned long long rCode )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1840,11 +1840,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "641"
-            endingLineNumber = "641"
+            startingLineNumber = "644"
+            endingLineNumber = "644"
             landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1856,11 +1856,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "642"
-            endingLineNumber = "642"
+            startingLineNumber = "645"
+            endingLineNumber = "645"
             landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
             landmarkType = "5">
          </BreakpointContent>
@@ -1872,11 +1872,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "354"
-            endingLineNumber = "354"
+            startingLineNumber = "357"
+            endingLineNumber = "357"
             landmarkName = "BaseSystem::decodeBarcode( unsigned long long rCode )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1888,11 +1888,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "365"
-            endingLineNumber = "365"
+            startingLineNumber = "368"
+            endingLineNumber = "368"
             landmarkName = "BaseSystem::decodeBarcode( unsigned long long rCode )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1904,11 +1904,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "366"
-            endingLineNumber = "366"
+            startingLineNumber = "369"
+            endingLineNumber = "369"
             landmarkName = "BaseSystem::decodeBarcode( unsigned long long rCode )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1920,11 +1920,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "374"
-            endingLineNumber = "374"
+            startingLineNumber = "377"
+            endingLineNumber = "377"
             landmarkName = "BaseSystem::decodeBarcode( unsigned long long rCode )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1936,11 +1936,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PromoCalculator/BaseSystem.cpp"
-            timestampString = "413852971.05917"
+            timestampString = "413943221.482026"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "429"
-            endingLineNumber = "429"
+            startingLineNumber = "432"
+            endingLineNumber = "432"
             landmarkName = "BaseSystem::checkForVariationFiles()"
             landmarkType = "5">
          </BreakpointContent>

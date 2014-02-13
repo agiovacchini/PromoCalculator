@@ -52,7 +52,8 @@ public:
     unsigned int getLoyCardsNumber() const ;
     int printCart() ;
     int persist( ) ;
-	int sendToPos(unsigned long pPosNumber, string pScanInPath);
+	int sendToPos(unsigned long pPosNumber, string pScanInPath, string pStoreId) ;
+    string getAllCartJson() ;
     int close( ) ;
     std::map <unsigned long long, Totals> getTotals() ;
     
