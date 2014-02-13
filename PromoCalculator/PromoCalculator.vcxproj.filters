@@ -42,6 +42,30 @@
     <ClInclude Include="Item.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="request.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="request_handler.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="request_parser.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="server.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="connection.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="header.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="mime_types.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="reply.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -63,6 +87,24 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="reply.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="request_handler.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="request_parser.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="server.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="connection.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="mime_types.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

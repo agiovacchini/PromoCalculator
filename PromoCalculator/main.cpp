@@ -85,12 +85,16 @@ void init(string pMainPath, string pIniFileName)
       << "> " << expr::smessage
       )
      );
-    // Block all signals for background thread.
+
+#if !defined(_WIN32)
+
+	// Block all signals for background thread.
     sigset_t new_mask;
     sigfillset(&new_mask);
     sigset_t old_mask;
     pthread_sigmask(SIG_BLOCK, &new_mask, &old_mask);
-    
+#endif
+
     logging::add_common_attributes();
     BaseSystem bs = BaseSystem(pMainPath, pIniFileName);
     
@@ -101,7 +105,8 @@ void init(string pMainPath, string pIniFileName)
     boost::thread t(boost::bind(&http::server3::server::run, &s));
     
     // Restore previous signals.
-    pthread_sigmask(SIG_SETMASK, &old_mask, 0);
+#if !defined(_WIN32)
+	pthread_sigmask(SIG_SETMASK, &old_mask, 0);
     
     // Wait for signal indicating time to shut down.
     sigset_t wait_mask;
@@ -112,7 +117,7 @@ void init(string pMainPath, string pIniFileName)
     pthread_sigmask(SIG_BLOCK, &wait_mask, 0);
     int sig = 0;
     sigwait(&wait_mask, &sig);
-    
+#endif
     // Stop the server.
     s.stop();
     t.join();
@@ -185,7 +190,8 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
      http://stackoverflow.com/questions/6006319/converting-tchar-to-string-in-c
      */
 	mainPath = argv[1] ;
-	
+	iniFileName = argv[2];
+
     if( lstrcmpi( argv[1], TEXT("install")) == 0 )
     {
         SvcInstall();
@@ -354,8 +360,9 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 
     ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
     
-	init(mainPath);
-    
+	std::cout << mainPath << endl;
+	init(mainPath, iniFileName);
+
     while(1)
     {
         // Check whether to stop the service.
