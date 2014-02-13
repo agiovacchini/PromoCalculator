@@ -408,7 +408,6 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
         }
     }
     
-
     switch (rValues.type)
     {
         case BCODE_EAN13_PRICE_REQ:
@@ -417,16 +416,21 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
             tempStringStream << rCode ;
             barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
             rValues.barcode = atoll(barcodeWrkStr.c_str()) ;
-            rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-            rValues.price = atoll(tempStringStream.str().substr(7,5).c_str()) ;
+            if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
+            {
+                rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
+                rValues.price = atoll(tempStringStream.str().substr(7,5).c_str()) ;
+            }
             break;
         default:
             rValues.barcode = rCode ;
-            rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-            rValues.price = itemsMap[rValues.code].getPrice() ;
+            if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
+            {
+                rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
+                rValues.price = itemsMap[rValues.code].getPrice() ;
+            }
             break;
     }
-    
     return rValues ;
 }
 
@@ -680,13 +684,14 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     {
                         if (itmCodePrice.type != BCODE_LOYCARD)
                         {
+                            
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc ;
                             
                             //BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "barcodeWrk: " << barcodeWrk ;
                             try {
                                 
                                 map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
-                                if (it!=itemsMap.end())
+                                if ( itmCodePrice.code != 0 )
                                 {
                                     //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
                                     rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price, itmCodePrice.type) ;
@@ -698,7 +703,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 }
                                 else {
                                     rc = BCODE_ITEM_NOT_FOUND;
-                                    respStringStream << "{\"status\":3,\"deviceReqId\":0}" ;
+                                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}" ;
                                 }
                             }
                             catch (std::exception const& e)
@@ -716,8 +721,8 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             }
                         }
                     } else {
-                        rc = RC_ERR ;
-                        respStringStream << "{Tipo barcode non riconosciuto}" ;
+                        rc = BCODE_NOT_RECOGNIZED ;
+                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}" ;
                     }
 
                     break;

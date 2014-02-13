@@ -168,11 +168,8 @@ namespace http {
                 rep.content.append(baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap));
             }
             
-            
-            
             // Fill out the reply to be sent to the client.
             rep.status = reply::ok;
-            char buf[512];
             
             //while (is.read(buf, sizeof(buf)).gcount() > 0)
                 //rep.content.append(buf, is.gcount());
@@ -183,7 +180,7 @@ namespace http {
             rep.headers[1].name = "Content-Type";
             rep.headers[1].value = mime_types::extension_to_type(extension);
         }
-        
+
         bool request_handler::url_decode(const std::string& in, std::string& out)
         {
             out.clear();
