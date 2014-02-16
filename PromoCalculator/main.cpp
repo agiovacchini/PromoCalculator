@@ -63,6 +63,25 @@ src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_main;
 
 void init(string pMainPath, string pIniFileName)
 {
+	typedef sinks::synchronous_sink< sinks::text_file_backend > file_sink;
+	shared_ptr< file_sink > Fsink(new file_sink(
+		keywords::file_name = "LOGS/PromoCalculator_%N.log",      // file name pattern
+		keywords::auto_flush = true,
+		keywords::open_mode = (std::ios::out | std::ios::app),
+		keywords::rotation_size = 102240                     // rotation size, in characters
+		));
+	// Set up where the rotated files will be stored
+	Fsink->locked_backend()->set_file_collector(sinks::file::make_collector(
+		keywords::target = "logs",                          // where to store rotated files
+		keywords::max_size = 1000 * 1024,              // maximum total size of the stored files, in bytes
+		keywords::min_free_space = 100 * 1024 * 1024        // minimum free space on the drive, in bytes
+		));
+	// Upon restart, scan the target directory for files matching the file_name pattern
+	Fsink->locked_backend()->scan_for_files();
+	// Ok, we're ready to add the sink to the logging library
+	logging::core::get()->add_sink(Fsink);
+
+	/*
     logging::add_file_log
     (
      keywords::file_name = pMainPath + "LOGS/PromoCalculator_%N.log",
@@ -78,6 +97,7 @@ void init(string pMainPath, string pIniFileName)
       << "> " << expr::smessage
       )
      );
+	 */
 
 #if !defined(_WIN32)
 
@@ -112,16 +132,16 @@ int main(int argc, char* argv[])
         iniFileName = argv[2] ;
         std::cout << mainPath << endl ;
         init(mainPath, iniFileName);
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb1";
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb1";
 		BaseSystem bs = BaseSystem(mainPath, iniFileName);
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb2";
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb2";
 
 		// Run server in background thread.
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb3";
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb3";
 
 		boost::thread t(boost::bind(&http::server3::server::run, &s));
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb4";    
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb4";    
 
 		//s.stop();
 		//t.join();
@@ -346,9 +366,9 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
 	http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
 	boost::thread t(boost::bind(&http::server3::server::run, &s));
-	BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Started http server";
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server";
 	ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0);
-	BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Service running";
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Service running";
 
     while(1)
     {
@@ -356,10 +376,10 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 		
         WaitForSingleObject(ghSvcStopEvent, INFINITE);
 
-		BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Received stop request";
+		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Received stop request";
 
         ReportSvcStatus( SERVICE_STOPPED, NO_ERROR, 0 );
-		BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Finished processing stop request";
+		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Finished processing stop request";
 		return;
     }
 }

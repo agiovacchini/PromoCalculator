@@ -75,7 +75,7 @@ struct CartRow {
 
 struct ItemCodePrice {
     unsigned long long code ;
-    unsigned long long price ;
+    unsigned long price ;
     unsigned long long barcode ;
     unsigned int type ;
 };
@@ -98,6 +98,7 @@ typedef Totals Totals ;
 #define CART_TMPFILE_LOADING 0x30
 #define CART_NOT_INITIALIZED 0x40
 #define CART_STATE_ERROR 0x50
+#define CART_NOT_FOUND 0x99
 
 #define GEN_CART_NEW       0x01
 #define GEN_CART_LOAD      0x02

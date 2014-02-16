@@ -41,9 +41,9 @@ public:
     void setNumber( unsigned long pNumber ) ;
     
     void writeTransactionRow( string row ) ;
-    int addItemByBarcode(Item& pItem, unsigned long long pBarcode, unsigned long long pPrice, unsigned int pBCodeType ) ;
-    int addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long long pPrice, unsigned int pBCodeType ) ;
-    int removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long long pPrice, unsigned int pBCodeType ) ;
+    int addItemByBarcode(Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType ) ;
+    int addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice, unsigned int pBCodeType ) ;
+    int removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType ) ;
     int addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxLoyCards ) ;
     unsigned int getState() const ;
     void setState( unsigned int pState ) ;
