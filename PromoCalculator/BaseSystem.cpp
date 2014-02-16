@@ -315,7 +315,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
         int column = 0 ;
         
         
-        unsigned long long tmpBcd = 0, bcdWrk = 0;
+        unsigned long long bcdWrk = 0;
         Barcodes tempBarcode ;
         for (auto i : result)
         {
@@ -476,7 +476,6 @@ void BaseSystem::loadCartsInProgress()
     unsigned long currentTmpCartNumber = 0, nextCartNumberTmp = 0 ;
     char rAction = ' ' ;
     unsigned long long rCode = 0 ;
-    unsigned long long tItemCode = 0 ;
     long rQty = 0 ;
     bool r = false ;
     int column = 0 ;
@@ -635,7 +634,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     std::ostringstream streamCartId ;
     std::ostringstream respStringStream ;
     std::ostringstream tempStringStream ;
-    int bCodeType = 0 ;
+    //int bCodeType = 0 ;
     unsigned long requestId = 0, qty = 0 ;
     unsigned long long barcode = 0 ;
     std::map <unsigned long long, Totals> tmpTotalsMap ;
@@ -644,12 +643,18 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     int rc = 0 ;
     respStringStream.str( std::string() ) ;
     respStringStream.clear() ;
-    
+    //std::cout << "pAction: " << pAction << std::endl ;
     if (pAction==WEBI_SESSION_INIT)
     {
         cartId = this->newCart( GEN_CART_NEW ) ;
         respStringStream << "{\"status\":0,\"deviceReqId\":1,\"sessionId\":" << cartId << "}" ;
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "InitResp - Cool" ;
+    } else if (pAction==WEBI_GET_STORE_INFO) {
+        respStringStream << "{\"status\":0,\"loyChannel\":" << configurationMap["MainStoreLoyChannel"] << ",\"Channel\":" << configurationMap["MainStoreChannel"] << ",\"id\":" << configurationMap["MainStoreId"] << "}" ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_SESSION_GET_STORE_INFO - Cool - result:" << respStringStream.str() ;
+    } else if (pAction==WEBI_ACTION_NOT_RECOGNIZED) {
+        respStringStream << "{\"status\":" << WEBI_ACTION_NOT_RECOGNIZED << "}" ;
+        BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - " << "Web action not recognized :(" ;
     } else {
         streamCartId.str( std::string() ) ;
         streamCartId.clear() ;
@@ -676,22 +681,19 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     }
                     qty = 1 ;
                     //atoll(pUrlParamsMap["qty"].c_str()) ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "barcode: " << barcode ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "qty: "  << qty  ;
+                    //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "barcode: " << barcode ;
+                    //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "qty: "  << qty  ;
                     
                     itmCodePrice = decodeBarcode( barcode ) ;
                     
                     if ( ( itmCodePrice.type != BCODE_NOT_RECOGNIZED ) )
                     {
                         if (itmCodePrice.type != BCODE_LOYCARD)
-                        {
-                            
-                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc ;
-                            
+                        {                            
                             //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "barcodeWrk: " << barcodeWrk ;
                             try {
                                 
-                                map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
+                                //map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
                                 if ( itmCodePrice.code != 0 )
                                 {
                                     //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
@@ -711,9 +713,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             {
                                 BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - " << "Sales session error: " << e.what();
                             }
+                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc << ", barcode: " << barcode << ", qty: "  << qty ;
                         } else {
-                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc ;
                             rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
+                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc << ", card: " << barcode ;
                             if (rc==RC_OK)
                             {
                                 respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}" ;
@@ -781,7 +784,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_SESSION_END - Cool - rc:" << rc ;
                     break;
                 default:
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Web action not recognized :(" ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - " << "Web action not recognized :(" ;
             }
             
 		} else {

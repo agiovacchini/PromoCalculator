@@ -63,25 +63,6 @@ src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_main;
 
 void init(string pMainPath, string pIniFileName)
 {
-	typedef sinks::synchronous_sink< sinks::text_file_backend > file_sink;
-	shared_ptr< file_sink > Fsink(new file_sink(
-		keywords::file_name = "LOGS/PromoCalculator_%N.log",      // file name pattern
-		keywords::auto_flush = true,
-		keywords::open_mode = (std::ios::out | std::ios::app),
-		keywords::rotation_size = 102240                     // rotation size, in characters
-		));
-	// Set up where the rotated files will be stored
-	Fsink->locked_backend()->set_file_collector(sinks::file::make_collector(
-		keywords::target = "logs",                          // where to store rotated files
-		keywords::max_size = 1000 * 1024,              // maximum total size of the stored files, in bytes
-		keywords::min_free_space = 100 * 1024 * 1024        // minimum free space on the drive, in bytes
-		));
-	// Upon restart, scan the target directory for files matching the file_name pattern
-	Fsink->locked_backend()->scan_for_files();
-	// Ok, we're ready to add the sink to the logging library
-	logging::core::get()->add_sink(Fsink);
-
-	/*
     logging::add_file_log
     (
      keywords::file_name = pMainPath + "LOGS/PromoCalculator_%N.log",
@@ -97,7 +78,6 @@ void init(string pMainPath, string pIniFileName)
       << "> " << expr::smessage
       )
      );
-	 */
 
 #if !defined(_WIN32)
 
@@ -130,21 +110,37 @@ int main(int argc, char* argv[])
         
         mainPath = argv[1] ;
         iniFileName = argv[2] ;
-        std::cout << mainPath << endl ;
+
+        std::cout << mainPath << endl;
         init(mainPath, iniFileName);
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb1";
-		BaseSystem bs = BaseSystem(mainPath, iniFileName);
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb2";
+        
+        sigset_t new_mask;
+        sigfillset(&new_mask);
+        sigset_t old_mask;
+        pthread_sigmask(SIG_BLOCK, &new_mask, &old_mask);
+        
+        logging::add_common_attributes();
 
-		// Run server in background thread.
-		std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb3";
-
-		boost::thread t(boost::bind(&http::server3::server::run, &s));
-		BOOST_LOG_SEV(my_logger_main, lt::fatal) << "- MA - " << "Deb4";    
-
-		//s.stop();
-		//t.join();
+        BaseSystem bs = BaseSystem(mainPath, iniFileName);
+        
+        // Run server in background thread.
+        std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
+        http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
+        boost::thread t(boost::bind(&http::server3::server::run, &s));
+        BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server";
+        // Wait for signal indicating time to shut down.
+        sigset_t wait_mask;
+        sigemptyset(&wait_mask);
+        sigaddset(&wait_mask, SIGINT);
+        sigaddset(&wait_mask, SIGQUIT);
+        sigaddset(&wait_mask, SIGTERM);
+        pthread_sigmask(SIG_BLOCK, &wait_mask, 0);
+        int sig = 0;
+        sigwait(&wait_mask, &sig);
+		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Received stop request";
+        s.stop();
+        t.join();
+		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Finished processing stop request";
 
     }
     catch (std::exception& e)

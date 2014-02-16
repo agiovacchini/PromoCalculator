@@ -88,85 +88,77 @@ namespace http {
             std::string servletFunction = "" ;
             std::string servletFunctionAction = "" ;
             std::string servletFunctionPar = "" ;
+            keys_and_values<std::string::iterator> paramsParser;    // create instance of parser
+            std::map<std::string, std::string> urlParamsMap;        // map to receive results
+            typedef std::map<std::string, std::string>::iterator urlParamRows;
 
+            int actionBS = WEBI_ACTION_NOT_RECOGNIZED ;
             
             //boost::regex exrp( "((.*))([?]+)((.*))" );
-            boost::regex exrp( "(/(.*))(/(.*))(/(.*))([?]+)((.*))" );
+            boost::regex exrpWithParams( "(/(.*))(/(.*))(/(.*))([?]+)((.*))" );
+            boost::regex exrpNoParams( "(/(.*))(/(.*))(/(.*))" );
+            
             boost::match_results<std::string::const_iterator> what;
-            if( regex_search( request_path, what, exrp ) ) {
+            if( regex_search( request_path, what, exrpWithParams ) ) {
                 servlet = std::string( what[2].first, what[2].second );
                 servletFunction = std::string( what[4].first, what[4].second );
                 servletFunctionAction = std::string( what[6].first, what[6].second );
                 servletFunctionPar = std::string( what[8].first, what[8].second );
+                std::string::iterator begin = servletFunctionPar.begin();
+                std::string::iterator end = servletFunctionPar.end();
+                bool result = qi::parse(begin, end, paramsParser, urlParamsMap);   // returns true if successful
                 
-                //std::cout << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
-            }
-            //std::stringstream  ciccio ;
-            //ciccio << "servlet: " << servlet << std::endl << "servletFunction: " << servletFunction << std::endl << "servletFunctionAction: " << servletFunctionAction << std::endl << "servletFunctionPar: " << servletFunctionPar << std::endl ;
-            
-            
-            //std::string input("key1=value1&key3=value3");  // input to parse
-            std::string::iterator begin = servletFunctionPar.begin();
-            std::string::iterator end = servletFunctionPar.end();
-            
-            keys_and_values<std::string::iterator> paramsParser;    // create instance of parser
-            std::map<std::string, std::string> urlParamsMap;        // map to receive results
-            bool result = qi::parse(begin, end, paramsParser, urlParamsMap);   // returns true if successful
-            typedef std::map<std::string, std::string>::iterator urlParamRows;
-            //std::cout << "Url params:" ;
-            //for(urlParamRows iterator = urlParamsMap.begin(); iterator != urlParamsMap.end(); iterator++) {
-                //std::cout << "\t" << iterator->first << " " << iterator->second << std::endl ;
-                //ciccio << "\t" << iterator->first << " " << iterator->second << std::endl ;
-            //}
-            
-            //rep.content.append(ciccio.str()) ;
-            
-            int actionBS = -1 ;
-            
-            if (servletFunctionAction.compare("initSession")==0)
-            {
-                actionBS = WEBI_SESSION_INIT ;
-            }
-            
-            if (servletFunctionAction.compare("endSession")==0)
-            {
-                actionBS = WEBI_SESSION_END ;
-            }
-            
-            if (servletFunctionAction.compare("voidTransaction")==0)
-            {
-                actionBS = WEBI_SESSION_VOID ;
-            }
-            
-            if (servletFunctionAction.compare("addCustomer")==0)
-            {
-                actionBS = WEBI_ADD_CUSTOMER ;
-            }
-            
-            if (servletFunctionAction.compare("addItem")==0)
-            {
-                actionBS = WEBI_ITEM_ADD ;
-            }
-            
-            if (servletFunctionAction.compare("voidItem")==0)
-            {
-                actionBS = WEBI_ITEM_VOID ;
-            }
-
-            if (servletFunctionAction.compare("getTotals")==0)
-            {
-                actionBS = WEBI_GET_TOTALS ;
+                if (servletFunctionAction.compare("initSession")==0)
+                {
+                    actionBS = WEBI_SESSION_INIT ;
+                }
+                
+                if (servletFunctionAction.compare("endSession")==0)
+                {
+                    actionBS = WEBI_SESSION_END ;
+                }
+                
+                if (servletFunctionAction.compare("voidTransaction")==0)
+                {
+                    actionBS = WEBI_SESSION_VOID ;
+                }
+                
+                if (servletFunctionAction.compare("addCustomer")==0)
+                {
+                    actionBS = WEBI_ADD_CUSTOMER ;
+                }
+                
+                if (servletFunctionAction.compare("addItem")==0)
+                {
+                    actionBS = WEBI_ITEM_ADD ;
+                }
+                
+                if (servletFunctionAction.compare("voidItem")==0)
+                {
+                    actionBS = WEBI_ITEM_VOID ;
+                }
+                
+                if (servletFunctionAction.compare("getTotals")==0)
+                {
+                    actionBS = WEBI_GET_TOTALS ;
+                }
+                
+                if (servletFunctionAction.compare("getAllCart")==0)
+                {
+                    actionBS = WEBI_GET_ALL_CART ;
+                }
+            } else if ( regex_search( request_path, what, exrpNoParams ) ) {
+                servlet = std::string( what[2].first, what[2].second );
+                servletFunction = std::string( what[4].first, what[4].second );
+                servletFunctionAction = std::string( what[6].first, what[6].second );
+                
+                if (servletFunctionAction.compare("getStoreInfo")==0)
+                {
+                    actionBS = WEBI_GET_STORE_INFO ;
+                }
             }
             
-            if (servletFunctionAction.compare("getAllCart")==0)
-            {
-                actionBS = WEBI_GET_ALL_CART ;
-            }
-            
-            if (actionBS > 0)
-            {
-                rep.content.append(baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap));
-            }
+            rep.content.append(baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap));
             
             // Fill out the reply to be sent to the client.
             rep.status = reply::ok;
