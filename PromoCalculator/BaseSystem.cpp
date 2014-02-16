@@ -105,7 +105,7 @@ int BaseSystem::loadConfiguration()
     
     try {
         boost::property_tree::ini_parser::read_ini(this->basePath + this->iniFileName, pt);
-        rc = rc + setConfigValue("MainArchivesDir", "Main.ArchivesDir", &pt );
+        //rc = rc + setConfigValue("MainArchivesDir", "Main.ArchivesDir", &pt );
         rc = rc + setConfigValue("MainStoreChannel", "Main.StoreChannel", &pt );
         rc = rc + setConfigValue("MainStoreLoyChannel", "Main.StoreLoyChannel", &pt );
         rc = rc + setConfigValue("MainStoreId", "Main.StoreId", &pt );
@@ -119,7 +119,7 @@ int BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("WebAddress", "Web.Address", &pt );
         rc = rc + setConfigValue("WebPort", "Web.Port", &pt );
         rc = rc + setConfigValue("WebThreads", "Web.Threads", &pt );
-        
+		configurationMap["MainArchivesDir"] = configurationMap["MainStoreChannel"] + "/" + configurationMap["MainStoreId"] + "/";
         this->nodeId = pt.get<std::uint32_t>("Node.Id") ;
     }
     catch (std::exception const& e)
@@ -258,10 +258,10 @@ void BaseSystem::readItemArchive( string pFileName )
                     tempItm.setDescription(i) ;
                     break;
                 case 16:
-                    tempItm.setDepartment(deparmentsMap[strtoull(i.c_str(),nullptr,10)]);
+                    tempItm.setDepartment(deparmentsMap[strtoul(i.c_str(),nullptr,10)]);
                     break;
                 case 26:
-                    tempItm.setPrice(strtoull(i.c_str(),nullptr,10)) ;
+                    tempItm.setPrice(strtoul(i.c_str(),nullptr,10)) ;
                     break;
                 default:
                     break ;
@@ -473,7 +473,7 @@ void BaseSystem::loadCartsInProgress()
     std::map<unsigned long long, Cart>::iterator itCarts ;
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr = "" ;
-    unsigned long long currentTmpCartNumber = 0, nextCartNumberTmp = 0 ;
+    unsigned long currentTmpCartNumber = 0, nextCartNumberTmp = 0 ;
     char rAction = ' ' ;
     unsigned long long rCode = 0 ;
     unsigned long long tItemCode = 0 ;
@@ -481,21 +481,21 @@ void BaseSystem::loadCartsInProgress()
     bool r = false ;
     int column = 0 ;
     ItemCodePrice itmCodePrice ;
-    
+	string cartsDir = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS";
     Cart* myCart = nullptr;
     
     nextCartNumber = 1 ;
     
-    if (!fs::exists(this->basePath + "CARTS"))
+	if (!fs::exists(cartsDir))
     {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "No CARTS subfolder found" ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "No " << cartsDir << " subfolder found" ;
         exit(-1);
     }
     
-    if (fs::is_directory(this->basePath + "CARTS"))
+	if (fs::is_directory(cartsDir))
     {
         BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "CARTS subfolder found" ;
-        fs::recursive_directory_iterator it(this->basePath + "CARTS");
+		fs::recursive_directory_iterator it(cartsDir);
         fs::recursive_directory_iterator endit;
         while(it != endit)
         {
@@ -527,7 +527,7 @@ void BaseSystem::loadCartsInProgress()
                     //cout << "Carico carrello\n" ;
                 }
                 //BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "Cart nr: " << myCart->getNumber() << "\n" ;
-                std::ifstream tmpTransactonFileToLoad( this->basePath + "CARTS/" + it->path().filename().string() );
+				std::ifstream tmpTransactonFileToLoad(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS/" + it->path().filename().string());
                 
                 while( std::getline(tmpTransactonFileToLoad, line) )
                 {
@@ -558,7 +558,7 @@ void BaseSystem::loadCartsInProgress()
                                 break;
                             case 3:
                                 //BOOST_LOG_SEV(my_logger_bs, lt::info) << " - BS - " << "Qty: " << i  << "\n" ;
-                                rQty = atoll(i.c_str()) ;
+                                rQty = atol(i.c_str()) ;
                                 break;
                             default:
                                 break ;
@@ -1022,9 +1022,9 @@ Item BaseSystem::getItemByIntCode( unsigned long long pIntcode )
 
 unsigned long BaseSystem::newCart( unsigned int pAction )
 {
-    unsigned long long thisCartNumber = nextCartNumber ;
+    unsigned long thisCartNumber = nextCartNumber ;
     
-    Cart newCart(this->basePath,thisCartNumber,pAction);
+	Cart newCart(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] , thisCartNumber, pAction);
     
     cartsMap.insert({thisCartNumber, std::move(newCart)}) ;
     //cartsMap.emplace( std::piecewise_construct, std::make_tuple(thisCartNumber), std::make_tuple(this->basePath,thisCartNumber,pAction) ) ;

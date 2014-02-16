@@ -12,20 +12,12 @@
 #include <string>
 //#include <thread>
 #include <sstream>
-
-
-
-
-
-
+#include <csignal>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include "server.hpp"
-
-
-
 
 
 //#include "gmock/gmock.h"
@@ -67,6 +59,7 @@ const int max_length = 1024;
 
 string mainPath = "" ;
 string iniFileName = "" ;
+src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_main;
 
 void init(string pMainPath, string pIniFileName)
 {
@@ -94,40 +87,15 @@ void init(string pMainPath, string pIniFileName)
     sigset_t old_mask;
     pthread_sigmask(SIG_BLOCK, &new_mask, &old_mask);
 #endif
+		
 
     logging::add_common_attributes();
-    BaseSystem bs = BaseSystem(pMainPath, pIniFileName);
-    
-    // Run server in background thread.
-    std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
-    
-    http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/" , num_threads, bs);
-    boost::thread t(boost::bind(&http::server3::server::run, &s));
-    
-    // Restore previous signals.
-#if !defined(_WIN32)
-	pthread_sigmask(SIG_SETMASK, &old_mask, 0);
-    
-    // Wait for signal indicating time to shut down.
-    sigset_t wait_mask;
-    sigemptyset(&wait_mask);
-    sigaddset(&wait_mask, SIGINT);
-    sigaddset(&wait_mask, SIGQUIT);
-    sigaddset(&wait_mask, SIGTERM);
-    pthread_sigmask(SIG_BLOCK, &wait_mask, 0);
-    int sig = 0;
-    sigwait(&wait_mask, &sig);
-#endif
-    // Stop the server.
-    s.stop();
-    t.join();
+	src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_ma;
 }
 
 #if !defined(_WIN32)
-
-#include <pthread.h>
-#include <signal.h>
-
+	#include <pthread.h>
+	#include <signal.h>
 
 int main(int argc, char* argv[])
 {
@@ -140,12 +108,24 @@ int main(int argc, char* argv[])
             return 1;
         }
         
-        
-
         mainPath = argv[1] ;
         iniFileName = argv[2] ;
         std::cout << mainPath << endl ;
         init(mainPath, iniFileName);
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb1";
+		BaseSystem bs = BaseSystem(mainPath, iniFileName);
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb2";
+
+		// Run server in background thread.
+		std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb3";
+
+		boost::thread t(boost::bind(&http::server3::server::run, &s));
+		BOOST_LOG_SEV(my_logger_main, lt::fatal) << " - MA - " << "Deb4";    
+
+		//s.stop();
+		//t.join();
+
     }
     catch (std::exception& e)
     {
@@ -357,20 +337,30 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
     }
 
     // Report running status when initialization is complete.
-
-    ReportSvcStatus( SERVICE_RUNNING, NO_ERROR, 0 );
     
 	std::cout << mainPath << endl;
 	init(mainPath, iniFileName);
+	BaseSystem bs = BaseSystem(mainPath, iniFileName);
+
+	// Run server in background thread.
+	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
+	http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
+	boost::thread t(boost::bind(&http::server3::server::run, &s));
+	BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Started http server";
+	ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0);
+	BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Service running";
 
     while(1)
     {
         // Check whether to stop the service.
 		
         WaitForSingleObject(ghSvcStopEvent, INFINITE);
-        
+
+		BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Received stop request";
+
         ReportSvcStatus( SERVICE_STOPPED, NO_ERROR, 0 );
-        return;
+		BOOST_LOG_SEV(my_logger_main, lt::info) << " - MA - " << "Finished processing stop request";
+		return;
     }
 }
 
