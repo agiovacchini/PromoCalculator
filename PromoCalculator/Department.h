@@ -19,16 +19,21 @@ using namespace std;
 class Department {
     
     unsigned long long int code ;
+    unsigned long long int parentCode ;
     string description ;
 
 public:
 	Department();
 
-	Department(unsigned long long int pCode, string pDescription);
+	Department(unsigned long long int pCode, unsigned long long int pParentCode, string pDescription);
 
     void setCode( unsigned long long int pCode ) ;
     
     unsigned long long int getCode() const ;
+
+    void setParentCode( unsigned long long int pParentCode ) ;
+    
+    unsigned long long int getParentCode() const ;
 
     void setDescription( string pDescription ) ;
     

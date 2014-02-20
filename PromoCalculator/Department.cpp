@@ -12,13 +12,15 @@
 Department::Department()
 {
 	this->code = 0;
+    this->parentCode = 0;
 	this->description = "";
 }
 
-Department::Department(unsigned long long int pCode, string pDescription)
+Department::Department(unsigned long long int pCode, unsigned long long int pParentCode, string pDescription)
 {
 	this->code = pCode;
-	this->description = pDescription;
+	this->parentCode = pParentCode;
+    this->description = pDescription;
 }
 
 void Department::setCode( unsigned long long int pCode ) {
@@ -27,6 +29,14 @@ void Department::setCode( unsigned long long int pCode ) {
 
 unsigned long long int Department::getCode() const {
     return this->code ;
+}
+
+void Department::setParentCode( unsigned long long int pParentCode ) {
+    this->code = pParentCode ;
+}
+
+unsigned long long int Department::getParentCode() const {
+    return this->parentCode ;
 }
 
 void Department::setDescription( string pDescription ) {

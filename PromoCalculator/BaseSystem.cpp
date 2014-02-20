@@ -22,6 +22,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "reply.hpp"
 #include "request.hpp"
@@ -34,7 +35,6 @@
 const int max_length = 8192;
 
 static unsigned long nextCartNumber ;
-
 namespace qi = boost::spirit::qi;
 namespace fs = boost::filesystem;
 
@@ -189,10 +189,13 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "ggg" << i;
             switch (column)
             {
-                case 1:
+                case 0:
                     tempDepartment.setCode(strtoull(i.c_str(),nullptr,10)) ;
                     break;
-                case 4:
+                case 1:
+                    tempDepartment.setParentCode(strtoull(i.c_str(),nullptr,10)) ;
+                    break;
+                case 2:
                     tempDepartment.setDescription(i) ;
                     break;
                 default:
@@ -208,7 +211,26 @@ void BaseSystem::readDepartmentArchive( string pFileName )
         
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
+    dumpDepartmentArchive( "DEPARTMENTS_DUMP.CSV" ) ;
+}
+
+void BaseSystem::dumpDepartmentArchive( string pFileName )
+{
+    typedef std::map<unsigned long long, Department>::iterator depts ;
+    Department tmpDept;
     
+    std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
+
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Departments dump into " << pFileName << " start" ;
+    for(depts iterator = deparmentsMap.begin(); iterator != deparmentsMap.end(); iterator++) {
+        tmpDept = iterator->second ;
+        outFile << tmpDept.getCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
+        //std::cout <<
+    }
+    
+    outFile.close() ;
+
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Departments dump into " << pFileName << " end" ;
 }
 
 void BaseSystem::readItemArchive( string pFileName )
@@ -278,6 +300,11 @@ void BaseSystem::readItemArchive( string pFileName )
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
 }
 
+void BaseSystem::dumpItemArchive( string pFileName )
+{
+    
+}
+
 void BaseSystem::readBarcodesArchive( string pFileName )
 {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
@@ -345,11 +372,23 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
 }
 
+void BaseSystem::dumpBarcodesArchive( string pFileName )
+{
+
+}
+
 void BaseSystem::readArchives()
 {
     this->readDepartmentArchive( "DEPARTMENTS.CSV" ) ;
     this->readItemArchive( "ITEMS.CSV" ) ;
     this->readBarcodesArchive( "BARCODES.CSV" ) ;
+}
+
+void BaseSystem::dumpArchivesFromMemory()
+{
+    this->dumpDepartmentArchive( "DEPARTMENTS.CSV" ) ;
+    this->dumpItemArchive( "ITEMS.CSV" ) ;
+    this->dumpBarcodesArchive( "BARCODES.CSV" ) ;
 }
 
 ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )

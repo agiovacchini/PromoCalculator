@@ -58,9 +58,13 @@ public:
     void printConfiguration() ;
     string getConfigValue( string pParamName ) ;
     void readDepartmentArchive( string pFileName ) ;
+    void dumpDepartmentArchive( string pFileName ) ;
     void readItemArchive( string pFileName ) ;
+    void dumpItemArchive( string pFileName ) ;
     void readBarcodesArchive( string pFileName ) ;
+    void dumpBarcodesArchive( string pFileName ) ;
     void readArchives( ) ;
+    void dumpArchivesFromMemory( ) ;
     void loadCartsInProgress( ) ;
     void checkForVariationFiles( ) ;
     ItemCodePrice decodeBarcode(unsigned long long rCode);
