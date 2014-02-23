@@ -46,6 +46,8 @@ public:
     std::map <unsigned long long, Item> itemsMap ;
     std::map <unsigned long long, Barcodes> barcodesMap ;
     std::map <unsigned long long, Cart> cartsMap ;
+    std::map <unsigned long long, unsigned int> allLoyCardsMap ;
+    
     typedef boost::shared_ptr<tcp::socket> socket_ptr;
 	std::map<unsigned long long, Cart>::iterator mainIterator ;
 

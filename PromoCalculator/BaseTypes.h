@@ -106,6 +106,7 @@ typedef Totals Totals ;
 #define RC_OK              0x00
 #define RC_ERR             0x01
 #define RC_CART_NOT_READY  0x02
+#define RC_LOY_CARD_IN_ANOTHER_TRANSACTION 0x98
 #define RC_LOY_CARD_ALREADY_PRESENT 0x99
 #define RC_LOY_MAX_CARD_NUMBER 0x100
 

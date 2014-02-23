@@ -32,7 +32,7 @@ unsigned long long int Department::getCode() const {
 }
 
 void Department::setParentCode( unsigned long long int pParentCode ) {
-    this->code = pParentCode ;
+    this->parentCode = pParentCode ;
 }
 
 unsigned long long int Department::getParentCode() const {
@@ -53,7 +53,8 @@ string Department::toStr() {
 	tempStringStream.str(std::string());
 	tempStringStream.clear();
 	tempStringStream << this->code
-		<< ", " << this->description ;
+        << ", " << this->parentCode
+		<< ", \"" << this->description << "\"" ;
 
 	return tempStringStream.str();
 }

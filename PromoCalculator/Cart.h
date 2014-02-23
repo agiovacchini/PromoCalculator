@@ -45,6 +45,7 @@ public:
     int addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice, unsigned int pBCodeType ) ;
     int removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType ) ;
     int addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxLoyCards ) ;
+    int removeLoyCard( unsigned long long pLoyCardNumber ) ;
     unsigned int getState() const ;
     void setState( unsigned int pState ) ;
     unsigned long getRequestId() ;

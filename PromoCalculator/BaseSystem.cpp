@@ -60,6 +60,8 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
         
         this->readArchives() ;
         
+        this->dumpArchivesFromMemory() ;
+        
         this->loadCartsInProgress() ;
         
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "System initialized." ;
@@ -204,14 +206,11 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             column++ ;
         }
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << tempItm.toStr() ;
-        
         deparmentsMap[tempDepartment.getCode()] = tempDepartment ;
-        
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
         
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
-    dumpDepartmentArchive( "DEPARTMENTS_DUMP.CSV" ) ;
 }
 
 void BaseSystem::dumpDepartmentArchive( string pFileName )
@@ -224,7 +223,8 @@ void BaseSystem::dumpDepartmentArchive( string pFileName )
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Departments dump into " << pFileName << " start" ;
     for(depts iterator = deparmentsMap.begin(); iterator != deparmentsMap.end(); iterator++) {
         tmpDept = iterator->second ;
-        outFile << tmpDept.getCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
+        outFile << tmpDept.toStr() << std::endl ;
+        //getParentCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
         //std::cout <<
     }
     
@@ -272,17 +272,17 @@ void BaseSystem::readItemArchive( string pFileName )
             //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "ggg" << i << std::endl;
             switch (column)
             {
-                case 1:
+                case 0:
 					tmp = std::string(i);
 					tempItm.setCode( atoll(tmp.c_str()) );
                     break;
-                case 2:
+                case 1:
                     tempItm.setDescription(i) ;
                     break;
-                case 16:
+                case 2:
                     tempItm.setDepartment(deparmentsMap[strtoul(i.c_str(),nullptr,10)]);
                     break;
-                case 26:
+                case 3:
                     tempItm.setPrice(strtoul(i.c_str(),nullptr,10)) ;
                     break;
                 default:
@@ -302,7 +302,22 @@ void BaseSystem::readItemArchive( string pFileName )
 
 void BaseSystem::dumpItemArchive( string pFileName )
 {
+    typedef std::map<unsigned long long, Item>::iterator items ;
+    Item tmpItem;
     
+    std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
+    
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Items dump into " << pFileName << " start" ;
+    for(items iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
+        tmpItem = iterator->second ;
+        outFile << tmpItem.toStr() << std::endl ;
+        //getParentCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
+        //std::cout <<
+    }
+    
+    outFile.close() ;
+    
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Items dump into " << pFileName << " end" ;
 }
 
 void BaseSystem::readBarcodesArchive( string pFileName )
@@ -349,7 +364,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             
             switch (column)
             {
-                case 1:
+                case 0:
 					tmp = std::string(i);
                     bcdWrk = atoll(tmp.c_str()) ;
                     itmCodePrice = decodeBarcode( bcdWrk ) ;
@@ -357,7 +372,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 
                     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << i.c_str() << "\n";
                     break;
-                case 2:
+                case 1:
                     tempBarcode.setItemCode(atoll(i.c_str())) ;
                     break;
             }
@@ -374,7 +389,22 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 
 void BaseSystem::dumpBarcodesArchive( string pFileName )
 {
-
+    typedef std::map<unsigned long long, Barcodes>::iterator barcodes ;
+    Barcodes tmpBarcode ;
+    
+    std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
+    
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Barcodes dump into " << pFileName << " start" ;
+    for(barcodes iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++) {
+        tmpBarcode = iterator->second ;
+        outFile << tmpBarcode.toStr() << std::endl ;
+        //getParentCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
+        //std::cout <<
+    }
+    
+    outFile.close() ;
+    
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Barcodes dump into " << pFileName << " end" ;
 }
 
 void BaseSystem::readArchives()
@@ -386,9 +416,9 @@ void BaseSystem::readArchives()
 
 void BaseSystem::dumpArchivesFromMemory()
 {
-    this->dumpDepartmentArchive( "DEPARTMENTS.CSV" ) ;
-    this->dumpItemArchive( "ITEMS.CSV" ) ;
-    this->dumpBarcodesArchive( "BARCODES.CSV" ) ;
+    this->dumpDepartmentArchive( "DEPARTMENTS_DUMP.CSV" ) ;
+    this->dumpItemArchive( "ITEMS_DUMP.CSV" ) ;
+    this->dumpBarcodesArchive( "BARCODES_DUMP.CSV" ) ;
 }
 
 ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
@@ -620,6 +650,8 @@ void BaseSystem::loadCartsInProgress()
                             break;
                         case 'L':
                             myCart->addLoyCard( rCode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()) ) ;
+                            allLoyCardsMap[rCode] = 1 ;
+                            break;
                         default:
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Row action not recognized" ;
                             break;
@@ -754,7 +786,21 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             }
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc << ", barcode: " << barcode << ", qty: "  << qty ;
                         } else {
+
                             rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
+                            typedef std::map<unsigned long long, unsigned int>::iterator it_type;
+                            if (rc == 0 )
+                            {
+                                for(it_type iterator = allLoyCardsMap.begin(); iterator != allLoyCardsMap.end(); iterator++) {
+                                    std::cout << iterator->first << endl ;
+                                    if (iterator->first==barcode)
+                                    {
+                                        rc = RC_LOY_CARD_IN_ANOTHER_TRANSACTION ;
+                                        myCart->removeLoyCard(barcode) ;
+                                    }
+                                }
+                                allLoyCardsMap[barcode] = 1 ;
+                            }
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc << ", card: " << barcode ;
                             if (rc==RC_OK)
                             {

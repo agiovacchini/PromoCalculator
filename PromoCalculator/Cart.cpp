@@ -146,6 +146,17 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
     return RC_OK ;
 }
 
+int Cart::removeLoyCard( unsigned long long pLoyCardNumber )
+{
+    typedef std::map<unsigned int, unsigned long long>::iterator it_type;
+    for(it_type iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
+        if (iterator->second==pLoyCardNumber)
+        {
+            loyCardsMap.erase(iterator->first) ;
+        }
+    }
+    return RC_OK ;
+}
 
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType )
 {
