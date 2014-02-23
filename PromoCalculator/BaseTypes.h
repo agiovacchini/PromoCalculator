@@ -83,6 +83,11 @@ struct ItemCodePrice {
 typedef Totals Totals ;
 
 
+struct CardSessionRow {
+    unsigned long long loyCode ;
+    unsigned long long sessionId ;
+};
+
 #define ITEM        0x01
 #define DEPT        0x02
 #define TOTAL       0x03
@@ -106,9 +111,10 @@ typedef Totals Totals ;
 #define RC_OK              0x00
 #define RC_ERR             0x01
 #define RC_CART_NOT_READY  0x02
-#define RC_LOY_CARD_IN_ANOTHER_TRANSACTION 0x98
-#define RC_LOY_CARD_ALREADY_PRESENT 0x99
-#define RC_LOY_MAX_CARD_NUMBER 0x100
+#define RC_LOY_CARD_NOT_PRESENT 0x90
+#define RC_LOY_CARD_ALREADY_PRESENT 0x91
+#define RC_LOY_CARD_IN_ANOTHER_TRANSACTION 0x92
+#define RC_LOY_MAX_CARD_NUMBER 0x99
 
 #define BCODE_EAN13         0x00
 #define BCODE_EAN13_PRICE_REQ         0x01
@@ -125,8 +131,8 @@ typedef Totals Totals ;
 #define WEBI_SESSION_INIT   0x01
 #define WEBI_SESSION_END    0x02
 #define WEBI_SESSION_VOID   0x03
-#define WEBI_ADD_CUSTOMER   0x10
-#define WEBI_REMOVE_CUSTOMER   0x11
+#define WEBI_CUSTOMER_ADD   0x10
+#define WEBI_CUSTOMER_VOID  0x11
 #define WEBI_ITEM_ADD       0x20
 #define WEBI_ITEM_VOID      0x21
 #define WEBI_GET_TOTALS     0x30

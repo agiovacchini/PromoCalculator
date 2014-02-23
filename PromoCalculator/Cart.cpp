@@ -128,10 +128,13 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
                 }
             }
             loyCardsMap[loyCardsNumber] = pLoyCardNumber ;
-            tempStringStream.str(std::string());
-            tempStringStream.clear();
-            tempStringStream << "L," << pLoyCardNumber << "," << "1" ;
-            this->writeTransactionRow(tempStringStream.str() );
+            if (this->getState()==CART_STATE_READY_FOR_ITEM)
+            {
+                tempStringStream.str(std::string());
+                tempStringStream.clear();
+                tempStringStream << "L,A," << pLoyCardNumber << "," << "1" ;
+                this->writeTransactionRow(tempStringStream.str() );
+            }
             this->loyCardsNumber++ ;
             return RC_OK ;
         } else {
@@ -148,14 +151,25 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
 
 int Cart::removeLoyCard( unsigned long long pLoyCardNumber )
 {
-    typedef std::map<unsigned int, unsigned long long>::iterator it_type;
-    for(it_type iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
+    std::stringstream tempStringStream;
+    typedef std::map<unsigned int, unsigned long long>::iterator itLoyCards;
+    for(itLoyCards iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
         if (iterator->second==pLoyCardNumber)
         {
-            loyCardsMap.erase(iterator->first) ;
+            loyCardsMap.erase(iterator) ;
+            if (this->getState()==CART_STATE_READY_FOR_ITEM)
+            {
+                tempStringStream.str(std::string());
+                tempStringStream.clear();
+                tempStringStream << "L,V," << pLoyCardNumber << "," << "1" ;
+                this->writeTransactionRow(tempStringStream.str() );
+            }
+            this->loyCardsNumber-- ;
+            return RC_OK ;
         }
     }
-    return RC_OK ;
+    
+    return RC_LOY_CARD_NOT_PRESENT ;
 }
 
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType )
@@ -192,7 +206,7 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
             {
                 tempStringStream.str(std::string());
                 tempStringStream.clear();
-                tempStringStream << "A," << pBarcode << "," << pQtyItem ;
+                tempStringStream << "I,A," << pBarcode << "," << pQtyItem ;
                 this->writeTransactionRow(tempStringStream.str() );
             }
         } catch (std::exception const& e)
@@ -250,7 +264,7 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
             {
 				tempStringStream.str(std::string());
 				tempStringStream.clear();
-				tempStringStream << "R," << pBarcode << "," << "1" ;
+				tempStringStream << "I,V," << pBarcode << "," << "1" ;
 				this->writeTransactionRow(tempStringStream.str() );
             }
         }

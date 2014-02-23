@@ -125,7 +125,12 @@ namespace http {
                 
                 if (servletFunctionAction.compare("addCustomer")==0)
                 {
-                    actionBS = WEBI_ADD_CUSTOMER ;
+                    actionBS = WEBI_CUSTOMER_ADD ;
+                }
+                
+                if (servletFunctionAction.compare("voidCustomer")==0)
+                {
+                    actionBS = WEBI_CUSTOMER_VOID ;
                 }
                 
                 if (servletFunctionAction.compare("addItem")==0)

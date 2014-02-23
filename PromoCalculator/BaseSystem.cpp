@@ -60,7 +60,7 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
         
         this->readArchives() ;
         
-        this->dumpArchivesFromMemory() ;
+        //this->dumpArchivesFromMemory() ;
         
         this->loadCartsInProgress() ;
         
@@ -116,6 +116,7 @@ int BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
         rc = rc + setConfigValue("LoyCardPrefix", "Loy.CardPrefix", &pt );
         rc = rc + setConfigValue("LoyMaxCardsPerTransaction", "Loy.MaxCardsPerTransaction", &pt );
+        rc = rc + setConfigValue("LoyOnlyOneShoppingSessionPerCard", "Loy.OnlyOneShoppingSessionPerCard", &pt );
         rc = rc + setConfigValue("BarcodesType01", "Barcodes.Type", &pt );
         rc = rc + setConfigValue("NodeId", "Node.Id", &pt );
         rc = rc + setConfigValue("WebAddress", "Web.Address", &pt );
@@ -356,7 +357,6 @@ void BaseSystem::readBarcodesArchive( string pFileName )
         assert(s_begin == s_end);
         int column = 0 ;
         
-        
         unsigned long long bcdWrk = 0;
         Barcodes tempBarcode ;
         for (auto i : result)
@@ -544,6 +544,7 @@ void BaseSystem::loadCartsInProgress()
     std::string barcodeWrkStr = "" ;
     unsigned long currentTmpCartNumber = 0, nextCartNumberTmp = 0 ;
     char rAction = ' ' ;
+    char rObject = ' ' ;
     unsigned long long rCode = 0 ;
     long rQty = 0 ;
     bool r = false ;
@@ -618,13 +619,17 @@ void BaseSystem::loadCartsInProgress()
                                 break;
                             case 1:
                                 //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Action: " << i << "\n" ;
-                                rAction = i[0] ;
+                                rObject = i[0] ;
                                 break;
                             case 2:
+                                //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Action: " << i << "\n" ;
+                                rAction = i[0] ;
+                                break;
+                            case 3:
                                 //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Barcode: " << i << "\n"  ;
                                 rCode = atoll(i.c_str()) ;
                                 break;
-                            case 3:
+                            case 4:
                                 //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Qty: " << i  << "\n" ;
                                 rQty = atol(i.c_str()) ;
                                 break;
@@ -637,20 +642,28 @@ void BaseSystem::loadCartsInProgress()
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Debug recupero riga carrello, rcode: " << rCode << ", barcode: " << barcodesMap[rCode].toStr() ;
                     
                     myCart->getNextRequestId() ;
-                    switch (rAction)
+                    switch (rObject)
                     {
                             
-                        case 'A':
-                            itmCodePrice = decodeBarcode( rCode ) ;
-                            myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price, itmCodePrice.type) ;
-                            break;
-                        case 'R':
-                            itmCodePrice = decodeBarcode( rCode ) ;
-                            myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price, itmCodePrice.type) ;
+                        case 'I':
+                            if (rAction == 'A')
+                            {
+                                itmCodePrice = decodeBarcode( rCode ) ;
+                                myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price, itmCodePrice.type) ;
+                            } else {
+                                itmCodePrice = decodeBarcode( rCode ) ;
+                                myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price, itmCodePrice.type) ;
+                            }
                             break;
                         case 'L':
-                            myCart->addLoyCard( rCode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()) ) ;
-                            allLoyCardsMap[rCode] = 1 ;
+                            if (rAction == 'A')
+                            {
+                                myCart->addLoyCard( rCode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()) ) ;
+                                allLoyCardsMap[rCode] = currentTmpCartNumber ;
+                            } else {
+                                myCart->removeLoyCard( rCode ) ;
+                                allLoyCardsMap.erase(rCode) ;
+                            }
                             break;
                         default:
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Row action not recognized" ;
@@ -731,9 +744,9 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
         streamCartId.clear() ;
         streamCartId << pUrlParamsMap["devSessId"] ;
         std::string strCartId = streamCartId.str() ;
+        cartId = atoll(strCartId.c_str()) ;
+        mainIterator = cartsMap.find(cartId) ;
         
-        mainIterator = cartsMap.find(atoll(strCartId.c_str()));
-
         //unsigned long posNumber = 0 ;
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "InitResp - pos: " << pUrlParamsMap["payStationID"] << " sess: " << strCartId ;
         if (mainIterator != cartsMap.end()) {
@@ -742,7 +755,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
             barcode = 0 ;
             switch (pAction)
             {
-                case WEBI_ADD_CUSTOMER:
+                case WEBI_CUSTOMER_ADD:
                     barcode = atoll(pUrlParamsMap["customerId"].c_str()) ;
                 case WEBI_ITEM_ADD:
                     //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
@@ -786,21 +799,30 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             }
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc << ", barcode: " << barcode << ", qty: "  << qty ;
                         } else {
-
-                            rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
-                            typedef std::map<unsigned long long, unsigned int>::iterator it_type;
-                            if (rc == 0 )
+                            typedef std::map<unsigned long long, unsigned long long>::iterator loyCardsIteratorType;
+                            //std::cout << "momama " << configurationMap["LoyOnlyOneShoppingSessionPerCard"] << std::endl ;
+                            for(loyCardsIteratorType cardIterator = allLoyCardsMap.begin(); cardIterator != allLoyCardsMap.end(); cardIterator++)
                             {
-                                for(it_type iterator = allLoyCardsMap.begin(); iterator != allLoyCardsMap.end(); iterator++) {
-                                    std::cout << iterator->first << endl ;
-                                    if (iterator->first==barcode)
+                                if (cardIterator->first == barcode)
+                                {
+                                    if (cardIterator->second == cartId)
                                     {
-                                        rc = RC_LOY_CARD_IN_ANOTHER_TRANSACTION ;
-                                        myCart->removeLoyCard(barcode) ;
+                                        rc = RC_LOY_CARD_ALREADY_PRESENT ;
+                                    } else {
+                                        if (atoi(configurationMap["LoyOnlyOneShoppingSessionPerCard"].c_str())==1)
+                                        {
+                                            rc = RC_LOY_CARD_IN_ANOTHER_TRANSACTION ;
+                                        }
                                     }
                                 }
-                                allLoyCardsMap[barcode] = 1 ;
                             }
+                            
+                            if (rc == 0)
+                            {
+                                allLoyCardsMap[barcode] = cartId ;
+                                rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
+                            }
+                            
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc << ", card: " << barcode ;
                             if (rc==RC_OK)
                             {
@@ -815,8 +837,18 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     }
 
                     break;
-                case WEBI_REMOVE_CUSTOMER:
+                case WEBI_CUSTOMER_VOID:
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_REMOVE_CUSTOMER - Cool - rc:" << rc ;
+                    barcode = atoll(pUrlParamsMap["customerId"].c_str()) ;
+                    rc = myCart->removeLoyCard(barcode) ;
+                    if (rc == RC_OK)
+                    {
+                        allLoyCardsMap.erase( barcode ) ;
+                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}" ;
+                    } else {
+                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"errorCode\":\"\",\"errorMessage\":\"\",\"resultExtension\":[]}" ;
+                    }
+                    
                     break;
                 case WEBI_ITEM_VOID:
                     if ( barcode == 0 )
