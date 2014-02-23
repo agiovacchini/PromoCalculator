@@ -136,6 +136,7 @@ struct CardSessionRow {
 #define WEBI_ITEM_ADD       0x20
 #define WEBI_ITEM_VOID      0x21
 #define WEBI_GET_TOTALS     0x30
+#define WEBI_GET_CARTS_LIST 0x39
 #define WEBI_GET_ALL_CART   0x40
 #define WEBI_GET_ALL_CART_WITH_BARCODES 0x41
 #define WEBI_GET_STORE_INFO 0x80

@@ -148,10 +148,16 @@ namespace http {
                     actionBS = WEBI_GET_TOTALS ;
                 }
                 
+                if (servletFunctionAction.compare("getCartsList")==0)
+                {
+                    actionBS = WEBI_GET_CARTS_LIST ;
+                }
+                
                 if (servletFunctionAction.compare("getAllCart")==0)
                 {
                     actionBS = WEBI_GET_ALL_CART ;
                 }
+                
                 if (servletFunctionAction.compare("getAllCartWithBarcodes")==0)
                 {
                     actionBS = WEBI_GET_ALL_CART_WITH_BARCODES ;

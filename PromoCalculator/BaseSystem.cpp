@@ -697,8 +697,6 @@ std::string BaseSystem::fromLongToStringWithDecimals( unsigned long long pValue 
     std::ostringstream tempStringStream, returnStream ;
     tempStringStream.str( std::string() ) ;
     tempStringStream.clear() ;
-    returnStream.str( std::string() ) ;
-    returnStream.clear() ;
     tempStringStream << pValue ;
     //std::cout << "Size tempStringStream: " << tempStringStream.str().size() << endl ;
     if (tempStringStream.str().size()<3)
@@ -890,6 +888,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"], this->configurationMap["MainStoreId"]);
                     respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_SESSION_END - Cool - rc:" << rc ;
+                    break;
+                case WEBI_GET_CARTS_LIST:
+                    respStringStream << this->getCartsList( ) ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_GET_CARTS_LIST - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_GET_ALL_CART:
                     respStringStream << myCart->getAllCartJson( itemsMap, false ) ;
@@ -1170,3 +1172,30 @@ bool BaseSystem::persistCarts( )
 {
     return true ;
 }
+
+string BaseSystem::getCartsList( )
+{
+    typedef std::map<unsigned long long, Cart>::iterator carts ;
+    unsigned long long cartId = 0 ;
+    bool firstRow = true ;
+    
+    Cart* tmpCart ;
+    std::ostringstream tempStringStream ;
+    tempStringStream.str( std::string() ) ;
+    tempStringStream.clear() ;
+    tempStringStream << "{\"Carts\":{" ;
+    
+    for(carts iterator = cartsMap.begin(); iterator != cartsMap.end(); iterator++)
+    {
+        if (!firstRow)
+        {
+            tempStringStream << "," ;
+        }
+        cartId = iterator->first ;
+        tempStringStream << "\"cart\":" << cartId ;
+        firstRow = false ;
+    }
+    tempStringStream << "}}" ;
+    return tempStringStream.str() ;
+}
+

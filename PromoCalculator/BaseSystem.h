@@ -68,6 +68,7 @@ public:
     void readArchives( ) ;
     void dumpArchivesFromMemory( ) ;
     void loadCartsInProgress( ) ;
+    string getCartsList( ) ;
     void checkForVariationFiles( ) ;
     ItemCodePrice decodeBarcode(unsigned long long rCode);
     //void salesServer(boost::asio::io_service& io_service, short port) ;
