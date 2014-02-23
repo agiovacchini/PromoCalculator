@@ -892,8 +892,12 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_SESSION_END - Cool - rc:" << rc ;
                     break;
                 case WEBI_GET_ALL_CART:
-                    respStringStream << myCart->getAllCartJson() ;
+                    respStringStream << myCart->getAllCartJson( itemsMap, false ) ;
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_SESSION_GET_ALL_CART - Cool - result:" << respStringStream.str() ;
+                    break;
+                case WEBI_GET_ALL_CART_WITH_BARCODES:
+                    respStringStream << myCart->getAllCartJson( itemsMap, true ) ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_GET_ALL_CART_WITH_BARCODES - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_SESSION_VOID:
                     rc = 0 ;

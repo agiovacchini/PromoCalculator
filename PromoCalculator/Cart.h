@@ -54,7 +54,7 @@ public:
     int printCart() ;
     int persist( ) ;
 	int sendToPos(unsigned long pPosNumber, string pScanInPath, string pStoreId) ;
-    string getAllCartJson() ;
+    string getAllCartJson( std::map<unsigned long long, Item>& pAllItemsMap, bool pWithBarcodes ) ;
     int close( ) ;
     std::map <unsigned long long, Totals> getTotals() ;
     
