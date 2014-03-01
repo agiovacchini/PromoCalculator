@@ -64,6 +64,10 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
         
         this->loadCartsInProgress() ;
         
+        this->baseSystemRunning = true ;
+        
+        boost::thread newThread(boost::bind(&BaseSystem::checkForVariationFiles, this));
+        
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "System initialized." ;
         //}
         
@@ -111,6 +115,7 @@ int BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("MainStoreChannel", "Main.StoreChannel", &pt );
         rc = rc + setConfigValue("MainStoreLoyChannel", "Main.StoreLoyChannel", &pt );
         rc = rc + setConfigValue("MainStoreId", "Main.StoreId", &pt );
+        rc = rc + setConfigValue("MainVarCheckDelaySeconds", "Main.VarCheckDelaySeconds", &pt );
         //rc = rc + setConfigValue("NetworkPort", "Network.Port", &pt );
         rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
         rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
@@ -144,12 +149,12 @@ void BaseSystem::printConfiguration()
 {
     typedef std::map<string, string>::iterator configurationRows;
     
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Config print start" ;
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\tNode Id: " << this->nodeId ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config print start" ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Node Id: " << this->nodeId ;
     for(configurationRows iterator = configurationMap.begin(); iterator != configurationMap.end(); iterator++) {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\tkey: " << iterator->first << ", value: " << iterator->second ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Key: " << iterator->first << ", value: " << iterator->second ;
     }
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Config print end" ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config print end" ;
 }
 
 void BaseSystem::readDepartmentArchive( string pFileName )
@@ -505,33 +510,122 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
 
 void BaseSystem::checkForVariationFiles()
 {
-    std::string varFolderName = "VARS" ;
+    std::string varFolderName = this->basePath +  "ARCHIVES/" + configurationMap["MainArchivesDir"] + "VARS" ;
     std::string varFileName = "" ;
-    if (!fs::exists(this->basePath + varFolderName))
+    unsigned long varCheckDelaySeconds = atol(configurationMap["MainVarCheckDelaySeconds"].c_str()) * 1000L ;
+    bool varsFound = false ;
+    std::string line;
+    std::string key;
+    std::string value;
+    int column = 0 ;
+    bool r = false ;
+    char rowType = 0, rowAction = 0 ;
+    Item itmTemp ;
+
+    while ( baseSystemRunning )
     {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "No " << varFolderName << " subfolder found" ;
-        exit(-1);
-    }
-    
-    if (fs::is_directory(this->basePath + varFolderName))
-    {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << varFolderName << " subfolder found" ;
-        fs::recursive_directory_iterator it(this->basePath + varFolderName);
-        fs::recursive_directory_iterator endit;
-        while(it != endit)
+        varsFound = false ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Checking for variation files" ;
+        if (!fs::exists(varFolderName))
         {
-            if (fs::is_regular_file(*it) && it->path().extension() == ".var")
+            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - No " << varFolderName << " subfolder found" ;
+        } else {
+            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << varFolderName << " subfolder found" ;
+            fs::recursive_directory_iterator it(varFolderName);
+            fs::recursive_directory_iterator endit;
+            while(it != endit)
             {
-                varFileName = it->path().stem().string() ;
-                std::cout << "Var file found : " << varFileName << endl ;
-                /*if (fs::is_regular_file(*it) && it->path().extension() == ".var")
+                //std::cout << it->path().stem().string() << " " << it->path().extension() << std::endl ;
+                if (fs::is_regular_file(*it) && it->path().extension() == ".VAR")
                 {
-                    std::cout << "Var file flag found : " << it->path().stem().string().c_str() << endl ;
-                }*/
+                    varFileName = it->path().filename().string() ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Var file found : " << varFileName ;
+                    
+                    std::ifstream varFileToLoad(varFolderName + "/" + varFileName);
+                    
+                    while( std::getline(varFileToLoad, line) )
+                    {
+                        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << line ;
+                        std::istringstream is_line(line);
+                        std::string::const_iterator s_begin = line.begin();
+                        std::string::const_iterator s_end = line.end();
+                        std::vector<std::string> result;
+                        
+                        r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
+                        assert(r == true);
+                        assert(s_begin == s_end);
+                        column = 0 ;
+                        for (auto i : result)
+                        {
+                            if (column == 0 )
+                            {
+                                rowType = i[0] ;
+                            } else {
+                                if (column == 1 ) {
+                                    rowAction = i[0] ;
+                                } else {
+                                    //std::cout << column << " momama " << i << std::endl ;
+                                    switch (rowType)
+                                    {
+                                        case 'I':
+                                            switch (column)
+                                            {
+                                                case 2:
+                                                    itmTemp.setCode(atoll(i.c_str())) ;
+                                                    break;
+                                                case 3:
+                                                    itmTemp.setDescription(i) ;
+                                                    break;
+                                                case 4:
+                                                    itmTemp.setDepartment(deparmentsMap[atol(i.c_str())]);
+                                                    break;
+                                                case 5:
+                                                    itmTemp.setPrice(atol(i.c_str())) ;
+                                                    break ;
+                                                default:
+                                                    break ;
+                                            }
+                                    }
+
+                                }
+                            }
+                            column++ ;
+                        }
+                        switch (rowType)
+                        {
+                            case 'I':
+                            {
+                                std::cout << itmTemp.toStr() << std::endl ;
+                                std::pair<std::map<unsigned long long, Item>::iterator,bool> ret;
+                                ret = itemsMap.insert( std::pair<unsigned long long, Item>(itmTemp.getCode(), itmTemp)) ;
+                                if ( !ret.second )
+                                {
+                                    std::cout << "Gia esistente, aggiorno" << std::endl ;
+                                    itmTemp.setQuantity(0) ;
+                                    itemsMap[itmTemp.getCode()] = itmTemp ;
+                                    std::cout << itemsMap[itmTemp.getCode()].getPrice() << std::endl ;
+                                }
+                                break ;
+                            }
+                            default:
+                            {
+                                std::cout << "row type not recognized" << std::endl ;
+                                break;
+                            }
+                        }
+                    }
+                    varsFound = true ;
+                }
+                ++it;
             }
         }
+        if (!varsFound)
+        {
+            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - No variation files found" ;
+        }
+        boost::this_thread::sleep(boost::posix_time::milliseconds(varCheckDelaySeconds));
     }
-    
+    std::cout << "Esco\n" ;
 }
 
 void BaseSystem::loadCartsInProgress()

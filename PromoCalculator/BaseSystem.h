@@ -39,6 +39,7 @@ class BaseSystem {
     string iniFileName ;
     unsigned long nodeId ;
     src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_bs;
+    bool baseSystemRunning ;
     
 public:
     std::map <string, string> configurationMap ;
