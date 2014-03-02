@@ -138,7 +138,7 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
             this->loyCardsNumber++ ;
             return RC_OK ;
         } else {
-            return RC_CART_NOT_READY ;
+            return CART_NOT_READY ;
         }
         //respStringStream << "{Loy card" << barcode << " aggiunta}" ;
 
@@ -213,8 +213,11 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
         {
             BOOST_LOG_SEV(my_logger_ca, lt::error) << "- CART# " << this->number << " - " << "Cart addItemBarcode error: " << e.what();
         }
+        return RC_OK ;
+    } else {
+        return this->state ;
     }
-    return RC_OK ;
+    
 }
 
 int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType  )
@@ -268,8 +271,26 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
 				this->writeTransactionRow(tempStringStream.str() );
             }
         }
+        return RC_OK ;
+    } else {
+        return this->state ;
     }
-    return RC_OK ;
+}
+
+int Cart::voidAllCart()
+{
+    std::stringstream tempStringStream;
+    if (this->state!=CART_VOIDED)
+    {
+        this->state = CART_VOIDED ;
+        tempStringStream.str(std::string());
+        tempStringStream.clear();
+        tempStringStream << "C,V" ;
+        this->writeTransactionRow(tempStringStream.str() );
+        return RC_OK ;
+    } else {
+        return this->state ;
+    }
 }
 
 int Cart::printCart()

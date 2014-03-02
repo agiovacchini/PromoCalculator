@@ -595,21 +595,21 @@ void BaseSystem::checkForVariationFiles()
                         {
                             case 'I':
                             {
-                                std::cout << itmTemp.toStr() << std::endl ;
+                                //std::cout << itmTemp.toStr() << std::endl ;
                                 std::pair<std::map<unsigned long long, Item>::iterator,bool> ret;
                                 ret = itemsMap.insert( std::pair<unsigned long long, Item>(itmTemp.getCode(), itmTemp)) ;
                                 if ( !ret.second )
                                 {
-                                    std::cout << "Gia esistente, aggiorno" << std::endl ;
+                                    //std::cout << "Gia esistente, aggiorno" << std::endl ;
                                     itmTemp.setQuantity(0) ;
                                     itemsMap[itmTemp.getCode()] = itmTemp ;
-                                    std::cout << itemsMap[itmTemp.getCode()].getPrice() << std::endl ;
+                                    //std::cout << itemsMap[itmTemp.getCode()].getPrice() << std::endl ;
                                 }
                                 break ;
                             }
                             default:
                             {
-                                std::cout << "row type not recognized" << std::endl ;
+                                //std::cout << "row type not recognized" << std::endl ;
                                 break;
                             }
                         }
@@ -759,14 +759,22 @@ void BaseSystem::loadCartsInProgress()
                                 allLoyCardsMap.erase(rCode) ;
                             }
                             break;
+                        case 'C':
+                            if (rAction == 'V')
+                            {
+                                myCart->setState(CART_VOIDED) ;
+                            }
+                            break;
                         default:
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Row action not recognized" ;
                             break;
                     }
                 }
                 
-                myCart->setState(CART_STATE_READY_FOR_ITEM) ;
-                //myCart->printCart() ;
+                if (myCart->getState()!=CART_VOIDED)
+                {
+                    myCart->setState(CART_STATE_READY_FOR_ITEM) ;
+                }
                 
                 tmpTransactonFileToLoad.close();
                 if (currentTmpCartNumber >= nextCartNumber)
@@ -996,9 +1004,9 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_GET_ALL_CART_WITH_BARCODES - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_SESSION_VOID:
-                    rc = 0 ;
+                    rc = myCart->voidAllCart() ;
                     respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << "}" ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_SESSION_END - Cool - rc:" << rc ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_SESSION_VOID - Cool - rc:" << rc ;
                     break;
                 default:
                     BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - " << "Web action not recognized :(" ;

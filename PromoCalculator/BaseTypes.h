@@ -103,14 +103,15 @@ struct CardSessionRow {
 #define CART_TMPFILE_LOADING 0x30
 #define CART_NOT_INITIALIZED 0x40
 #define CART_STATE_ERROR 0x50
+#define CART_NOT_READY  0x98
 #define CART_NOT_FOUND 0x99
+#define CART_VOIDED 0x100
 
 #define GEN_CART_NEW       0x01
 #define GEN_CART_LOAD      0x02
 
 #define RC_OK              0x00
 #define RC_ERR             0x01
-#define RC_CART_NOT_READY  0x02
 #define RC_LOY_CARD_NOT_PRESENT 0x90
 #define RC_LOY_CARD_ALREADY_PRESENT 0x91
 #define RC_LOY_CARD_IN_ANOTHER_TRANSACTION 0x92

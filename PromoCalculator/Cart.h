@@ -51,6 +51,7 @@ public:
     unsigned long getRequestId() ;
     unsigned long getNextRequestId() ;
     unsigned int getLoyCardsNumber() const ;
+    int voidAllCart() ;
     int printCart() ;
     int persist( ) ;
 	int sendToPos(unsigned long pPosNumber, string pScanInPath, string pStoreId) ;
