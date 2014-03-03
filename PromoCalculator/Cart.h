@@ -21,7 +21,9 @@
 class Cart {
     //Totals totals ;
     std::map <unsigned int, unsigned long long> loyCardsMap ;
-    std::map <void*, CartRow> itemsMap ;
+    std::map <void*, CartRow> cartItemsMap ;
+    std::map <unsigned long long, Item> itemsLocalCopyMap ;
+    
     std::map <unsigned long long, long> barcodesMap ;
     std::map <unsigned long long, Totals> totalsMap ;
     unsigned long number ;

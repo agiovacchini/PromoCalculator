@@ -38,12 +38,14 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     basePath = pBasePath ;
     
     
-    itemsMap.clear() ;
+    cartItemsMap.clear() ;
+    itemsLocalCopyMap.clear() ;
+    
     CartRow totalCartRow = { TOTAL, 0 } ;
     
     totalsMap[0].totalAmount = 0 ;
     totalsMap[0].itemsNumber = 0 ;
-    itemsMap[&totalsMap[0]] = totalCartRow ;
+    cartItemsMap[&totalsMap[0]] = totalCartRow ;
     cartFileName = (boost::format("%sCARTS/%010lu.cart") % basePath % number).str() ;
     tmpTransactionFileName = (boost::format("%sCARTS/%010lu.transaction_in_progress") % basePath % number).str() ;
     tmpTransactionFile.open( tmpTransactionFileName, fstream::app );
@@ -114,13 +116,12 @@ void Cart::writeTransactionRow( string row )
 
 int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNumber )
 {
-    std::stringstream tempStringStream;
-    if (this->loyCardsNumber < maxCardNumber )
+    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
-        if ( (this->getState()==CART_STATE_READY_FOR_ITEM) || (this->getState()==CART_TMPFILE_LOADING) )
+        if (this->loyCardsNumber < maxCardNumber )
         {
-            //std::cout << "{Loy card" << pLoyCardNumber << " aggiunta}" ;
             typedef std::map<unsigned int, unsigned long long>::iterator it_type;
+            std::stringstream tempStringStream;
             for(it_type iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
                 if (iterator->second==pLoyCardNumber)
                 {
@@ -137,39 +138,42 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
             }
             this->loyCardsNumber++ ;
             return RC_OK ;
+            
         } else {
-            return CART_NOT_READY ;
+            return RC_LOY_MAX_CARD_NUMBER ;
+            //respStringStream << "{Numero massimo di carte fedelta superato}" ;
         }
-        //respStringStream << "{Loy card" << barcode << " aggiunta}" ;
-
+        return RC_OK ;
     } else {
-        return RC_LOY_MAX_CARD_NUMBER ;
-        //respStringStream << "{Numero massimo di carte fedelta superato}" ;
-    }    
-    return RC_OK ;
+        return this->state ;
+    }
 }
 
 int Cart::removeLoyCard( unsigned long long pLoyCardNumber )
 {
-    std::stringstream tempStringStream;
-    typedef std::map<unsigned int, unsigned long long>::iterator itLoyCards;
-    for(itLoyCards iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
-        if (iterator->second==pLoyCardNumber)
-        {
-            loyCardsMap.erase(iterator) ;
-            if (this->getState()==CART_STATE_READY_FOR_ITEM)
+    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
+    {
+        typedef std::map<unsigned int, unsigned long long>::iterator itLoyCards;
+        std::stringstream tempStringStream;
+        for(itLoyCards iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
+            if (iterator->second==pLoyCardNumber)
             {
-                tempStringStream.str(std::string());
-                tempStringStream.clear();
-                tempStringStream << "L,V," << pLoyCardNumber << "," << "1" ;
-                this->writeTransactionRow(tempStringStream.str() );
+                loyCardsMap.erase(iterator) ;
+                if (this->getState()==CART_STATE_READY_FOR_ITEM)
+                {
+                    tempStringStream.str(std::string());
+                    tempStringStream.clear();
+                    tempStringStream << "L,V," << pLoyCardNumber << "," << "1" ;
+                    this->writeTransactionRow(tempStringStream.str() );
+                }
+                this->loyCardsNumber-- ;
+                return RC_OK ;
             }
-            this->loyCardsNumber-- ;
-            return RC_OK ;
         }
+        return RC_LOY_CARD_NOT_PRESENT ;
+    } else {
+        return this->state ;
     }
-    
-    return RC_LOY_CARD_NOT_PRESENT ;
 }
 
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType )
@@ -181,10 +185,20 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice, unsigned int pBCodeType )
 {
     std::stringstream tempStringStream;
+    
+    if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+    {
+        std::cout << "item in local map" << std::endl ;
+        pItem = itemsLocalCopyMap[pItem.getCode()] ;
+    } else {
+        std::cout << "item not in local map" << std::endl ;
+        itemsLocalCopyMap.insert( std::pair<unsigned long long, Item>(pItem.getCode(), pItem)) ;
+    }
+    
     if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         try {
-            long qtyItem = itemsMap[&pItem].quantity + pQtyItem ;
+            long qtyItem = cartItemsMap[&pItem].quantity + pQtyItem ;
             long qtyBarcode = barcodesMap[pBarcode] + pQtyItem ;
             
             totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
@@ -194,7 +208,7 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
             
             itemsNumber = itemsNumber + pQtyItem ;
             
-            itemsMap[&pItem] = { ITEM, qtyItem } ;
+            cartItemsMap[&pItem] = { ITEM, qtyItem } ;
             barcodesMap[pBarcode] = qtyBarcode ;
             
             tempStringStream.str(std::string());
@@ -229,7 +243,7 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
         long qtyItem ; //= itemsMap[&pItem].quantity ;
         long qtyBarcode ; //= barcodesMap[&pBarcode] ;
         
-        if ((itemsMap.find(&pItem) == itemsMap.end()))
+        if ((cartItemsMap.find(&pItem) == cartItemsMap.end()))
         {
             BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Not found: " << pItem.getDescription() ;
             return RC_ERR ;
@@ -237,7 +251,7 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
         else
         {
             BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Found: " << pItem.getDescription() ;
-            qtyItem = itemsMap[&pItem].quantity - 1 ;
+            qtyItem = cartItemsMap[&pItem].quantity - 1 ;
             qtyBarcode = barcodesMap[pBarcode] - 1 ;
             totalsMap[0].itemsNumber-- ;
             totalsMap[0].totalAmount = totalsMap[0].totalAmount - pPrice ;
@@ -249,10 +263,10 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
             if (qtyItem < 1)
             {
                 BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Erasing item" ;
-                itemsMap.erase(&pItem) ;
+                cartItemsMap.erase(&pItem) ;
             } else
             {
-                itemsMap[&pItem] = { ITEM, qtyItem } ;
+                cartItemsMap[&pItem] = { ITEM, qtyItem } ;
             }
             
             if (qtyBarcode < 1)
@@ -280,7 +294,7 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
 int Cart::voidAllCart()
 {
     std::stringstream tempStringStream;
-    if (this->state!=CART_VOIDED)
+    if ( (this->state!=CART_VOIDED) && (this->state!=CART_STATE_CLOSED) )
     {
         this->state = CART_VOIDED ;
         tempStringStream.str(std::string());
@@ -295,39 +309,43 @@ int Cart::voidAllCart()
 
 int Cart::printCart()
 {
-    typedef std::map<void*, CartRow>::iterator itemRows;
-    Item* itmRow ;
-    //Totals* totalsRow ;
-    
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Print start" ;
-    for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
-        CartRow key = iterator->second ;
-        switch (key.type) {
-            case ITEM:
-                itmRow = (Item*)iterator->first;
-                BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity ;
-                break;
-            case DEPT:
-                break;
-            case TOTAL:
-                //totalsRow = (Totals*)iterator->first;
-                //BOOST_LOG_SEV(my_logger_ca, lt::info) << "\nTotale: " << totalsRow->totalAmount << " Item Nr.: " << totalsRow->itemsNumber ;
-                break;
-            default:
-                break;
+    if ( (this->state!=CART_VOIDED) && (this->state!=CART_STATE_CLOSED) )
+    {   typedef std::map<void*, CartRow>::iterator itemRows;
+        Item* itmRow ;
+        //Totals* totalsRow ;
+        
+        BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Print start" ;
+        for(itemRows iterator = cartItemsMap.begin(); iterator != cartItemsMap.end(); iterator++) {
+            CartRow key = iterator->second ;
+            switch (key.type) {
+                case ITEM:
+                    itmRow = (Item*)iterator->first;
+                    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity ;
+                    break;
+                case DEPT:
+                    break;
+                case TOTAL:
+                    //totalsRow = (Totals*)iterator->first;
+                    //BOOST_LOG_SEV(my_logger_ca, lt::info) << "\nTotale: " << totalsRow->totalAmount << " Item Nr.: " << totalsRow->itemsNumber ;
+                    break;
+                default:
+                    break;
+            }
+            //BOOST_LOG_SEV(my_logger_ca, lt::info) << "\nkey: " << key ;
         }
-        //BOOST_LOG_SEV(my_logger_ca, lt::info) << "\nkey: " << key ;
+        BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "State: " << this->getState();
+        BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Totals start" ;
+        typedef std::map<unsigned long long, Totals>::iterator configurationRows;
+        
+        for(configurationRows iterator = totalsMap.begin(); iterator != totalsMap.end(); iterator++) {
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber ;
+        }
+        BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Totals end" ;
+        BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Cart print end" ;
+        return RC_OK ;
+    } else {
+        return this->state ;
     }
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "State: " << this->getState();
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Totals start" ;
-    typedef std::map<unsigned long long, Totals>::iterator configurationRows;
-    
-    for(configurationRows iterator = totalsMap.begin(); iterator != totalsMap.end(); iterator++) {
-        BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber ;
-    }
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Totals end" ;
-    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Cart print end" ;
-    return RC_OK ;
 }
 
 int Cart::persist( )
@@ -354,29 +372,31 @@ int Cart::persist( )
 
 int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStoreId )
 {
-    cart_sendtopos_mutex.lock() ;
-    
-    typedef std::map<void*, CartRow>::iterator itemRows;
-    typedef std::map<unsigned long long, long>::iterator barcodesRows;
-    std::stringstream tempStringStream;
-    
-    tempStringStream.str(std::string());
-    tempStringStream.clear();
-
-    unsigned long long rowBarcode ;
-    long qty = 0 ;
-	string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
-	string scanInFileName = (boost::format("%s/POS%03lu.IN") % pScanInPath % pPosNumber).str();
-	BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Sending to pos with file: " << cartFileName ;
-    boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
-    std::stringstream date_stream;
-    date_stream.imbue(std::locale(date_stream.getloc(), facet));
-    date_stream << boost::posix_time::microsec_clock::universal_time();
-    std::ofstream scanInFile( scanInTmpFileName.c_str() );
-    
-    tempStringStream << loyCardsMap.begin()->second ;
-    
-    scanInFile << "03;" << date_stream.str() //tsInit
+    if (this->getState()==CART_STATE_READY_FOR_ITEM)
+    {
+        cart_sendtopos_mutex.lock() ;
+        
+        typedef std::map<void*, CartRow>::iterator itemRows;
+        typedef std::map<unsigned long long, long>::iterator barcodesRows;
+        std::stringstream tempStringStream;
+        
+        tempStringStream.str(std::string());
+        tempStringStream.clear();
+        
+        unsigned long long rowBarcode ;
+        long qty = 0 ;
+        string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
+        string scanInFileName = (boost::format("%s/POS%03lu.IN") % pScanInPath % pPosNumber).str();
+        BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Sending to pos with file: " << cartFileName ;
+        boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
+        std::stringstream date_stream;
+        date_stream.imbue(std::locale(date_stream.getloc(), facet));
+        date_stream << boost::posix_time::microsec_clock::universal_time();
+        std::ofstream scanInFile( scanInTmpFileName.c_str() );
+        
+        tempStringStream << loyCardsMap.begin()->second ;
+        
+        scanInFile << "03;" << date_stream.str() //tsInit
         << ";" << date_stream.str() //tsEnd
         << ";" << pPosNumber
         << ";" << tempStringStream.str().substr(1,8) //customerCode
@@ -388,27 +408,30 @@ int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStore
         << ";" << totalsMap[0].totalAmount
         << ";" << "0" << loyCardsMap.begin()->second
         << endl;
-    
-    for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
-    {
-        rowBarcode = (unsigned long long)iterator->first;
-        qty = iterator->second ;
-		if (qty > 0)
-		{
-			for (long repetitions = 0; repetitions < qty; repetitions++ )
-			{
-				scanInFile << "04;" << rowBarcode << ";" << "0.00" << ";" << date_stream.str() << endl;
-			}
-		}
+        
+        for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
+        {
+            rowBarcode = (unsigned long long)iterator->first;
+            qty = iterator->second ;
+            if (qty > 0)
+            {
+                for (long repetitions = 0; repetitions < qty; repetitions++ )
+                {
+                    scanInFile << "04;" << rowBarcode << ";" << "0.00" << ";" << date_stream.str() << endl;
+                }
+            }
+        }
+        
+        scanInFile.close() ;
+        
+        boost::filesystem::rename(scanInTmpFileName.c_str(), scanInFileName);
+        
+        cart_sendtopos_mutex.unlock() ;
+        
+        return RC_OK ;
+    } else {
+        return this->state ;
     }
-    
-    scanInFile.close() ;
-
-	boost::filesystem::rename(scanInTmpFileName.c_str(), scanInFileName);
-    
-    cart_sendtopos_mutex.unlock() ;
-    
-    return RC_OK ;
 }
 
 string Cart::getAllCartJson( std::map<unsigned long long, Item>& pAllItemsMap, bool pWithBarcodes )
@@ -466,7 +489,7 @@ string Cart::getAllCartJson( std::map<unsigned long long, Item>& pAllItemsMap, b
         Item* tempItm ;
         tempStringStream << ",\"items\":{" ;
 
-        for(itemRows iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++)
+        for(itemRows iterator = cartItemsMap.begin(); iterator != cartItemsMap.end(); iterator++)
         {
             tempItm = (Item*)iterator->first ;
             rowIntCode= tempItm->getCode() ;
