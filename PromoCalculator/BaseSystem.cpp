@@ -521,7 +521,12 @@ void BaseSystem::checkForVariationFiles()
     bool r = false ;
     char rowType = 0, rowAction = 0 ;
     Item itmTemp ;
-
+    
+    bool updatedItems = false ;
+    bool updatedBarcodes = false ;
+    bool updatedDepts = false ;
+    bool updatedVats = false ;
+    
     while ( baseSystemRunning )
     {
         varsFound = false ;
@@ -568,6 +573,8 @@ void BaseSystem::checkForVariationFiles()
                                     switch (rowType)
                                     {
                                         case 'I':
+                                        {
+                                            updatedItems = true ;
                                             switch (column)
                                             {
                                                 case 2:
@@ -585,6 +592,7 @@ void BaseSystem::checkForVariationFiles()
                                                 default:
                                                     break ;
                                             }
+                                        }
                                     }
 
                                 }
@@ -614,6 +622,8 @@ void BaseSystem::checkForVariationFiles()
                             }
                         }
                     }
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Renaming Var file " << varFileName << " in " << varFileName + ".OLD" ;
+                    fileMove(varFolderName + "/" + varFileName, varFolderName + "/" + varFileName + ".OLD") ;
                     varsFound = true ;
                 }
                 ++it;
@@ -622,6 +632,49 @@ void BaseSystem::checkForVariationFiles()
         if (!varsFound)
         {
             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - No variation files found" ;
+        } else {
+            if (updatedItems==true)
+            {
+                if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
+                {
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping ITEMS: Rename old file ok" ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping ITEMS: Start" ;
+                    this->dumpItemArchive( "ITEMS.CSV" ) ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping ITEMS: End " ;
+                } else {
+                    BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Dumping ITEMS: Rename old file failed" ;
+                }
+                
+            }
+            if (updatedBarcodes==true)
+            {
+                if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
+                {
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping BARCODES: Rename old file ok" ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping BARCODES: Start" ;
+                    this->dumpBarcodesArchive( "BARCODES.CSV" ) ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping BARCODES: End " ;
+                } else {
+                    BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Dumping BARCODES: Rename old file failed" ;
+                }
+                
+            }
+            if (updatedDepts==true)
+            {
+                if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
+                {
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping DEPARTMENTS: Rename old file ok" ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping DEPARTMENTS: Start" ;
+                    this->dumpDepartmentArchive( "DEPARTMENTS.CSV" ) ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping DEPARTMENTS: End " ;
+                } else {
+                    BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Dumping DEPARTMENTS: Rename old file failed" ;
+                }
+            }
+            if (updatedVats==true)
+            {
+                //todo
+            }
         }
         boost::this_thread::sleep(boost::posix_time::milliseconds(varCheckDelaySeconds));
     }
@@ -743,9 +796,11 @@ void BaseSystem::loadCartsInProgress()
                             if (rAction == 'A')
                             {
                                 itmCodePrice = decodeBarcode( rCode ) ;
+                                itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
                                 myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price, itmCodePrice.type) ;
                             } else {
                                 itmCodePrice = decodeBarcode( rCode ) ;
+                                itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
                                 myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price, itmCodePrice.type) ;
                             }
                             break;
@@ -869,7 +924,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "qty: "  << qty  ;
                     
                     itmCodePrice = decodeBarcode( barcode ) ;
-                    
+                    itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
                     if ( ( itmCodePrice.type != BCODE_NOT_RECOGNIZED ) )
                     {
                         if (itmCodePrice.type != BCODE_LOYCARD)
@@ -956,6 +1011,8 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
                     }
                     itmCodePrice = decodeBarcode( barcode ) ;
+                    itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                    
                     qty = -1 ;
                     try {
                         //tItemCode = barcodesMap[barcodeWrk].getItemCode();

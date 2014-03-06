@@ -31,6 +31,7 @@
 		45D88BAA189C0C0C00397C7A /* libboost_system-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D88BA2189C0C0C00397C7A /* libboost_system-mt.dylib */; };
 		45D88BAB189C0C0C00397C7A /* libboost_thread-mt.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D88BA3189C0C0C00397C7A /* libboost_thread-mt.dylib */; };
 		45DC82A3187DA17200F27E91 /* Barcodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45DC82A1187DA17200F27E91 /* Barcodes.cpp */; };
+		45EDAC3918C4FE150021DAB9 /* BaseTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45EDAC3818C4FE150021DAB9 /* BaseTypes.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -149,6 +150,7 @@
 		45D88BA3189C0C0C00397C7A /* libboost_thread-mt.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libboost_thread-mt.dylib"; path = "/opt/local/lib/libboost_thread-mt.dylib"; sourceTree = "<absolute>"; };
 		45DC82A1187DA17200F27E91 /* Barcodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Barcodes.cpp; sourceTree = "<group>"; };
 		45DC82A2187DA17200F27E91 /* Barcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Barcodes.h; sourceTree = "<group>"; };
+		45EDAC3818C4FE150021DAB9 /* BaseTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseTypes.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +208,7 @@
 				4587107B187D5E11007EFF50 /* BaseSystem.h */,
 				45D45D661879866000D5FC36 /* Department.cpp */,
 				45D45D671879866000D5FC36 /* Department.h */,
+				45EDAC3818C4FE150021DAB9 /* BaseTypes.cpp */,
 				45D45D6518797E6B00D5FC36 /* BaseTypes.h */,
 				4546CE41187860B600198E29 /* Cart.cpp */,
 				4546CE42187860B600198E29 /* Cart.h */,
@@ -395,6 +398,7 @@
 				4587107C187D5E11007EFF50 /* BaseSystem.cpp in Sources */,
 				45D3C23B189FBD4D005DB28F /* request_handler.cpp in Sources */,
 				4546CE4018785A5700198E29 /* Item.cpp in Sources */,
+				45EDAC3918C4FE150021DAB9 /* BaseTypes.cpp in Sources */,
 				4546CE3618784B9100198E29 /* main.cpp in Sources */,
 				45D3C23E189FBD9C005DB28F /* mime_types.cpp in Sources */,
 				45D3C238189FB7D6005DB28F /* reply.cpp in Sources */,

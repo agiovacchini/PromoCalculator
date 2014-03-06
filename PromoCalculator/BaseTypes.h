@@ -36,7 +36,7 @@
 #include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/spirit/include/qi.hpp>
-
+#include <boost/filesystem.hpp>
 
 #include <boost/thread/shared_mutex.hpp>
 
@@ -164,5 +164,7 @@ struct keys_and_values
 };
 
 BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(my_logger, src::severity_logger_mt< >)
+
+bool fileMove(std::string fileOri, std::string fileDest) ;
 
 #endif

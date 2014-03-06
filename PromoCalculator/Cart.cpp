@@ -176,6 +176,31 @@ int Cart::removeLoyCard( unsigned long long pLoyCardNumber )
     }
 }
 
+long Cart::updateLocalItemMap(Item& pItem, unsigned int pBCodeType)
+{
+    std::stringstream tempStringStream;
+    if (this->getState()==CART_STATE_READY_FOR_ITEM)
+    {
+        if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+        {
+            //std::cout << "item in local map" << std::endl ;
+            pItem = itemsLocalCopyMap[pItem.getCode()] ;
+            if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
+            {
+                return itemsLocalCopyMap[pItem.getCode()].getPrice();
+            }
+        } else {
+            //std::cout << "item not in local map" << std::endl ;
+            itemsLocalCopyMap.insert( std::pair<unsigned long long, Item>(pItem.getCode(), pItem) ) ;
+            tempStringStream.str(std::string());
+            tempStringStream.clear();
+            tempStringStream << "K,I," << pItem.toStr() ;
+            this->writeTransactionRow(tempStringStream.str() );
+        }
+    }
+    return pItem.getPrice();
+}
+
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType )
 {
     long pQtyItem = 1 ;
@@ -185,15 +210,6 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice, unsigned int pBCodeType )
 {
     std::stringstream tempStringStream;
-    
-    if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
-    {
-        std::cout << "item in local map" << std::endl ;
-        pItem = itemsLocalCopyMap[pItem.getCode()] ;
-    } else {
-        std::cout << "item not in local map" << std::endl ;
-        itemsLocalCopyMap.insert( std::pair<unsigned long long, Item>(pItem.getCode(), pItem)) ;
-    }
     
     if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
