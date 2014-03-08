@@ -28,7 +28,7 @@ string Barcodes::toStr() const {
     std::stringstream row ;
     
     row << this->code
-    << ", " << this->itemCode ;
+    << "," << this->itemCode ;
     
     return row.str() ;
 }

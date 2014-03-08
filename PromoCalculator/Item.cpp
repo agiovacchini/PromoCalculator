@@ -54,9 +54,9 @@ string Item::toStr() {
 	tempStringStream.str(std::string());
 	tempStringStream.clear();
 	tempStringStream << this->code
-		<< ", \"" << this->description << "\""
-        << ", " << this->department->getCode()
-        << ", " << this->price ;
+		<< ",\"" << this->description << "\""
+        << "," << this->department->getCode()
+        << "," << this->price ;
 
 	return tempStringStream.str();
 }

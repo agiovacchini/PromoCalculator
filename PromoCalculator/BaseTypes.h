@@ -140,7 +140,7 @@ struct CardSessionRow {
 #define WEBI_GET_CARTS_LIST 0x39
 #define WEBI_GET_ALL_CART   0x40
 #define WEBI_GET_ALL_CART_WITH_BARCODES 0x41
-#define WEBI_GET_STORE_INFO 0x80
+#define WEBI_GET_STORE_INFO 0x79
 #define WEBI_ACTION_NOT_RECOGNIZED 0x80
 
 namespace lt = boost::log::trivial;

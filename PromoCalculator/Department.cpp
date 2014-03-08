@@ -53,8 +53,8 @@ string Department::toStr() {
 	tempStringStream.str(std::string());
 	tempStringStream.clear();
 	tempStringStream << this->code
-        << ", " << this->parentCode
-		<< ", \"" << this->description << "\"" ;
+        << "," << this->parentCode
+		<< ",\"" << this->description << "\"" ;
 
 	return tempStringStream.str();
 }

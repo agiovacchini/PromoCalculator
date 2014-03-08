@@ -176,30 +176,49 @@ int Cart::removeLoyCard( unsigned long long pLoyCardNumber )
     }
 }
 
-long Cart::updateLocalItemMap(Item& pItem, unsigned int pBCodeType)
+bool Cart::updateLocalItemMap(Item& pItem)
 {
     std::stringstream tempStringStream;
-    if (this->getState()==CART_STATE_READY_FOR_ITEM)
+
+    if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
     {
-        if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+        //std::cout << "f" << std::endl ;
+        return false ;
+    } else {
+        if (this->getState()==CART_STATE_READY_FOR_ITEM)
         {
-            //std::cout << "item in local map" << std::endl ;
-            pItem = itemsLocalCopyMap[pItem.getCode()] ;
-            if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
-            {
-                return itemsLocalCopyMap[pItem.getCode()].getPrice();
-            }
-        } else {
-            //std::cout << "item not in local map" << std::endl ;
-            itemsLocalCopyMap.insert( std::pair<unsigned long long, Item>(pItem.getCode(), pItem) ) ;
+            tempStringStream.str(std::string());
+            tempStringStream.clear();
+            tempStringStream << "K,D," << pItem.getDepartment().toStr() ;
+            this->writeTransactionRow(tempStringStream.str() );
             tempStringStream.str(std::string());
             tempStringStream.clear();
             tempStringStream << "K,I," << pItem.toStr() ;
             this->writeTransactionRow(tempStringStream.str() );
         }
+        itemsLocalCopyMap.insert( std::pair<unsigned long long, Item>(pItem.getCode(), pItem) ) ;
+        //std::cout << "nf" << std::endl ;
+        return true ;
     }
-    return pItem.getPrice();
 }
+
+long Cart::getItemPrice(Item& pItem, unsigned int pBCodeType)
+{
+    std::stringstream tempStringStream;
+    
+    if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+    {
+        if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
+        {
+            return itemsLocalCopyMap[pItem.getCode()].getPrice();
+        } else {
+            return -1 ;
+        }
+    } else {
+        return pItem.getPrice();
+    }
+}
+
 
 int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType )
 {

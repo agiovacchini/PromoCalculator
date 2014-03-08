@@ -29,6 +29,8 @@
 #include "request_parser.hpp"
 #include "request_handler.hpp"
 
+#include "Item.h"
+#include "Department.h"
 
 #include "BaseSystem.h"
 
@@ -304,6 +306,7 @@ void BaseSystem::readItemArchive( string pFileName )
         
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
+    //dumpItemArchive("item.ooo");
 }
 
 void BaseSystem::dumpItemArchive( string pFileName )
@@ -316,9 +319,13 @@ void BaseSystem::dumpItemArchive( string pFileName )
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Items dump into " << pFileName << " start" ;
     for(items iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
         tmpItem = iterator->second ;
-        outFile << tmpItem.toStr() << std::endl ;
-        //getParentCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
-        //std::cout <<
+        //std::cout << "--" << tmpItem.getDescription() <<  std::endl ;
+        if (tmpItem.getCode()>0)
+        {
+            outFile << tmpItem.toStr() << std::endl ;
+        } else {
+            BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - Attention, there's a blank item!" ;
+        }
     }
     
     outFile.close() ;
@@ -578,6 +585,7 @@ void BaseSystem::checkForVariationFiles()
                                             switch (column)
                                             {
                                                 case 2:
+                                                    //std::cout << i.c_str() << "\n" ;
                                                     itmTemp.setCode(atoll(i.c_str())) ;
                                                     break;
                                                 case 3:
@@ -604,14 +612,17 @@ void BaseSystem::checkForVariationFiles()
                             case 'I':
                             {
                                 //std::cout << itmTemp.toStr() << std::endl ;
-                                std::pair<std::map<unsigned long long, Item>::iterator,bool> ret;
-                                ret = itemsMap.insert( std::pair<unsigned long long, Item>(itmTemp.getCode(), itmTemp)) ;
-                                if ( !ret.second )
+                                if (itmTemp.getCode()>0)
                                 {
-                                    //std::cout << "Gia esistente, aggiorno" << std::endl ;
-                                    itmTemp.setQuantity(0) ;
-                                    itemsMap[itmTemp.getCode()] = itmTemp ;
-                                    //std::cout << itemsMap[itmTemp.getCode()].getPrice() << std::endl ;
+                                    std::pair<std::map<unsigned long long, Item>::iterator,bool> ret;
+                                    ret = itemsMap.insert( std::pair<unsigned long long, Item>(itmTemp.getCode(), itmTemp)) ;
+                                    if ( !ret.second )
+                                    {
+                                        //std::cout << "Gia esistente, aggiorno" << std::endl ;
+                                        itmTemp.setQuantity(0) ;
+                                        itemsMap[itmTemp.getCode()] = itmTemp ;
+                                        //std::cout << itemsMap[itmTemp.getCode()].getPrice() << std::endl ;
+                                    }
                                 }
                                 break ;
                             }
@@ -686,9 +697,11 @@ void BaseSystem::loadCartsInProgress()
     std::string line;
     std::string key;
     std::string value;
+    std::string tmp = "" ;
     std::map<unsigned long long, Cart>::iterator itCarts ;
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr = "" ;
+    std::string cartsDir = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS";
     unsigned long currentTmpCartNumber = 0, nextCartNumberTmp = 0 ;
     char rAction = ' ' ;
     char rObject = ' ' ;
@@ -697,8 +710,9 @@ void BaseSystem::loadCartsInProgress()
     bool r = false ;
     int column = 0 ;
     ItemCodePrice itmCodePrice ;
-	string cartsDir = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS";
     Cart* myCart = nullptr;
+    Item tempItm ;
+    Department tempDepartment ;
     
     nextCartNumber = 1 ;
     
@@ -772,16 +786,67 @@ void BaseSystem::loadCartsInProgress()
                                 //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Action: " << i << "\n" ;
                                 rAction = i[0] ;
                                 break;
-                            case 3:
-                                //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Barcode: " << i << "\n"  ;
-                                rCode = atoll(i.c_str()) ;
-                                break;
-                            case 4:
-                                //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Qty: " << i  << "\n" ;
-                                rQty = atol(i.c_str()) ;
-                                break;
                             default:
-                                break ;
+                                switch (rObject)
+                                {
+                                    case 'I':
+                                    case 'L':
+                                        switch (column)
+                                        {
+                                            case 3:
+                                                //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Barcode: " << i << "\n"  ;
+                                                rCode = atoll(i.c_str()) ;
+                                                break;
+                                            case 4:
+                                                //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Qty: " << i  << "\n" ;
+                                                rQty = atol(i.c_str()) ;
+                                                break;
+                                            default:
+                                                break ;
+                                        }
+                                        break ;
+                                    case 'K':
+                                        switch (rAction)
+                                        {
+                                            case 'D':
+                                                switch (column)
+                                                {
+                                                    case 3:
+                                                        tempDepartment.setCode(strtoull(i.c_str(),nullptr,10)) ;
+                                                        break;
+                                                    case 4:
+                                                        tempDepartment.setParentCode(strtoull(i.c_str(),nullptr,10)) ;
+                                                        break;
+                                                    case 5:
+                                                        tempDepartment.setDescription(i) ;
+                                                        break;
+                                                }
+                                                break;
+                                            case 'I':
+                                                switch (column)
+                                                {
+                                                    case 3:
+                                                        tmp = std::string(i);
+                                                        tempItm.setCode( atoll(tmp.c_str()) );
+                                                        break;
+                                                    case 4:
+                                                        tempItm.setDescription(i) ;
+                                                        break;
+                                                    case 5:
+                                                        tempItm.setDepartment(deparmentsMap[strtoul(i.c_str(),nullptr,10)]);
+                                                        break;
+                                                    case 6:
+                                                        tempItm.setPrice(strtoul(i.c_str(),nullptr,10)) ;
+                                                        break;
+                                                    default:
+                                                        break;
+                                                }
+                                                break ;
+                                        }
+                                        break ;
+                                    default:
+                                        break ;
+                                }
                         }
                         column++ ;
                     }
@@ -796,11 +861,11 @@ void BaseSystem::loadCartsInProgress()
                             if (rAction == 'A')
                             {
                                 itmCodePrice = decodeBarcode( rCode ) ;
-                                itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
                                 myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price, itmCodePrice.type) ;
                             } else {
                                 itmCodePrice = decodeBarcode( rCode ) ;
-                                itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
                                 myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price, itmCodePrice.type) ;
                             }
                             break;
@@ -818,6 +883,16 @@ void BaseSystem::loadCartsInProgress()
                             if (rAction == 'V')
                             {
                                 myCart->setState(CART_VOIDED) ;
+                            }
+                            break;
+                        case 'K':
+                            switch (rAction)
+                            {
+                                case 'I':
+                                    myCart->updateLocalItemMap(tempItm) ;
+                                    break;
+                                case 'D':
+                                    break;
                             }
                             break;
                         default:
@@ -912,6 +987,38 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
             {
                 case WEBI_CUSTOMER_ADD:
                     barcode = atoll(pUrlParamsMap["customerId"].c_str()) ;
+                    typedef std::map<unsigned long long, unsigned long long>::iterator loyCardsIteratorType;
+                    //std::cout << "momama " << configurationMap["LoyOnlyOneShoppingSessionPerCard"] << std::endl ;
+                    for(loyCardsIteratorType cardIterator = allLoyCardsMap.begin(); cardIterator != allLoyCardsMap.end(); cardIterator++)
+                    {
+                        if (cardIterator->first == barcode)
+                        {
+                            if (cardIterator->second == cartId)
+                            {
+                                rc = RC_LOY_CARD_ALREADY_PRESENT ;
+                            } else {
+                                if (atoi(configurationMap["LoyOnlyOneShoppingSessionPerCard"].c_str())==1)
+                                {
+                                    rc = RC_LOY_CARD_IN_ANOTHER_TRANSACTION ;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (rc == 0)
+                    {
+                        allLoyCardsMap[barcode] = cartId ;
+                        rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
+                    }
+                    
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc << ", card: " << barcode ;
+                    if (rc==RC_OK)
+                    {
+                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}" ;
+                    } else {
+                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"errorCode\":\"\",\"errorMessage\":\"\",\"resultExtension\":[]}" ;
+                    }
+                    break ;
                 case WEBI_ITEM_ADD:
                     //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
                     if ( barcode == 0 )
@@ -924,68 +1031,37 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "qty: "  << qty  ;
                     
                     itmCodePrice = decodeBarcode( barcode ) ;
-                    itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                    //std::cout << "1-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
+                    myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+                    //std::cout << "2-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
+                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                    //std::cout << "3-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
                     if ( ( itmCodePrice.type != BCODE_NOT_RECOGNIZED ) )
                     {
-                        if (itmCodePrice.type != BCODE_LOYCARD)
-                        {                            
-                            //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "barcodeWrk: " << barcodeWrk ;
-                            try {
+                        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "barcodeWrk: " << barcodeWrk ;
+                        try {
+                            
+                            //map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
+                            if ( itmCodePrice.code != 0 )
+                            {
+                                //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
+                                rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price, itmCodePrice.type) ;
+                                tmpTotalsMap = myCart->getTotals();
+                                //tempStringStream << tmpTotalsMap[0].totalAmount ;
                                 
-                                //map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
-                                if ( itmCodePrice.code != 0 )
-                                {
-                                    //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
-                                    rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price, itmCodePrice.type) ;
-                                    tmpTotalsMap = myCart->getTotals();
-                                    //tempStringStream << tmpTotalsMap[0].totalAmount ;
-
-                                    respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
-                                    //",\"promoResponse\":{\"promoValue\":0.0,\"promoQty\":0,\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}"
-                                }
-                                else {
-                                    rc = BCODE_ITEM_NOT_FOUND;
-                                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}" ;
-                                }
+                                respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
+                                //",\"promoResponse\":{\"promoValue\":0.0,\"promoQty\":0,\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}"
                             }
-                            catch (std::exception const& e)
-                            {
-                                BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - " << "Sales session error: " << e.what();
-                            }
-                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc << ", barcode: " << barcode << ", qty: "  << qty ;
-                        } else {
-                            typedef std::map<unsigned long long, unsigned long long>::iterator loyCardsIteratorType;
-                            //std::cout << "momama " << configurationMap["LoyOnlyOneShoppingSessionPerCard"] << std::endl ;
-                            for(loyCardsIteratorType cardIterator = allLoyCardsMap.begin(); cardIterator != allLoyCardsMap.end(); cardIterator++)
-                            {
-                                if (cardIterator->first == barcode)
-                                {
-                                    if (cardIterator->second == cartId)
-                                    {
-                                        rc = RC_LOY_CARD_ALREADY_PRESENT ;
-                                    } else {
-                                        if (atoi(configurationMap["LoyOnlyOneShoppingSessionPerCard"].c_str())==1)
-                                        {
-                                            rc = RC_LOY_CARD_IN_ANOTHER_TRANSACTION ;
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            if (rc == 0)
-                            {
-                                allLoyCardsMap[barcode] = cartId ;
-                                rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
-                            }
-                            
-                            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc << ", card: " << barcode ;
-                            if (rc==RC_OK)
-                            {
-                                respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}" ;
-                            } else {
-                                respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"errorCode\":\"\",\"errorMessage\":\"\",\"resultExtension\":[]}" ;
+                            else {
+                                rc = BCODE_ITEM_NOT_FOUND;
+                                respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}" ;
                             }
                         }
+                        catch (std::exception const& e)
+                        {
+                            BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - " << "Sales session error: " << e.what();
+                        }
+                        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc << ", barcode: " << barcode << ", qty: "  << qty ;
                     } else {
                         rc = BCODE_NOT_RECOGNIZED ;
                         respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}" ;
@@ -1011,7 +1087,8 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
                     }
                     itmCodePrice = decodeBarcode( barcode ) ;
-                    itmCodePrice.price = myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                    myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
                     
                     qty = -1 ;
                     try {
@@ -1030,43 +1107,43 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             rc = BCODE_ITEM_NOT_FOUND;
                             respStringStream << "{Orrore}" ;
                         }
-                        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_VOID - Cool - rc:" << rc ;
+                        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_ITEM_VOID - Cool - rc:" << rc ;
                     }
                     catch (std::exception const& e)
                     {
-                        BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - " << "Sales session error: " << e.what();
+                        BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Sales session error: " << e.what();
                     }
                     break;
                 case WEBI_GET_TOTALS:
                     //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
                     tmpTotalsMap = myCart->getTotals();
                     respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}";
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_GET_TOTALS - Cool - rc:" << rc ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_TOTALS - Cool - rc:" << rc ;
                     break;
                 case WEBI_SESSION_END:
                     rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"], this->configurationMap["MainStoreId"]);
                     respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_SESSION_END - Cool - rc:" << rc ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_END - Cool - rc:" << rc ;
                     break;
                 case WEBI_GET_CARTS_LIST:
                     respStringStream << this->getCartsList( ) ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_GET_CARTS_LIST - Cool - result:" << respStringStream.str() ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_CARTS_LIST - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_GET_ALL_CART:
                     respStringStream << myCart->getAllCartJson( itemsMap, false ) ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_SESSION_GET_ALL_CART - Cool - result:" << respStringStream.str() ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_GET_ALL_CART - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_GET_ALL_CART_WITH_BARCODES:
                     respStringStream << myCart->getAllCartJson( itemsMap, true ) ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_GET_ALL_CART_WITH_BARCODES - Cool - result:" << respStringStream.str() ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_ALL_CART_WITH_BARCODES - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_SESSION_VOID:
                     rc = myCart->voidAllCart() ;
                     respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << "}" ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_SESSION_VOID - Cool - rc:" << rc ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_VOID - Cool - rc:" << rc ;
                     break;
                 default:
-                    BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - " << "Web action not recognized :(" ;
+                    BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - Web action not recognized :(" ;
             }
             
 		} else {
