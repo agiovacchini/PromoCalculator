@@ -1031,19 +1031,19 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "qty: "  << qty  ;
                     
                     itmCodePrice = decodeBarcode( barcode ) ;
-                    //std::cout << "1-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
-                    myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
-                    //std::cout << "2-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
-                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
-                    //std::cout << "3-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
-                    if ( ( itmCodePrice.type != BCODE_NOT_RECOGNIZED ) )
+                    if ( itmCodePrice.type != BCODE_NOT_RECOGNIZED )
                     {
+                        //std::cout << "3-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
                         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "barcodeWrk: " << barcodeWrk ;
                         try {
                             
                             //map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
                             if ( itmCodePrice.code != 0 )
                             {
+                                //std::cout << "1-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
+                                myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+                                //std::cout << "2-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
                                 //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
                                 rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price, itmCodePrice.type) ;
                                 tmpTotalsMap = myCart->getTotals();
@@ -1087,8 +1087,6 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
                     }
                     itmCodePrice = decodeBarcode( barcode ) ;
-                    myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
-                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
                     
                     qty = -1 ;
                     try {
@@ -1096,6 +1094,8 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
                         if (it != itemsMap.end())
                         {
+                            myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+                            itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
                             //rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, itemPrice, bCodeType);
                             rc = myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], barcode, itmCodePrice.price, itmCodePrice.type) ;
                             tmpTotalsMap = myCart->getTotals();
@@ -1105,7 +1105,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         }
                         else {
                             rc = BCODE_ITEM_NOT_FOUND;
-                            respStringStream << "{Orrore}" ;
+                            respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}" ;
                         }
                         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_ITEM_VOID - Cool - rc:" << rc ;
                     }

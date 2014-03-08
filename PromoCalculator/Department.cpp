@@ -49,12 +49,17 @@ string Department::getDescription() const {
 
 string Department::toStr() {
 	std::stringstream tempStringStream;
-
-	tempStringStream.str(std::string());
-	tempStringStream.clear();
-	tempStringStream << this->code
+    tempStringStream.str(std::string());
+    tempStringStream.clear();
+    try {
+        tempStringStream << this->code
         << "," << this->parentCode
 		<< ",\"" << this->description << "\"" ;
+    } catch (std::exception const& e)
+    {
+        std::cout << "Dept: " << e.what() << std::endl ;
+    }
+
 
 	return tempStringStream.str();
 }
