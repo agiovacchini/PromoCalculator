@@ -44,7 +44,7 @@ public:
     
     void writeTransactionRow( string row ) ;
     bool updateLocalItemMap(Item& pItem) ;
-    long getItemPrice(Item& pItem, unsigned int pBCodeType) ;
+    long getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int pBCodeType) ;
     int addItemByBarcode(Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType ) ;
     int addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice, unsigned int pBCodeType ) ;
     int removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType ) ;

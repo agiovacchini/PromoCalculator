@@ -500,7 +500,7 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
             if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
             {
                 rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-                rValues.price = atol(tempStringStream.str().substr(7,5).c_str()) ;
+                //rValues.price = atol(tempStringStream.str().substr(7,5).c_str()) ;
             }
             break;
         default:
@@ -508,7 +508,7 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
             if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
             {
                 rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-                rValues.price = itemsMap[rValues.code].getPrice() ;
+                //rValues.price = itemsMap[rValues.code].getPrice() ;
             }
             break;
     }
@@ -861,11 +861,11 @@ void BaseSystem::loadCartsInProgress()
                             if (rAction == 'A')
                             {
                                 itmCodePrice = decodeBarcode( rCode ) ;
-                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], rCode, itmCodePrice.type) ;
                                 myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price, itmCodePrice.type) ;
                             } else {
                                 itmCodePrice = decodeBarcode( rCode ) ;
-                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], rCode, itmCodePrice.type) ;
                                 myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price, itmCodePrice.type) ;
                             }
                             break;
@@ -1034,7 +1034,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     //std::cout << "1-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
                     myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
                     //std::cout << "2-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
-                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
                     //std::cout << "3-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
                     if ( ( itmCodePrice.type != BCODE_NOT_RECOGNIZED ) )
                     {
@@ -1088,7 +1088,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     }
                     itmCodePrice = decodeBarcode( barcode ) ;
                     myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
-                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], itmCodePrice.type) ;
+                    itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
                     
                     qty = -1 ;
                     try {

@@ -202,9 +202,10 @@ bool Cart::updateLocalItemMap(Item& pItem)
     }
 }
 
-long Cart::getItemPrice(Item& pItem, unsigned int pBCodeType)
+long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int pBCodeType)
 {
-    std::stringstream tempStringStream;
+    std::stringstream tempStringStream ;
+    std::string barcodeWrkStr ;
     
     if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
     {
@@ -212,11 +213,16 @@ long Cart::getItemPrice(Item& pItem, unsigned int pBCodeType)
         {
             return itemsLocalCopyMap[pItem.getCode()].getPrice();
         } else {
-            return -1 ;
+            tempStringStream.str( std::string() ) ;
+            tempStringStream.clear() ;
+            tempStringStream << pBarcode ;
+            barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
+            return atol(tempStringStream.str().substr(7,5).c_str()) ;
         }
     } else {
         return pItem.getPrice();
     }
+
 }
 
 
