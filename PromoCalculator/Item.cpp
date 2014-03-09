@@ -8,6 +8,15 @@
 
 #include "Item.h"
 
+Item::Item()
+{
+    this->code = 0 ;
+    this->price = 0 ;
+	this->description = "" ;
+    this->quantity = 0 ;
+    this->department = nullptr ;
+}
+
 void Item::setCode( unsigned long long int pCode ) {
     this->code = pCode ;
 }
@@ -49,6 +58,14 @@ long Item::getQuantity() const {
     return this->quantity ;
 }
 
+void Item::setLinkedBarCode( unsigned long long int pLinkedBarCode ) {
+    this->linkedBarCode = pLinkedBarCode ;
+}
+
+unsigned long long int Item::getLinkedBarCode() const {
+    return this->linkedBarCode ;
+}
+
 string Item::toStr() {
 	std::stringstream tempStringStream;
 	tempStringStream.str(std::string());
@@ -56,7 +73,9 @@ string Item::toStr() {
 	tempStringStream << this->code
 		<< ",\"" << this->description << "\""
         << "," << this->department->getCode()
-        << "," << this->price ;
+        << "," << this->price
+        << "," << this->linkedBarCode
+    ;
 
 	return tempStringStream.str();
 }

@@ -88,60 +88,59 @@ struct CardSessionRow {
     unsigned long long sessionId ;
 };
 
-#define ITEM        0x01
-#define DEPT        0x02
-#define TOTAL       0x03
-#define LOY_CARD    0x04
+#define RC_OK                               00000
+#define RC_ERR                              00001
 
-#define CARD_PREFIX 0x10001
+#define ITEM                                10001
+#define DEPT                                10002
+#define TOTAL                               10003
+#define LOY_CARD                            10004
+#define CARD_PREFIX                         10005
 
-#define CART_STATE_READY_FOR_ITEM 0x00
-#define CART_STATE_TOTAL 0x01
-#define CART_STATE_ASKING 0x02
-#define CART_STATE_PAYING 0x03
-#define CART_STATE_CLOSED 0x20
-#define CART_TMPFILE_LOADING 0x30
-#define CART_NOT_INITIALIZED 0x40
-#define CART_STATE_ERROR 0x50
-#define CART_NOT_READY  0x98
-#define CART_NOT_FOUND 0x99
-#define CART_VOIDED 0x100
-
-#define GEN_CART_NEW       0x01
-#define GEN_CART_LOAD      0x02
-
-#define RC_OK              0x00
-#define RC_ERR             0x01
-#define RC_LOY_CARD_NOT_PRESENT 0x90
-#define RC_LOY_CARD_ALREADY_PRESENT 0x91
-#define RC_LOY_CARD_IN_ANOTHER_TRANSACTION 0x92
-#define RC_LOY_MAX_CARD_NUMBER 0x99
-
-#define BCODE_EAN13         0x00
-#define BCODE_EAN13_PRICE_REQ         0x01
-#define BCODE_UPC           0x02
-#define BCODE_EAN8          0x03
-#define BCODE_CODE39        0x04
-#define BCODE_CODE128       0x05
-
-#define BCODE_ITEM_NOT_FOUND 0x03
-#define BCODE_LOYCARD       0x80
-#define BCODE_NOT_RECOGNIZED    0xff
+#define CART_STATE_READY_FOR_ITEM           20000
+#define CART_STATE_TOTAL                    20001
+#define CART_STATE_ASKING                   20002
+#define CART_STATE_PAYING                   20003
+#define CART_STATE_CLOSED                   20020
+#define CART_STATE_TMPFILE_LOADING          20030
+#define CART_STATE_STATE_NOT_INITIALIZED    20040
+#define CART_STATE_ERROR                    20050
+#define CART_STATE_VOIDED                   20097
+#define CART_STATE_NOT_READY                20098
+#define CART_NOT_FOUND                      20099
 
 
-#define WEBI_SESSION_INIT   0x01
-#define WEBI_SESSION_END    0x02
-#define WEBI_SESSION_VOID   0x03
-#define WEBI_CUSTOMER_ADD   0x10
-#define WEBI_CUSTOMER_VOID  0x11
-#define WEBI_ITEM_ADD       0x20
-#define WEBI_ITEM_VOID      0x21
-#define WEBI_GET_TOTALS     0x30
-#define WEBI_GET_CARTS_LIST 0x39
-#define WEBI_GET_ALL_CART   0x40
-#define WEBI_GET_ALL_CART_WITH_BARCODES 0x41
-#define WEBI_GET_STORE_INFO 0x79
-#define WEBI_ACTION_NOT_RECOGNIZED 0x80
+#define GEN_CART_NEW                        30001
+#define GEN_CART_LOAD                       30002
+
+#define BCODE_EAN13                         40000
+#define BCODE_EAN13_PRICE_REQ               40001
+#define BCODE_UPC                           40002
+#define BCODE_EAN8                          40003
+#define BCODE_CODE39                        40004
+#define BCODE_CODE128                       40005
+
+#define BCODE_ITEM_NOT_FOUND                41003
+#define BCODE_LOYCARD                       41080
+#define BCODE_NOT_RECOGNIZED                41081
+#define RC_LOY_CARD_NOT_PRESENT             41090
+#define RC_LOY_CARD_ALREADY_PRESENT         41091
+#define RC_LOY_CARD_IN_ANOTHER_TRANSACTION  41092
+#define RC_LOY_MAX_CARD_NUMBER              41099
+
+#define WEBI_SESSION_INIT                   50001
+#define WEBI_SESSION_END                    50002
+#define WEBI_SESSION_VOID                   50003
+#define WEBI_CUSTOMER_ADD                   50010
+#define WEBI_CUSTOMER_VOID                  50011
+#define WEBI_ITEM_ADD                       50020
+#define WEBI_ITEM_VOID                      50021
+#define WEBI_GET_TOTALS                     50030
+#define WEBI_GET_CARTS_LIST                 50039
+#define WEBI_GET_ALL_CART                   50040
+#define WEBI_GET_ALL_CART_WITH_BARCODES     50041
+#define WEBI_GET_STORE_INFO                 50079
+#define WEBI_ACTION_NOT_RECOGNIZED          50080
 
 namespace lt = boost::log::trivial;
 namespace qi = boost::spirit::qi;

@@ -148,11 +148,6 @@ namespace http {
                     actionBS = WEBI_GET_TOTALS ;
                 }
                 
-                if (servletFunctionAction.compare("getCartsList")==0)
-                {
-                    actionBS = WEBI_GET_CARTS_LIST ;
-                }
-                
                 if (servletFunctionAction.compare("getAllCart")==0)
                 {
                     actionBS = WEBI_GET_ALL_CART ;
@@ -167,12 +162,23 @@ namespace http {
                 servletFunction = std::string( what[4].first, what[4].second );
                 servletFunctionAction = std::string( what[6].first, what[6].second );
                 
+                
                 if (servletFunctionAction.compare("getStoreInfo")==0)
                 {
                     actionBS = WEBI_GET_STORE_INFO ;
                 }
+                
+                std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
+                
+                if (servletFunctionAction.compare("getCartsList")==0)
+                {
+                    actionBS = WEBI_GET_CARTS_LIST ;
+                    //std::cout << "ooo" << std::endl ;
+                }
+                
+                std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
             }
-            
+            //std::cout << "ooo" << actionBS << std::endl ;
             rep.content.append(baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap));
             
             // Fill out the reply to be sent to the client.

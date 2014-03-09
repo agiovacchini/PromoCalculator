@@ -24,8 +24,10 @@ class Item {
     string description ;
     long quantity ;
     Department *department ;
+    unsigned long long int linkedBarCode ;
 
 public:
+    Item() ;
     
     void setCode( unsigned long long int pCode ) ;
     
@@ -48,6 +50,10 @@ public:
     void setQuantity( long pQuantity ) ;
     
     long getQuantity() const ;
+    
+    void setLinkedBarCode( unsigned long long int pLinkedBarCode ) ;
+    
+    unsigned long long int getLinkedBarCode() const ;
     
     string toStr() ;
     

@@ -59,7 +59,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
             state = CART_STATE_READY_FOR_ITEM ;
             break ;
         case GEN_CART_LOAD:
-            state = CART_TMPFILE_LOADING ;            
+            state = CART_STATE_TMPFILE_LOADING ;
             break;
         default:
             break;
@@ -77,7 +77,7 @@ unsigned long Cart::getNumber() const
     return this->number ;
 }
 
-unsigned int Cart::getState() const {
+long Cart::getState() const {
     return this->state;
 }
 
@@ -114,9 +114,9 @@ void Cart::writeTransactionRow( string row )
     tmpTransactionFile.close() ;
 }
 
-int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNumber )
+long Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNumber )
 {
-    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
+    if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         if (this->loyCardsNumber < maxCardNumber )
         {
@@ -149,9 +149,9 @@ int Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNum
     }
 }
 
-int Cart::removeLoyCard( unsigned long long pLoyCardNumber )
+long Cart::removeLoyCard( unsigned long long pLoyCardNumber )
 {
-    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
+    if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         typedef std::map<unsigned int, unsigned long long>::iterator itLoyCards;
         std::stringstream tempStringStream;
@@ -226,17 +226,17 @@ long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int p
 }
 
 
-int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType )
+long Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice )
 {
     long pQtyItem = 1 ;
-    return addItemByBarcode(pItem, pBarcode, pQtyItem, pPrice, pBCodeType) ;
+    return addItemByBarcode(pItem, pBarcode, pQtyItem, pPrice) ;
 }
 
-int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice, unsigned int pBCodeType )
+long Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice )
 {
     std::stringstream tempStringStream;
     
-    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
+    if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         try {
             long qtyItem = cartItemsMap[&pItem].quantity + pQtyItem ;
@@ -275,10 +275,10 @@ int Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned l
     
 }
 
-int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice, unsigned int pBCodeType  )
+long Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice  )
 {
     std::stringstream tempStringStream;
-    if ( (this->getState()==CART_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
+    if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         
         long qtyItem ; //= itemsMap[&pItem].quantity ;
@@ -332,12 +332,12 @@ int Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigne
     }
 }
 
-int Cart::voidAllCart()
+long Cart::voidAllCart()
 {
-    std::stringstream tempStringStream;
-    if ( (this->state!=CART_VOIDED) && (this->state!=CART_STATE_CLOSED) )
+    if ( (this->state!=CART_STATE_VOIDED) && (this->state!=CART_STATE_CLOSED) )
     {
-        this->state = CART_VOIDED ;
+        std::stringstream tempStringStream;
+        this->state = CART_STATE_VOIDED ;
         tempStringStream.str(std::string());
         tempStringStream.clear();
         tempStringStream << "C,V" ;
@@ -348,9 +348,9 @@ int Cart::voidAllCart()
     }
 }
 
-int Cart::printCart()
+long Cart::printCart()
 {
-    if ( (this->state!=CART_VOIDED) && (this->state!=CART_STATE_CLOSED) )
+    if ( (this->state!=CART_STATE_VOIDED) && (this->state!=CART_STATE_CLOSED) )
     {   typedef std::map<void*, CartRow>::iterator itemRows;
         Item* itmRow ;
         //Totals* totalsRow ;
@@ -389,7 +389,7 @@ int Cart::printCart()
     }
 }
 
-int Cart::persist( )
+long Cart::persist( )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
     typedef std::map<unsigned long long, long>::iterator barcodesRows;
@@ -411,7 +411,7 @@ int Cart::persist( )
     return RC_OK ;
 }
 
-int Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStoreId )
+long Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStoreId )
 {
     if (this->getState()==CART_STATE_READY_FOR_ITEM)
     {
@@ -556,7 +556,7 @@ std::map <unsigned long long, Totals> Cart::getTotals()
     return totalsMap ;
 }
 
-int Cart::close()
+long Cart::close()
 {
     //tmpTransactionFile.close() ;
     state = CART_STATE_CLOSED ;
