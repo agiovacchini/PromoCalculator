@@ -1019,6 +1019,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "qty: "  << qty  ;
                     
                     itmCodePrice = decodeBarcode( barcode ) ;
+                    
                     if ( itmCodePrice.type != BCODE_NOT_RECOGNIZED )
                     {
                         //std::cout << "3-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
