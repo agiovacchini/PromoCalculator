@@ -40,6 +40,7 @@ class BaseSystem {
     unsigned long nodeId ;
     src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_bs;
     bool baseSystemRunning ;
+    bool dummyRCS ;
     
 public:
     std::map <string, string> configurationMap ;

@@ -27,7 +27,7 @@ using namespace std;
 
 std::mutex cart_sendtopos_mutex ;
 
-Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
+Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction, bool pDummyRCS )
 {
     std::stringstream tempStringStream;
     std::ofstream tmpTransactionFile;
@@ -36,7 +36,7 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction )
     nextRequestId = 1 ;
     loyCardsNumber = 0 ;
     basePath = pBasePath ;
-    
+    dummyRCS = pDummyRCS ;
     
     cartItemsMap.clear() ;
     itemsLocalCopyMap.clear() ;
