@@ -1,0 +1,41 @@
+lab_ravenna_development:
+   dbUrl: DBI:OCI8:192.168.91.70:1521/XE
+   dbUser: kcrmcne
+   dbPassword: kcrmcne
+   dbType: ORA
+
+lab_ravenna_showcase:
+   dbUrl: DBI:OCI8:192.168.202.68:1521/XE
+   dbUser: kcrmcne
+   dbPassword: kcrmcne
+   dbType: ORA
+
+lab_ravenna_serverci:
+   dbUrl: DBI:OCI8:192.168.202.222:1521/XE
+   dbUser: kcrmcne
+   dbPassword: kcrmcne
+   dbType: ORA
+
+lab_ravenna_staging:
+   dbUrl: DBI:OCI8:192.168.202.222:1521/XE
+   dbUser: kcrmsta
+   dbPassword: kcrmsta
+   dbType: ORA
+
+lab_ingiro_ibm:
+   dbUrl: DBI:OCI8:192.168.1.68:1521/XE
+   dbUser: kcrmcne
+   dbPassword: kcrmcne
+   dbType: ORA
+
+lab_local_vm:
+   dbUrl: DBI:OCI8:192.168.56.102:1521/XE
+   dbUser: kcrmcne
+   dbPassword: kcrmcne
+   dbType: ORA
+
+lab_reggio_cne:
+   dbUrl: DBI:OCI8:10.5.13.146:1521/KRESO
+   dbUser: kcrm
+   dbPassword: kcrm
+   dbType: ORA

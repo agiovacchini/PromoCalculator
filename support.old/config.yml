@@ -1,0 +1,12 @@
+myMac:
+   salesIp: "127.0.0.1"
+   salesPort: "45000"
+
+myWin:
+   salesIp: "192.168.1.130"
+   salesPort: "45000"
+
+raCne:
+   salesIp: "192.168.202.63"
+   salesPort: "45000"
+

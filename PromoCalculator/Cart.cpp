@@ -207,22 +207,22 @@ long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int p
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr ;
     
-    if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+    if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
     {
-        if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
+        if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
         {
             return itemsLocalCopyMap[pItem.getCode()].getPrice();
         } else {
-            tempStringStream.str( std::string() ) ;
-            tempStringStream.clear() ;
-            tempStringStream << pBarcode ;
-            barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
-            return atol(tempStringStream.str().substr(7,5).c_str()) ;
+            return pItem.getPrice();
         }
     } else {
-        return pItem.getPrice();
+        tempStringStream.str( std::string() ) ;
+        tempStringStream.clear() ;
+        tempStringStream << pBarcode ;
+        barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
+        return atol(tempStringStream.str().substr(7,5).c_str()) ;
     }
-
+    
 }
 
 
