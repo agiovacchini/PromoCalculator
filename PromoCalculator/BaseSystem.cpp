@@ -956,8 +956,8 @@ std::string BaseSystem::fromLongToStringWithDecimals( unsigned long long pValue 
 string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap)
 {
     std::uint64_t cartId = 0 ;
-    std::string resp = "Ciao" ;
-    std::ostringstream streamCartId ;
+    std::string resp = " " ;
+    //std::ostringstream streamCartId ;
     std::ostringstream respStringStream ;
     std::ostringstream tempStringStream ;
     //int bCodeType = 0 ;
@@ -985,10 +985,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
         respStringStream << "{\"status\":" << WEBI_ACTION_NOT_RECOGNIZED << "}" ;
         BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - " << "Web action not recognized :(" ;
     } else {
-        streamCartId.str( std::string() ) ;
-        streamCartId.clear() ;
-        streamCartId << pUrlParamsMap["devSessId"] ;
-        std::string strCartId = streamCartId.str() ;
+        tempStringStream.str( std::string() ) ;
+        tempStringStream.clear() ;
+        tempStringStream << pUrlParamsMap["devSessId"] ;
+        std::string strCartId = tempStringStream.str() ;
         cartId = atoll(strCartId.c_str()) ;
         mainIterator = cartsMap.find(cartId) ;
         
@@ -1034,7 +1034,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 {
                                     unsigned long long barCodeTmp = itemsMap[itmCodePrice.code].getLinkedBarCode() ;
                                     myCart->updateLocalItemMap(itemsMap[barcodesMap[barCodeTmp].getItemCode()]) ;
-                                    long rcLinked  = myCart->addItemByBarcode(itemsMap[barcodesMap[barCodeTmp].getItemCode()], barCodeTmp, qty, itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice() );                                    
+                                    long rcLinked  = myCart->addItemByBarcode(itemsMap[barcodesMap[barCodeTmp].getItemCode()], barCodeTmp, qty, itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice() );
                                     if (atoi(configurationMap["MainReturnSeparateLinkedBarcode"].c_str())==1)
                                     {
                                         respStringStream << "\"addItemResponse\":{\"status\":" << rcLinked << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barCodeTmp << "\",\"description\":\"" << itemsMap[barcodesMap[barCodeTmp].getItemCode()].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice()) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}," ;
@@ -1086,12 +1086,33 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
                         if (it != itemsMap.end())
                         {
-                            myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+                            //myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
                             itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
                             //rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, itemPrice, bCodeType);
+                            
+                            respStringStream << "{" ;
+                            
                             rc = myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], barcode, itmCodePrice.price) ;
+                            
+                            
+                            if ( (rc==0) && (itemsMap[itmCodePrice.code].getLinkedBarCode()>0) )
+                            {
+                                unsigned long long barCodeTmp = itemsMap[itmCodePrice.code].getLinkedBarCode() ;
+                               // myCart->updateLocalItemMap(itemsMap[barcodesMap[barCodeTmp].getItemCode()]) ;
+                                long rcLinked  = myCart->removeItemByBarcode(itemsMap[barcodesMap[barCodeTmp].getItemCode()], barCodeTmp, itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice() );
+                                if (atoi(configurationMap["MainReturnSeparateLinkedBarcode"].c_str())==1)
+                                {
+                                    respStringStream << "\"addItemResponse\":{\"status\":" << rcLinked << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barCodeTmp << "\",\"description\":\"" << itemsMap[barcodesMap[barCodeTmp].getItemCode()].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice()) << ",\"voidFlag\":\"true\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}," ;
+                                } else {
+                                    itmCodePrice.price = itmCodePrice.price + itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice() ;
+                                }
+                            }
                             tmpTotalsMap = myCart->getTotals();
-                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
+                            
+                            respStringStream << "{\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"true\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}" ;
+                            
+                            respStringStream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
+                            
                             //"},\"promoResponse\":{\"promoValue\":0.0,\"promoQty\":0,\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}"
                             
                         }
@@ -1184,231 +1205,6 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     return respStringStream.str() ;
 }
 
-/*
-void BaseSystem::salesSession(socket_ptr pSock)
-{
-    string msg = "" ;
-    std::uint64_t cartId = 0 ;
-    std::uint64_t barcode = 0 ;
-    std::uint64_t barcodeWrk = 0 ;
-    std::int32_t qty = 0 ;
-	std::ostringstream tempStringStream ;
-	std::ostringstream streamCartId ;
-	
-    string tmp = "" ;
-    
-    int rc = 0 ;
-    unsigned long requestId = 0 ;
-    char data[max_length];
-    
-    try
-    {
-        for (;;)
-        {
-            memset(data,0,max_length);
-            tempStringStream.str( std::string() ) ;
-			tempStringStream.clear() ;
-			
-            boost::system::error_code error;
-            size_t length = pSock->read_some(boost::asio::buffer(data), error);
-
-            
-            if (error == boost::asio::error::eof)
-            {
-                BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Connection reset by peer" ;
-                break; // Connection closed cleanly by peer.
-            } else if (error)
-            {
-                BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Oh my God! There's been a bad fault on socket!" ;
-                throw boost::system::system_error(error); // Some other error.
-            }
-            ptree pt2;
-            std::istringstream is (data);
-            
-            try {
-                read_json (is, pt2);
-            }
-            catch (std::exception const& e)
-            {
-				BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales JSON parse error: " << e.what();
-            }
-            try {
-                std::string action = pt2.get<std::string> ("action");
-                if (action.compare("init")==0)
-                {
-                    cartId = this->newCart( GEN_CART_NEW ) ;
-                    tempStringStream.str( std::string() ) ;
-                    tempStringStream.clear() ;
-                    tempStringStream << "{\"cartId\":" << cartId << ",\"rc\":" << rc << "}" ;
-                    sendRespMsg(pSock, tempStringStream.str() ) ;
-                } else {
-                    cartId = pt2.get<std::uint64_t> ("cartId");
-                }
-                
-                mainIterator = cartsMap.find(cartId);
-                Cart* myCart = nullptr;
-                streamCartId.str( std::string() ) ;
-                streamCartId.clear() ;
-                streamCartId << cartId ;
-                std::string strCartId = streamCartId.str() ;
-                
-                unsigned long posNumber = 0 ;
-                
-                if (mainIterator != cartsMap.end()) {
-                    myCart = &(mainIterator->second);
-                }
-                
-                if ( (myCart != nullptr) && (myCart->getState() != CART_NOT_INITIALIZED) && (myCart->getState() != CART_STATE_CLOSED) )
-                {
-                    requestId = myCart->getNextRequestId() ;
-                    if (action.compare("save")==0)
-                    {
-                        rc = myCart->persist() ;
-                        tempStringStream.str( std::string() ) ;
-                        tempStringStream.clear() ;
-                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"save\",\"status\":\"ok\"}" << endl ;
-                        sendRespMsg(pSock, tempStringStream.str() );
-                    }
-                    
-                    if (action.compare("sendToPos")==0)
-                    {
-                        posNumber = pt2.get<std::uint32_t> ("posNumber");
-                        rc = myCart->sendToPos(posNumber, this->configurationMap["SelfScanScanInDir"]);
-                        tempStringStream.str( std::string() ) ;
-                        tempStringStream.clear() ;
-                        tempStringStream << "{\"cartId\":" << strCartId << ",\"posNumber\":" << posNumber  << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"sendToPos\",\"status\":\"ok\"}" << endl ;
-                        sendRespMsg(pSock, tempStringStream.str() );
-                    }
-                    
-                    if (action.compare("add")==0)
-                    {
-                        barcode = pt2.get<std::uint64_t> ("barcode");
-                        qty = pt2.get<std::int32_t> ("qty");
-                        
-                        bCodeType = checkBarcodeType( barcode ) ;
-                        
-                        if ( ( bCodeType != BCODE_NOT_RECOGNIZED ) )
-                        {
-                            if (bCodeType != BCODE_LOYCARD)
-                            {
-                                
-                                if (bCodeType == BCODE_EAN13_PRICE_REQ)
-                                {
-                                    tempStringStream.str( std::string() ) ;
-                                    tempStringStream.clear() ;
-                                    tempStringStream << barcode ;
-                                    tmp = tempStringStream.str().substr(0,7) + "000000" ;
-                                    barcodeWrk = atoll(tmp.c_str()) ;
-                                } else {
-                                    barcodeWrk = barcode ;
-                                }
-                                
-                                BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "barcodeWrk: " << barcodeWrk ;
-								try {
-									unsigned long long tItemCode = barcodesMap[barcodeWrk].getItemCode();
-									map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
-									if (it!=itemsMap.end())
-									{
-										rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, bCodeType) ;
-									}
-									else {
-										rc = BCODE_ITEM_NOT_FOUND;
-									}
-								}
-								catch (std::exception const& e)
-								{
-									BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what(); 
-								}
-                            } else {
-                                rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
-                            }
-                        } else {
-                            rc = RC_ERR ;
-                        }
-                        tempStringStream.str( std::string() ) ;
-                        tempStringStream.clear() ;
-                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeAdd\",\"status\":\"ok\",\"barcode\":" << barcode << ",\"description\":\"" << itemsMap[barcodesMap[barcodeWrk].getItemCode()].getDescription() << "\"}" << endl ;
-                        sendRespMsg(pSock, tempStringStream.str() ) ;
-                        //myCart->printCart() ;
-                    }
-                    //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\noooo1y\n" ;
-                    if (action.compare("remove")==0)
-                    {
-                        barcode = pt2.get<std::uint64_t> ("barcode");
-						try {
-							unsigned long long tItemCode = barcodesMap[barcodeWrk].getItemCode();
-							map < unsigned long long, Item>::iterator it = itemsMap.find(tItemCode);
-							if (it != itemsMap.end())
-							{
-								rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcode].getItemCode()], barcode, bCodeType);
-							}
-							else {
-								rc = BCODE_ITEM_NOT_FOUND;
-							}
-							
-						}
-						catch (std::exception const& e)
-						{
-							BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
-						}
-						tempStringStream.str( std::string() ) ;
-                        tempStringStream.clear() ;
-                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"barcodeRemove\",\"status\":\"ok\",\"barcode\":" << barcode << "}" << endl ;
-                        sendRespMsg(pSock, tempStringStream.str() ) ;
-                        
-                        //myCart->printCart() ;
-                    }
-                    
-                    if (action.compare("print")==0)
-                    {
-                        rc = myCart->printCart() ;
-                        tempStringStream.str( std::string() ) ;
-                        tempStringStream.clear() ;
-                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"print\",\"status\":\"ok\"}" << endl ;
-                        sendRespMsg(pSock, tempStringStream.str()) ;
-                    }
-                    
-                    if (action.compare("close")==0)
-                    {
-                        rc = myCart->close() ;
-                        tempStringStream.str( std::string() ) ;
-                        tempStringStream.clear() ;
-                        tempStringStream << "{\"cartId\":" << strCartId << ",\"rc\":" << rc << ",\"requestId\":" << requestId << ",\"action\":\"close\",\"status\":\"ok\"}" << endl ;
-                        sendRespMsg(pSock, tempStringStream.str() ) ;
-                        
-                    }
-                }
-                else
-                {
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Invalid cart state\n" ;
-                }
-            }
-            catch (std::exception const& e)
-            {
-				BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
-            }
-            
-        }
-    }
-    catch (std::exception& e)
-    {
-		BOOST_LOG_SEV(my_logger_bs, lt::error) << "Sales session error: " << e.what();
-    }
-}
-*/
-/*
-void BaseSystem::salesServer(boost::asio::io_service& io_service, short port)
-{
-    tcp::acceptor tcpAcceptor(io_service, tcp::endpoint(tcp::v4(), port));
-    for (;;)
-    {
-        socket_ptr sock(new tcp::socket(io_service));
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Server started" ;
-        tcpAcceptor.accept(*sock);
-        boost::thread newThread(boost::bind(&BaseSystem::salesSession, this, sock));
-    }
-}
-*/
 
 Item BaseSystem::getItemByIntCode( unsigned long long pIntcode )
 {
@@ -1422,16 +1218,12 @@ unsigned long BaseSystem::newCart( unsigned int pAction )
 	Cart newCart(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] , thisCartNumber, pAction);
     
     cartsMap.insert({thisCartNumber, std::move(newCart)}) ;
+    //emplace non disponibile nel GCC di Debian 7
     //cartsMap.emplace( std::piecewise_construct, std::make_tuple(thisCartNumber), std::make_tuple(this->basePath,thisCartNumber,pAction) ) ;
     
     nextCartNumber++;
     return thisCartNumber ;
 }
-
-/*Cart* BaseSystem::getCart( unsigned long pCartNumber )
- {
- return &cartsMap[pCartNumber] ;
- }*/
 
 bool BaseSystem::persistCarts( )
 {
