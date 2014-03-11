@@ -258,27 +258,6 @@ Feature: Test kStore Servlet
     When I add kStore a customer with code "026005784701"
     Then kStore should return RC "3" and the same card which has been sent
 
-
-  Scenario: Starting one shopping session and leaving it open
-    Given request "A" to initialize a new session with device "10001"
-    Then kStore should return RC "0" and a session id
-
-    Given existing request "A"
-    When I add kStore a customer with code "026007249101"
-    Then kStore should return RC "0" and the same card which has been sent
-
-    Given existing request "A"
-    When I add kStore an item of type "SCAN_SDT_EAN13" with code "8000754914679"
-    Then kStore should return RC "0"
-
-    Given existing request "A"
-    When I add kStore an item of type "SCAN_SDT_EAN13" with code "2093940001013"
-    Then kStore should return RC "0"
-
-    Given existing request "A"
-    When I add kStore an item of type "SCAN_SDT_EAN13" with code "2093940001013"
-    Then kStore should return RC "0"
-
   #When I ask for totals
     #Then kStore should return RC "0"
     #When I ask for totals

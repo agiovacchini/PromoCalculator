@@ -36,7 +36,11 @@ end
 
 
 When(/^I add kStore a customer with code "(.*?)"$/) do |arg1|
-  retCode = kStoreServlet.AddCustomer( myRequestId, arg1 )
+  retCode = kStoreServlet.AddCustomer( myRequestId, arg1, false )
+end
+
+When(/^I void kStore a customer with code "(.*?)"$/) do |arg1|
+  retCode = kStoreServlet.AddCustomer( myRequestId, arg1, true )
 end
 
 Then(/^kStore should return RC "(.*?)" and the same card which has been sent$/) do |arg1|
