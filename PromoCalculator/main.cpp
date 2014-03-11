@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
         // Check command line arguments.
         if (argc != 3)
         {
-            std::cerr << "Usage: promoCalculator rootPath" << std::endl ;
+            std::cerr << "Usage: promoCalculator rootPath iniFileName" << std::endl ;
             return 1;
         }
         
@@ -127,7 +127,17 @@ int main(int argc, char* argv[])
         std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
         http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
         boost::thread t(boost::bind(&http::server3::server::run, &s));
-        BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server";
+        BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server" ;
+        
+        
+        std::string pidFileName = mainPath + "/promoCalculator.pid" ;
+        std::ofstream pidFile ;
+        pidFile.open( pidFileName , fstream::app );
+        pidFile << getpid() << std::endl ;
+        pidFile.close() ;
+        
+        std::cout << "Started with pid: " << getpid() << std::endl ;
+        
         // Wait for signal indicating time to shut down.
         sigset_t wait_mask;
         sigemptyset(&wait_mask);
@@ -141,7 +151,7 @@ int main(int argc, char* argv[])
         s.stop();
         t.join();
 		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Finished processing stop request";
-
+        std::cout << "Process exit " << fileDelete(pidFileName) << std::endl ;
     }
     catch (std::exception& e)
     {

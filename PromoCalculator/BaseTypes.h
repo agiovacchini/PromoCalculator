@@ -165,5 +165,6 @@ struct keys_and_values
 BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(my_logger, src::severity_logger_mt< >)
 
 bool fileMove(std::string fileOri, std::string fileDest) ;
+bool fileDelete(std::string pFileName) ;
 
 #endif

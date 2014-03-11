@@ -1184,11 +1184,11 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     {
                         allLoyCardsMap[barcode] = cartId ;
                         rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str())) ;
-                    } else {
-                        if (dummyRCS)
-                        {
-                            rc = 3 ;
-                        }
+                    }
+                    
+                    if ( (rc != 0) && (dummyRCS) )
+                    {
+                        rc = 3 ;
                     }
                     
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc << ", card: " << barcode ;

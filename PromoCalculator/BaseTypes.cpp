@@ -8,10 +8,10 @@
 
 #include "BaseTypes.h"
 
-bool fileMove(std::string fileOri, std::string fileDest)
+bool fileMove(std::string pFileOri, std::string pFileDest)
 {
-    boost::filesystem::path src(fileOri);
-    boost::filesystem::path dest(fileDest);
+    boost::filesystem::path src(pFileOri);
+    boost::filesystem::path dest(pFileDest);
     
     try {
         boost::filesystem::rename(src, dest);
@@ -21,4 +21,21 @@ bool fileMove(std::string fileOri, std::string fileDest)
         return false;
     }
     return boost::filesystem::exists(dest);
+}
+
+bool fileDelete(std::string pFileName)
+{
+    boost::filesystem::path fileToDelete(pFileName);
+    
+    try {
+        if (boost::filesystem::exists(fileToDelete))
+        {
+            boost::filesystem::remove(fileToDelete);
+        }
+    }
+    catch (std::exception const& e)
+    {
+        return false;
+    }
+    return !boost::filesystem::exists(fileToDelete);
 }

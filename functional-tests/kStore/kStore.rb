@@ -41,12 +41,16 @@ class KStore < JsonSvz
     #puts @reqId.to_s
   end
 
-  def AddCustomer( pMyRequestId, pCardCode )
+  def AddCustomer( pMyRequestId, pCardCode, pIsVoid )
     @codiceCarta = pCardCode
     @reqId[pMyRequestId] = @reqId[pMyRequestId] + 1
-    query = "/addCustomer?devId=#{@devId}&devReqId=#{@reqId[pMyRequestId]}&devSessId=#{@sessionId[pMyRequestId]}&customerId=#{pCardCode}"
+    if pIsVoid
+      query = "/voidCustomer?devId=#{@devId}&devReqId=#{@reqId[pMyRequestId]}&devSessId=#{@sessionId[pMyRequestId]}&customerId=#{pCardCode}"
+    else
+      query = "/addCustomer?devId=#{@devId}&devReqId=#{@reqId[pMyRequestId]}&devSessId=#{@sessionId[pMyRequestId]}&customerId=#{pCardCode}"
+    end
     @result = getResponse( query )
-    #puts @result.to_s
+    puts @result.to_s
     @customerID = @result["customerID"]
     @name = @result["name"]
     @loyaltyMessage = @result["loyaltyMessage"]
@@ -83,7 +87,7 @@ class KStore < JsonSvz
     @reqId[pMyRequestId] = @reqId[pMyRequestId] + 1
     query = "/getTotals?devId=#{@devId}&devReqId=#{@reqId[pMyRequestId]}&devSessId=#{@sessionId[pMyRequestId]}"
     @result = getResponse( query )
-    #puts @result.to_s
+    puts @result.to_s
     @totalAmount = @result["totalAmount"]
     @totalDiscounts = @result["totalDiscounts"]
     @amountToPay = @result["amountToPay"]
@@ -96,7 +100,7 @@ class KStore < JsonSvz
     @reqId[pMyRequestId] = @reqId[pMyRequestId] + 1
     query = "/endSession?devId=#{@devId}&devReqId=#{@reqId[pMyRequestId]}&devSessId=#{@sessionId[pMyRequestId]}&payStationID=#{@posNumber}"
     @result = getResponse( query )
-    #puts @result.to_s
+    puts @result.to_s
     @deviceReqId = @result["deviceReqId"]
     @status = @result["status"]
   end
@@ -105,7 +109,7 @@ class KStore < JsonSvz
     @reqId[pMyRequestId] = @reqId[pMyRequestId] + 1
     query = "/voidTransaction?devId=#{@devId}&devReqId=#{@reqId[pMyRequestId]}&devSessId=#{@sessionId[pMyRequestId]}"
     @result = getResponse( query )
-    #puts @result.to_s
+    puts @result.to_s
     @status = @result["status"]
   end
 

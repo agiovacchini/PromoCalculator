@@ -2,23 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c53156f1-7971-4283-8b65-6fcac891fa91" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb.ori" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" afterPath="$PROJECT_DIR$/support.old/config.yml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/support/env.rb" afterPath="$PROJECT_DIR$/support.old/env.rb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/support/lib/configuration.rb" afterPath="$PROJECT_DIR$/support.old/lib/configuration.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/SCANIN/POS002.IN" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/SCANIN/POS002.IN" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/PromoCalculator.iml" afterPath="$PROJECT_DIR$/.idea/PromoCalculator.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/SCANIN/POS001.IN" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/SCANIN/POS001.IN" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/kStore.feature" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/kStore.feature" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/kStore/kStore.rb" afterPath="$PROJECT_DIR$/functional-tests/kStore/kStore.rb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PromoCalculator.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394477566878" ignored="false" />
-    <file path="/config.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394478030915" ignored="false" />
+    <file path="/config.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394492154640" ignored="false" />
     <file path="/env.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715334158" ignored="false" />
-    <file path="/kStore.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394478345497" ignored="false" />
-    <file path="/kStoreSteps.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715581509" ignored="false" />
-    <file path="/kStore.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394478397827" ignored="false" />
+    <file path="/kStore.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394491963117" ignored="false" />
+    <file path="/kStoreSteps.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394497313700" ignored="false" />
+    <file path="/kStore.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394497357668" ignored="false" />
     <file path="/temp.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715474205" ignored="false" />
     <file path="/cucumber.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715643744" ignored="false" />
     <file path="/kStoreMultiThreadedTester.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389717477122" ignored="false" />
@@ -36,6 +37,8 @@
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/gen/com/cne/kWallet/R.java" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build/kWallet/android/native/gen/com/cne/kWallet/Manifest.java" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389968976553" ignored="false" />
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build-ci.properties" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391505931660" ignored="false" />
+    <file path="/kStoreMine.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394492093167" ignored="false" />
+    <file path="/kStoreMine.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394497588505" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,10 +81,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="kStore.feature" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="kStoreMine.feature" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.feature">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="170" column="82" selection-start="6543" selection-end="6543" vertical-scroll-proportion="0.45273632">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="kStore.feature" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/kStore.feature">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="280" column="0" selection-start="10040" selection-end="10040" vertical-scroll-proportion="0.4745223">
+            <state line="240" column="22" selection-start="8536" selection-end="8536" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="env.rb" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/env.rb">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -90,7 +111,7 @@
       <file leaf-file-name="kStoreSteps.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="28" selection-start="1475" selection-end="1475" vertical-scroll-proportion="0.0">
+            <state line="63" column="35" selection-start="1817" selection-end="1817" vertical-scroll-proportion="-9.04">
               <folding />
             </state>
           </provider>
@@ -99,7 +120,7 @@
       <file leaf-file-name="kStore.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/kStore/kStore.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="21" selection-start="2153" selection-end="2153" vertical-scroll-proportion="0.0">
+            <state line="89" column="4" selection-start="2913" selection-end="2913" vertical-scroll-proportion="-3.04">
               <folding />
             </state>
           </provider>
@@ -126,16 +147,7 @@
       <file leaf-file-name="config.yml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="30" selection-start="2860" selection-end="2860" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cucumber.yml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/config/cucumber.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="7" selection-start="7" selection-end="7" vertical-scroll-proportion="0.0">
+            <state line="75" column="33" selection-start="3368" selection-end="3368" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -168,8 +180,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/functional-tests/common/basicSetup/support/env.rb" />
-        <option value="$PROJECT_DIR$/functional-tests/kWalletWebServicesTests/kStore/kStore.rb" />
         <option value="$PROJECT_DIR$/functional-tests/kWalletWebServicesTests/features/step_definitions/kStoreSteps.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/kStoreMultiThreadedTester.rb" />
         <option value="$PROJECT_DIR$/functional-tests/Gemfile" />
@@ -180,10 +190,12 @@
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/salesServer/salesServer.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature" />
-        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb" />
-        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" />
-        <option value="$PROJECT_DIR$/functional-tests/kStore/kStore.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/kStore.feature" />
+        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.rb" />
+        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" />
+        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb" />
+        <option value="$PROJECT_DIR$/functional-tests/kStore/kStore.rb" />
+        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.feature" />
       </list>
     </option>
   </component>
@@ -669,16 +681,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/functional-tests/Gemfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="23" selection-end="23" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/support.old/lib/configuration.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/support.old/env.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="10" selection-start="194" selection-end="194" vertical-scroll-proportion="0.0" />
@@ -731,6 +733,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="17" selection-start="392" selection-end="392" vertical-scroll-proportion="0.26273885">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/env.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="75" column="33" selection-start="3368" selection-end="3368" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/salesServerSteps.rb.ori">
       <provider selected="true" editor-type-id="text-editor">
         <state line="22" column="3" selection-start="350" selection-end="350" vertical-scroll-proportion="0.0">
@@ -752,37 +775,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/kStore.feature">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="240" column="22" selection-start="8536" selection-end="8536" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="28" selection-start="1475" selection-end="1475" vertical-scroll-proportion="0.0">
+        <state line="63" column="35" selection-start="1817" selection-end="1817" vertical-scroll-proportion="-9.04">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/kStore/kStore.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="21" selection-start="2153" selection-end="2153" vertical-scroll-proportion="0.0">
+        <state line="89" column="4" selection-start="2913" selection-end="2913" vertical-scroll-proportion="-3.04">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/salesServer.feature">
+    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.feature">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="17" selection-start="392" selection-end="392" vertical-scroll-proportion="0.26273885">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="30" selection-start="2860" selection-end="2860" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/kStore.feature">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="280" column="0" selection-start="10040" selection-end="10040" vertical-scroll-proportion="0.4745223">
+        <state line="170" column="82" selection-start="6543" selection-end="6543" vertical-scroll-proportion="0.45273632">
           <folding />
         </state>
       </provider>

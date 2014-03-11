@@ -500,7 +500,7 @@ string Cart::getAllCartJson( std::map<unsigned long long, Item>& pAllItemsMap, b
             tempStringStream << "," ;
         }
         rowCardCode = (unsigned long long)iterator->second;
-        tempStringStream << "{\"loyCard:\":" << rowCardCode << "}" ;
+        tempStringStream << "{\"loyCard\":" << rowCardCode << "}" ;
         firstRow = false ;
     }
     //itemsMap[&pItem] = { ITEM, qtyItem } ;
