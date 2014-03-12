@@ -202,16 +202,21 @@ bool Cart::updateLocalItemMap(Item& pItem)
     }
 }
 
-long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int pBCodeType)
+long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int pBCodeType, bool pPriceChangesWhileShopping)
 {
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr ;
     
     if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
     {
-        if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+        if (!pPriceChangesWhileShopping)
         {
-            return itemsLocalCopyMap[pItem.getCode()].getPrice();
+            if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+            {
+                return itemsLocalCopyMap[pItem.getCode()].getPrice();
+            } else {
+                return pItem.getPrice();
+            }
         } else {
             return pItem.getPrice();
         }

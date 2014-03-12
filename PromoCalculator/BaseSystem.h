@@ -41,7 +41,7 @@ class BaseSystem {
     src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_bs;
     bool baseSystemRunning ;
     bool dummyRCS ;
-    
+    bool cartsPriceChangesWhileShopping ;
 public:
     std::map <string, string> configurationMap ;
     std::map <unsigned long long, Department> deparmentsMap ;

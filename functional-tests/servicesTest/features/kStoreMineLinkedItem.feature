@@ -121,9 +121,57 @@ Feature: Test kStore Servlet
     Then kStore should return RC "0" and the same card which has been sent
 
     Given existing request "A"
+    When I add kStore an item of type "SCAN_SDT_EAN13" with code "8033286980218"
+    Then kStore should return RC "0"
+
+    Given existing request "A"
     When I suspend kStore transaction for POS "1"
     Then kStore should return RC "0"
 
+  Scenario: Starting one shopping with linked item and its void
+    Given request "A" to initialize a new session with device "10001"
+    Then kStore should return RC "0" and a session id
+
+    Given existing request "A"
+    When I add kStore a customer with code "026007249101"
+    Then kStore should return RC "0" and the same card which has been sent
+
+    Given existing request "A"
+    When I add kStore an item of type "SCAN_SDT_EAN13" with code "8033286980218"
+    Then kStore should return RC "0"
+
+    Given existing request "A"
+    When I void kStore an item of type "SCAN_SDT_EAN13" with code "8033286980218"
+    Then kStore should return RC "0"
+
+    Given existing request "A"
+    When I suspend kStore transaction for POS "1"
+    Then kStore should return RC "0"
+
+
+  Scenario: Starting one shopping session, add item, void it and try to add item again
+    Given request "A" to initialize a new session with device "10001"
+    Then kStore should return RC "0" and a session id
+
+    Given existing request "A"
+    When I add kStore a customer with code "026007249101"
+    Then kStore should return RC "0" and the same card which has been sent
+
+    Given existing request "A"
+    When I add kStore an item of type "SCAN_SDT_EAN13" with code "8033286980218"
+    Then kStore should return RC "0"
+
+    Given existing request "A"
+    When I void kStore transaction
+    Then kStore should return RC "0"
+
+    Given existing request "A"
+    When I add kStore an item of type "SCAN_SDT_EAN13" with code "8100754914679"
+    Then kStore should return RC "3"
+
+    Given existing request "A"
+    When I suspend kStore transaction for POS "1"
+    Then kStore should return RC "3"
 
   Scenario: Starting one shopping session, add item, void it and add it again then add item and close transaction
     Given request "A" to initialize a new session with device "10001"
@@ -144,6 +192,10 @@ Feature: Test kStore Servlet
     Given existing request "A"
     When I add kStore a customer with code "026007249101"
     Then kStore should return RC "0" and the same card which has been sent
+
+    Given existing request "A"
+    When I add kStore an item of type "SCAN_SDT_EAN13" with code "8033286980218"
+    Then kStore should return RC "0"
 
     Given existing request "A"
     When I suspend kStore transaction for POS "1"

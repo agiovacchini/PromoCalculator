@@ -67,6 +67,7 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
         this->loadCartsInProgress() ;
         
         this->dummyRCS = atoi(configurationMap["MainDummyRCS"].c_str()) ;
+        this->cartsPriceChangesWhileShopping = atoi(configurationMap["CartsPriceChangesWhileShopping"].c_str()) ;
         
         this->baseSystemRunning = true ;
         
@@ -122,6 +123,7 @@ long BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("MainVarCheckDelaySeconds", "Main.VarCheckDelaySeconds", &pt );
         rc = rc + setConfigValue("MainReturnSeparateLinkedBarcode", "Main.ReturnSeparateLinkedBarcode", &pt );
         rc = rc + setConfigValue("MainDummyRCS", "Main.DummyRCS", &pt );
+        rc = rc + setConfigValue("CartsPriceChangesWhileShopping", "Carts.PriceChangesWhileShopping", &pt );
         //rc = rc + setConfigValue("NetworkPort", "Network.Port", &pt );
         rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
         rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
@@ -870,11 +872,11 @@ void BaseSystem::loadCartsInProgress()
                             if (rAction == 'A')
                             {
                                 itmCodePrice = decodeBarcode( rCode ) ;
-                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], rCode, itmCodePrice.type) ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], rCode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
                                 myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price ) ;
                             } else {
                                 itmCodePrice = decodeBarcode( rCode ) ;
-                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], rCode, itmCodePrice.type) ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], rCode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
                                 myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price ) ;
                             }
                             break;
@@ -903,7 +905,10 @@ void BaseSystem::loadCartsInProgress()
                             switch (rAction)
                             {
                                 case 'I':
-                                    myCart->updateLocalItemMap(tempItm) ;
+                                    if (!cartsPriceChangesWhileShopping)
+                                    {
+                                        myCart->updateLocalItemMap(tempItm) ; ;
+                                    }
                                     break;
                                 case 'D':
                                     break;
@@ -1031,11 +1036,16 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             {
                                 //std::cout << "1-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
                                 //std::cout << "2-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
-                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
+                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
                                 //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
 
                                 respStringStream << "{" ;
-                                myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+                                
+                                if (!cartsPriceChangesWhileShopping)
+                                {
+                                    myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+                                }
+                                
                                 rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price ) ;
                                 if ((rc>0)&&(dummyRCS))
                                 {
@@ -1044,7 +1054,12 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 if ( (rc==0) && (itemsMap[itmCodePrice.code].getLinkedBarCode()>0) )
                                 {
                                     unsigned long long barCodeTmp = itemsMap[itmCodePrice.code].getLinkedBarCode() ;
-                                    myCart->updateLocalItemMap(itemsMap[barcodesMap[barCodeTmp].getItemCode()]) ;
+                                    
+                                    if (!cartsPriceChangesWhileShopping)
+                                    {
+                                        myCart->updateLocalItemMap(itemsMap[barcodesMap[barCodeTmp].getItemCode()]) ;
+                                    }
+                                    
                                     long rcLinked  = myCart->addItemByBarcode(itemsMap[barcodesMap[barCodeTmp].getItemCode()], barCodeTmp, qty, itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice() );
                                     if ((rcLinked>0)&&(dummyRCS))
                                     {
@@ -1109,7 +1124,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         if (it != itemsMap.end())
                         {
                             //myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
-                            itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
+                            itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
                             //rc = myCart->removeItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, itemPrice, bCodeType);
                             
                             respStringStream << "{" ;
