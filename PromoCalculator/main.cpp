@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
         
         std::string pidFileName = mainPath + "/promoCalculator.pid" ;
         std::ofstream pidFile ;
-        pidFile.open( pidFileName , fstream::app );
+        pidFile.open( pidFileName );
         pidFile << getpid() << std::endl ;
         pidFile.close() ;
         

@@ -37,6 +37,7 @@
 const int max_length = 8192;
 
 static unsigned long nextCartNumber ;
+boost::mutex cartnumber_mutex ;
 namespace qi = boost::spirit::qi;
 namespace fs = boost::filesystem;
 
@@ -66,9 +67,22 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
         
         this->loadCartsInProgress() ;
         
-        this->dummyRCS = atoi(configurationMap["MainDummyRCS"].c_str()) ;
-        this->cartsPriceChangesWhileShopping = atoi(configurationMap["CartsPriceChangesWhileShopping"].c_str()) ;
-        
+		if (atoi(configurationMap["MainDummyRCS"].c_str()) == 1)
+		{
+			this->dummyRCS = true;
+		}
+		else {
+			this->dummyRCS = false;
+		}
+
+		if (atoi(configurationMap["CartsPriceChangesWhileShopping"].c_str()) == 1)
+		{
+			this->cartsPriceChangesWhileShopping = true;
+		}
+		else {
+			this->cartsPriceChangesWhileShopping = false;
+		}
+
         this->baseSystemRunning = true ;
         
         boost::thread newThread(boost::bind(&BaseSystem::checkForVariationFiles, this));
@@ -220,7 +234,8 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             column++ ;
         }
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << tempItm.toStr() ;
-        deparmentsMap[tempDepartment.getCode()] = tempDepartment ;
+        //deparmentsMap[tempDepartment.getCode()] = tempDepartment ;
+		deparmentsMap.insert(std::pair<unsigned long long, Department>(tempDepartment.getCode(), tempDepartment));
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
         
     }
@@ -309,8 +324,7 @@ void BaseSystem::readItemArchive( string pFileName )
         }
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << tempItm.toStr() ;
         tempItm.setQuantity(0) ;
-        itemsMap[tempItm.getCode()] = tempItm ;
-        
+		itemsMap.insert(std::pair<unsigned long long, Item>(tempItm.getCode(), tempItm));
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << itemsMap[tempItm.getCode()].toStr();
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName ;
@@ -399,7 +413,9 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             column++ ;
         }
         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Barcode.getcode: " << tempBarcode.getCode() << " type: " << bCodeType << "\n" ;
-        barcodesMap[tempBarcode.getCode()] = tempBarcode ;
+        //barcodesMap[tempBarcode.getCode()] = tempBarcode ;
+		barcodesMap.insert(std::pair<unsigned long long, Barcodes>(tempBarcode.getCode(), tempBarcode));
+
         //barcodesMap.emplace( std::piecewise_construct, std::make_tuple(tempBarcode.getCode()), std::make_tuple(tempBarcode) ) ;
 		//BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "toStr: " << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
         
@@ -525,6 +541,7 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
 
 void BaseSystem::checkForVariationFiles()
 {
+	src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_var ;
     std::string varFolderName = this->basePath +  "ARCHIVES/" + configurationMap["MainArchivesDir"] + "VARS" ;
     std::string varFileName = "" ;
     unsigned long varCheckDelaySeconds = atol(configurationMap["MainVarCheckDelaySeconds"].c_str()) * 1000L ;
@@ -545,12 +562,12 @@ void BaseSystem::checkForVariationFiles()
     while ( baseSystemRunning )
     {
         varsFound = false ;
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Checking for variation files" ;
+		BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Checking for variation files";
         if (!fs::exists(varFolderName))
         {
-            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - No " << varFolderName << " subfolder found" ;
+			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No " << varFolderName << " subfolder found";
         } else {
-            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << varFolderName << " subfolder found" ;
+			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - " << varFolderName << " subfolder found";
             fs::recursive_directory_iterator it(varFolderName);
             fs::recursive_directory_iterator endit;
             while(it != endit)
@@ -559,7 +576,7 @@ void BaseSystem::checkForVariationFiles()
                 if (fs::is_regular_file(*it) && it->path().extension() == ".VAR")
                 {
                     varFileName = it->path().filename().string() ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Var file found : " << varFileName ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Var file found : " << varFileName;
                     
                     std::ifstream varFileToLoad(varFolderName + "/" + varFileName);
                     
@@ -641,7 +658,7 @@ void BaseSystem::checkForVariationFiles()
                             }
                         }
                     }
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Renaming Var file " << varFileName << " in " << varFileName + ".OLD" ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Renaming Var file " << varFileName << " in " << varFileName + ".OLD";
                     fileMove(varFolderName + "/" + varFileName, varFolderName + "/" + varFileName + ".OLD") ;
                     varsFound = true ;
                 }
@@ -650,18 +667,18 @@ void BaseSystem::checkForVariationFiles()
         }
         if (!varsFound)
         {
-            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - No variation files found" ;
+			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No variation files found";
         } else {
             if (updatedItems==true)
             {
                 if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
                 {
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping ITEMS: Rename old file ok" ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping ITEMS: Start" ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: Rename old file ok";
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: Start";
                     this->dumpItemArchive( "ITEMS.CSV" ) ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping ITEMS: End " ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: End ";
                 } else {
-                    BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Dumping ITEMS: Rename old file failed" ;
+					BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping ITEMS: Rename old file failed";
                 }
                 
             }
@@ -669,25 +686,24 @@ void BaseSystem::checkForVariationFiles()
             {
                 if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
                 {
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping BARCODES: Rename old file ok" ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping BARCODES: Start" ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Rename old file ok";
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Start";
                     this->dumpBarcodesArchive( "BARCODES.CSV" ) ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping BARCODES: End " ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: End ";
                 } else {
-                    BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Dumping BARCODES: Rename old file failed" ;
+					BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping BARCODES: Rename old file failed";
                 }
-                
             }
             if (updatedDepts==true)
             {
                 if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
                 {
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping DEPARTMENTS: Rename old file ok" ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping DEPARTMENTS: Start" ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Rename old file ok";
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Start";
                     this->dumpDepartmentArchive( "DEPARTMENTS.CSV" ) ;
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Dumping DEPARTMENTS: End " ;
+					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: End ";
                 } else {
-                    BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Dumping DEPARTMENTS: Rename old file failed" ;
+					BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping DEPARTMENTS: Rename old file failed";
                 }
             }
             if (updatedVats==true)
@@ -1305,7 +1321,7 @@ string BaseSystem::getCartsList( )
     unsigned long long cartId = 0 ;
     bool firstRow = true ;
     
-    Cart* tmpCart ;
+    Cart* tmpCart = nullptr ;
     std::ostringstream tempStringStream ;
     tempStringStream.str( std::string() ) ;
     tempStringStream.clear() ;

@@ -3,7 +3,7 @@ require 'savon'
 require 'watir-webdriver'
 require '../kStore/KStore.rb'
 require 'json'
-require 'net/ssh'
+#require 'net/ssh'
 
 puts "Inizializzo kStoreServlet su url: #{KSTORE_SERVLET_URL}"
 kStoreServlet = KStore.new("#{KSTORE_SERVLET_URL}", "JSON")
