@@ -72,6 +72,8 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
 
         this->readArchives() ;
 
+		this->dumpArchivesFromMemory();
+
         this->loadCartsInProgress() ;
 
         boost::thread newThread(boost::bind(&BaseSystem::checkForVariationFiles, this));
@@ -292,16 +294,16 @@ void BaseSystem::readItemArchive( string pFileName )
             {
                 case 0:
 					tmp = std::string(i);
-					tempItm.setCode( atoll(tmp.c_str()) );
+					tempItm.setCode(strtoul(tmp.c_str(), nullptr, 10));
                     break;
                 case 1:
                     tempItm.setDescription(i) ;
                     break;
                 case 2:
-                    tempItm.setDepartment(deparmentsMap[strtoul(i.c_str(),nullptr,10)]);
+                    tempItm.setDepartment(deparmentsMap[strtoull(i.c_str(),nullptr,10)]);
                     break;
                 case 3:
-                    tempItm.setPrice(strtoul(i.c_str(),nullptr,10)) ;
+					tempItm.setPrice(strtol(i.c_str(), nullptr, 10));
                     break;
                 case 4:
                     tempItm.setLinkedBarCode(strtoull(i.c_str(),nullptr,10)) ;
@@ -373,12 +375,12 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             {
                 case 0:
 					tmp = std::string(i);
-                    bcdWrk = atoll(tmp.c_str()) ;
+                    bcdWrk = strtoull(tmp.c_str(),nullptr,10) ;
                     itmCodePrice = decodeBarcode( bcdWrk ) ;
                     tempBarcode.setCode(itmCodePrice.barcode) ;
                     break;
                 case 1:
-                    tempBarcode.setItemCode(atoll(i.c_str())) ;
+                    tempBarcode.setItemCode(strtoull(i.c_str(),nullptr,10)) ;
                     break;
             }
             column++ ;
@@ -555,16 +557,16 @@ void BaseSystem::checkForVariationFiles()
                                             {
                                                 case 2:
                                                     //std::cout << i.c_str() << "\n" ;
-                                                    itmTemp.setCode(atoll(i.c_str())) ;
+													itmTemp.setCode(strtoull(i.c_str(), nullptr, 10));
                                                     break;
                                                 case 3:
                                                     itmTemp.setDescription(i) ;
                                                     break;
                                                 case 4:
-                                                    itmTemp.setDepartment(deparmentsMap[atol(i.c_str())]);
+													itmTemp.setDepartment(deparmentsMap[strtoull(i.c_str(), nullptr, 10)]);
                                                     break;
                                                 case 5:
-                                                    itmTemp.setPrice(atol(i.c_str())) ;
+													itmTemp.setPrice(strtol(i.c_str(), nullptr, 10));
                                                     break ;
                                                 default:
                                                     break ;
@@ -789,16 +791,16 @@ void BaseSystem::loadCartsInProgress()
                                                 {
                                                     case 3:
                                                         tmp = std::string(i);
-                                                        tempItm.setCode( atoll(tmp.c_str()) );
+														tempItm.setCode(strtoull(i.c_str(), nullptr, 10));
                                                         break;
                                                     case 4:
                                                         tempItm.setDescription(i) ;
                                                         break;
                                                     case 5:
-                                                        tempItm.setDepartment(deparmentsMap[strtoul(i.c_str(),nullptr,10)]);
+                                                        tempItm.setDepartment(deparmentsMap[strtoull(i.c_str(),nullptr,10)]);
                                                         break;
                                                     case 6:
-                                                        tempItm.setPrice(strtoul(i.c_str(),nullptr,10)) ;
+														tempItm.setPrice(strtol(i.c_str(), nullptr, 10));
                                                         break;
                                                     case 7:
                                                         tempItm.setLinkedBarCode(strtoull(i.c_str(),nullptr,10)) ;
@@ -934,6 +936,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     respStringStream.str( std::string() ) ;
     respStringStream.clear() ;
     //std::cout << "pAction: " << pAction << std::endl ;
+	
     if (pAction==WEBI_SESSION_INIT)
     {
         cartId = this->newCart( GEN_CART_NEW ) ;
@@ -972,7 +975,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     //rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()), this->configurationMap["SelfScanScanInDir"]);
                     if ( barcode == 0 )
                     {
-                        barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
+						barcode = strtoull(pUrlParamsMap["barcode"].c_str(), nullptr, 10);
                     }
                     qty = 1 ;
                     //atoll(pUrlParamsMap["qty"].c_str()) ;
@@ -995,7 +998,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
 								//Department *deptTmp;
 								//*deptTmp = itemsMap[itmCodePrice.code].getDepartment();
 								//BOOST_LOG_SEV(my_logger_bs, lt::debug) << "- BS - Brucia all'inferno - " << itemsMap[itmCodePrice.code].getDepartment().getCode() << " - " << deptTmp->getCode() << " - " << itemsMap[itmCodePrice.code].getDescription();
-                                itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
+								itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
                                 //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
 
                                 respStringStream << "{" ;
@@ -1072,7 +1075,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                 case WEBI_ITEM_VOID:
                     if ( barcode == 0 )
                     {
-                        barcode = atoll(pUrlParamsMap["barcode"].c_str()) ;
+						barcode = strtoull(pUrlParamsMap["barcode"].c_str(), nullptr, 10);
                     }
                     itmCodePrice = decodeBarcode( barcode ) ;
                     
@@ -1135,7 +1138,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     }
                     break;
                 case WEBI_CUSTOMER_ADD:
-                    barcode = atoll(pUrlParamsMap["customerId"].c_str()) ;
+					barcode = strtoull(pUrlParamsMap["customerId"].c_str(), nullptr, 10);
                     typedef std::map<unsigned long long, unsigned long long>::iterator loyCardsIteratorType;
                     //std::cout << "momama " << configurationMap["LoyOnlyOneShoppingSessionPerCard"] << std::endl ;
                     for(loyCardsIteratorType cardIterator = allLoyCardsMap.begin(); cardIterator != allLoyCardsMap.end(); cardIterator++)
@@ -1174,7 +1177,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     }
                     break ;
                 case WEBI_CUSTOMER_VOID:
-                    barcode = atoll(pUrlParamsMap["customerId"].c_str()) ;
+					barcode = strtoull(pUrlParamsMap["customerId"].c_str(), nullptr, 10);
                     rc = myCart->removeLoyCard(barcode) ;
 					BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_REMOVE_CUSTOMER - Cool - rc:" << rc;
 					if (rc == RC_OK)
@@ -1230,6 +1233,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
 		}
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << respStringStream.str() ;
+
     return respStringStream.str() ;
 }
 

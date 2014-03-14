@@ -369,11 +369,22 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 
 	// Run server in background thread.
 	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
+	
 	http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
+
 	boost::thread t(boost::bind(&http::server3::server::run, &s));
-	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server";
+
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Started http server";
 	ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0);
-	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Service running";
+	
+	
+	std::string pidFileName = mainPath + "/promoCalculator.pid";
+	std::ofstream pidFile;
+	pidFile.open(pidFileName);
+	pidFile << _getpid() << std::endl;
+	pidFile.close();
+
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Service running with pid: " << _getpid();
 
     while(1)
     {
@@ -381,10 +392,13 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 		
         WaitForSingleObject(ghSvcStopEvent, INFINITE);
 
-		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Received stop request";
+		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Received stop request";
+
+		std::cout << "Process exit " << fileDelete(pidFileName) << std::endl;
 
         ReportSvcStatus( SERVICE_STOPPED, NO_ERROR, 0 );
-		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Finished processing stop request";
+
+		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Finished processing stop request";
 		return;
     }
 }
