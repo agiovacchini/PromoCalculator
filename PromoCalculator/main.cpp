@@ -111,7 +111,6 @@ int main(int argc, char* argv[])
         mainPath = argv[1] ;
         iniFileName = argv[2] ;
 
-        std::cout << mainPath << endl;
         init(mainPath, iniFileName);
         
         sigset_t new_mask;

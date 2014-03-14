@@ -37,7 +37,6 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/filesystem.hpp>
-
 #include <boost/thread/shared_mutex.hpp>
 
 
@@ -166,5 +165,6 @@ BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(my_logger, src::severity_logger_mt< >)
 
 bool fileMove(std::string fileOri, std::string fileDest) ;
 bool fileDelete(std::string pFileName) ;
+
 
 #endif

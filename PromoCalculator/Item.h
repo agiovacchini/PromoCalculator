@@ -46,11 +46,7 @@ public:
     void setDepartmentByCode( Department& pDepartment ) ;
     
     Department& getDepartment() const ;
-    
-    void setQuantity( long pQuantity ) ;
-    
-    long getQuantity() const ;
-    
+        
     void setLinkedBarCode( unsigned long long int pLinkedBarCode ) ;
     
     unsigned long long int getLinkedBarCode() const ;
@@ -72,6 +68,18 @@ public:
     friend bool operator> (const Item& p1, const Item& p2)
     {
         return p1.getCode() > p2.getCode() ;
+    }
+    
+    //Copy constructor
+    Item& operator=( const Item& other ) {
+        code = other.code ;
+        price = other.price ;
+        description = other.description ;
+        quantity = other.quantity ;
+        department = other.department ;
+        linkedBarCode = other.linkedBarCode ;
+
+        return *this;
     }
     
 } ;

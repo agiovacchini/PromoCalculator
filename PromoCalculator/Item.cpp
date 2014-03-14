@@ -13,7 +13,6 @@ Item::Item()
     this->code = 0 ;
     this->price = 0 ;
 	this->description = "" ;
-    this->quantity = 0 ;
     this->department = nullptr ;
 }
 
@@ -48,14 +47,6 @@ void Item::setDepartment( Department& pDepartment ) {
 
 Department& Item::getDepartment() const {
     return *department ;
-}
-
-void Item::setQuantity( long pQuantity ) {
-    this->quantity = pQuantity ;
-}
-
-long Item::getQuantity() const {
-    return this->quantity ;
 }
 
 void Item::setLinkedBarCode( unsigned long long int pLinkedBarCode ) {

@@ -13,7 +13,6 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <boost/regex.hpp>
 #include <boost/tokenizer.hpp>
 #include <stdlib.h>
 
@@ -51,56 +50,33 @@ using namespace std;
 BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
 {
     using namespace logging::trivial;
- 
-    boost::asio::io_service io_service;
     
     this->basePath = pBasePath ;
     this->iniFileName = pIniFileName ;
-    
+    this->nodeId = 0 ;
+    this->baseSystemRunning = false ;
+    this->dummyRCS = false ;
+    this->cartsPriceChangesWhileShopping = false ;
+    this->ean13 = "\\d{13}"  ;
+    this->ean13PriceReq = "2\\d{12}" ;
+    this->upc = "\\d{12}" ;
+    this->ean8 = "\\d{8}" ;
+    this->loyCard = "260\\d{9}" ;
+    this->loyCardNoCheck = "260\\d{8}" ;
+
     if ( this->loadConfiguration() == 0 )
     {
         this->printConfiguration() ;
         
-        this->readArchives() ;
-        
-        //this->dumpArchivesFromMemory() ;
-        
-        this->loadCartsInProgress() ;
-        
-		if (atoi(configurationMap["MainDummyRCS"].c_str()) == 1)
-		{
-			this->dummyRCS = true;
-		}
-		else {
-			this->dummyRCS = false;
-		}
-
-		if (atoi(configurationMap["CartsPriceChangesWhileShopping"].c_str()) == 1)
-		{
-			this->cartsPriceChangesWhileShopping = true;
-		}
-		else {
-			this->cartsPriceChangesWhileShopping = false;
-		}
-
         this->baseSystemRunning = true ;
-        
+
+        this->readArchives() ;
+
+        this->loadCartsInProgress() ;
+
         boost::thread newThread(boost::bind(&BaseSystem::checkForVariationFiles, this));
         
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "System initialized." ;
-        //}
-        
-        /*try
-        {
-            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Server starting...";
-            
-            using namespace std;
-            salesServer(io_service, atol(configurationMap["NetworkPort"].c_str()));
-        }
-        catch (std::exception& e)
-        {
-            BOOST_LOG_SEV(my_logger_bs, fatal) << e.what() ;
-        }*/
     } else {
         BOOST_LOG_SEV(my_logger_bs, fatal) << "- BS - " << "Bad configuration error, aborting start" ;
     }
@@ -150,7 +126,28 @@ long BaseSystem::loadConfiguration()
         rc = rc + setConfigValue("WebPort", "Web.Port", &pt );
         rc = rc + setConfigValue("WebThreads", "Web.Threads", &pt );
 		configurationMap["MainArchivesDir"] = configurationMap["MainStoreChannel"] + "/" + configurationMap["MainStoreId"] + "/";
+        
         this->nodeId = pt.get<std::uint32_t>("Node.Id") ;
+        
+        if (atoi(configurationMap["MainDummyRCS"].c_str()) == 1)
+		{
+			this->dummyRCS = true;
+		}
+		else {
+			this->dummyRCS = false;
+		}
+        
+		if (atoi(configurationMap["CartsPriceChangesWhileShopping"].c_str()) == 1)
+		{
+			this->cartsPriceChangesWhileShopping = true;
+		}
+		else {
+			this->cartsPriceChangesWhileShopping = false;
+		}
+        
+        this->varFolderName = this->basePath +  "ARCHIVES/" + configurationMap["MainArchivesDir"] + "VARS" ;
+        this->cartFolderName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS" ;
+        this->varCheckDelaySeconds = atol(configurationMap["MainVarCheckDelaySeconds"].c_str()) * 1000L ;
     }
     catch (std::exception const& e)
     {
@@ -188,10 +185,13 @@ void BaseSystem::readDepartmentArchive( string pFileName )
     // Tokenizer
     typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
-    
     string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName ;
-    
+    std::string line;
     std::ifstream archiveFile( archiveFileName );
+    bool r = false ;
+    int column = 0 ;
+    Department tempDepartment ;
+    
     if (!archiveFile) {
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - File " + archiveFileName + " not found" ;
         exit(-1);
@@ -199,21 +199,19 @@ void BaseSystem::readDepartmentArchive( string pFileName )
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - File " + archiveFileName + " found" ;
     }
     
-    std::string line;
     while( std::getline(archiveFile, line) )
     {
         
         // Boost Spirit Qi
-        
         std::string::const_iterator s_begin = line.begin();
         std::string::const_iterator s_end = line.end();
         std::vector<std::string> result;
         
-        bool r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
+        r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
         assert(r == true);
         assert(s_begin == s_end);
-        int column = 0 ;
-        Department tempDepartment ;
+        column = 0 ;
+        
         for (auto i : result)
         {
             //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "ggg" << i;
@@ -233,11 +231,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             }
             column++ ;
         }
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << tempItm.toStr() ;
-        //deparmentsMap[tempDepartment.getCode()] = tempDepartment ;
-		deparmentsMap.insert(std::pair<unsigned long long, Department>(tempDepartment.getCode(), tempDepartment));
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << deparmentsMap[tempDepartment.getCode()].toStr();
-        
+		deparmentsMap.insert(std::pair<unsigned long long, Department>(tempDepartment.getCode(), std::move(tempDepartment)));
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName ;
 }
@@ -245,20 +239,14 @@ void BaseSystem::readDepartmentArchive( string pFileName )
 void BaseSystem::dumpDepartmentArchive( string pFileName )
 {
     typedef std::map<unsigned long long, Department>::iterator depts ;
-    Department tmpDept;
-    
     std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
 
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Departments dump into " << pFileName << " start" ;
     for(depts iterator = deparmentsMap.begin(); iterator != deparmentsMap.end(); iterator++) {
-        tmpDept = iterator->second ;
-        outFile << tmpDept.toStr() << std::endl ;
-        //getParentCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
-        //std::cout <<
+        outFile << iterator->second.toStr() << std::endl ;
     }
     
     outFile.close() ;
-
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Departments dump into " << pFileName << " end" ;
 }
 
@@ -271,9 +259,12 @@ void BaseSystem::readItemArchive( string pFileName )
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
     string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName ;
-	string tmp = "" ;
-    
     std::ifstream archiveFile( archiveFileName );
+	string tmp = "" ;
+    bool r = false ;
+    int column = 0 ;
+    Item tempItm ;
+    
     if (!archiveFile) {
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "File " + archiveFileName + " not found" ;
         exit(-1);
@@ -286,19 +277,17 @@ void BaseSystem::readItemArchive( string pFileName )
     {
         
         // Boost Spirit Qi
-        
         std::string::const_iterator s_begin = line.begin();
         std::string::const_iterator s_end = line.end();
         std::vector<std::string> result;
         
-        bool r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
+        r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
         assert(r == true);
         assert(s_begin == s_end);
-        int column = 0 ;
-        Item tempItm ;
+        column = 0 ;
+        
         for (auto i : result)
         {
-            //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "ggg" << i << std::endl;
             switch (column)
             {
                 case 0:
@@ -322,36 +311,22 @@ void BaseSystem::readItemArchive( string pFileName )
             }
             column++ ;
         }
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << tempItm.toStr() ;
-        tempItm.setQuantity(0) ;
-		itemsMap.insert(std::pair<unsigned long long, Item>(tempItm.getCode(), tempItm));
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << itemsMap[tempItm.getCode()].toStr();
+		itemsMap.insert(std::pair<unsigned long long, Item>(tempItm.getCode(), std::move(tempItm)));
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName ;
-    //dumpItemArchive("item.ooo");
 }
 
 void BaseSystem::dumpItemArchive( string pFileName )
 {
     typedef std::map<unsigned long long, Item>::iterator items ;
-    Item tmpItem;
-    
     std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
     
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Items dump into " << pFileName << " start" ;
     for(items iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
-        tmpItem = iterator->second ;
-        //std::cout << "--" << tmpItem.getDescription() <<  std::endl ;
-        if (tmpItem.getCode()>0)
-        {
-            outFile << tmpItem.toStr() << std::endl ;
-        } else {
-            BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - Attention, there's a blank item!" ;
-        }
+        outFile << iterator->second.toStr() << std::endl ;
     }
     
     outFile.close() ;
-    
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Items dump into " << pFileName << " end" ;
 }
 
@@ -365,10 +340,13 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
     
     string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName ;
-	string tmp = "";
-	std::stringstream tempStringStream ;
-	
     std::ifstream archiveFile( archiveFileName );
+	string tmp = "" ;
+    bool r = false ;
+    int column = 0 ;
+    unsigned long long bcdWrk = 0 ;
+    Barcodes tempBarcode ;
+    
     if (!archiveFile) {
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "File " + archiveFileName + " not found" ;
         exit(-1);
@@ -381,21 +359,16 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     {
         
         // Boost Spirit Qi
-        
         std::string::const_iterator s_begin = line.begin();
         std::string::const_iterator s_end = line.end();
         std::vector<std::string> result;
         
-        bool r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
+        r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
         assert(r == true);
         assert(s_begin == s_end);
-        int column = 0 ;
-        
-        unsigned long long bcdWrk = 0;
-        Barcodes tempBarcode ;
+        column = 0 ;
         for (auto i : result)
         {
-            
             switch (column)
             {
                 case 0:
@@ -403,8 +376,6 @@ void BaseSystem::readBarcodesArchive( string pFileName )
                     bcdWrk = atoll(tmp.c_str()) ;
                     itmCodePrice = decodeBarcode( bcdWrk ) ;
                     tempBarcode.setCode(itmCodePrice.barcode) ;
-
-                    //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << i.c_str() << "\n";
                     break;
                 case 1:
                     tempBarcode.setItemCode(atoll(i.c_str())) ;
@@ -412,13 +383,7 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             }
             column++ ;
         }
-        //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Barcode.getcode: " << tempBarcode.getCode() << " type: " << bCodeType << "\n" ;
-        //barcodesMap[tempBarcode.getCode()] = tempBarcode ;
-		barcodesMap.insert(std::pair<unsigned long long, Barcodes>(tempBarcode.getCode(), tempBarcode));
-
-        //barcodesMap.emplace( std::piecewise_construct, std::make_tuple(tempBarcode.getCode()), std::make_tuple(tempBarcode) ) ;
-		//BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "toStr: " << barcodesMap[tempBarcode.getCode()].toStr() << "\n" ;
-        
+		barcodesMap.insert(std::pair<unsigned long long, Barcodes>(tempBarcode.getCode(), std::move(tempBarcode)));
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
 }
@@ -426,20 +391,14 @@ void BaseSystem::readBarcodesArchive( string pFileName )
 void BaseSystem::dumpBarcodesArchive( string pFileName )
 {
     typedef std::map<unsigned long long, Barcodes>::iterator barcodes ;
-    Barcodes tmpBarcode ;
-    
     std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
     
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Barcodes dump into " << pFileName << " start" ;
     for(barcodes iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++) {
-        tmpBarcode = iterator->second ;
-        outFile << tmpBarcode.toStr() << std::endl ;
-        //getParentCode() << "," << tmpDept.getCode() << ",\"" << tmpDept.getDescription() << "\"" << std::endl ;
-        //std::cout <<
+        outFile << iterator->second.toStr() << std::endl ;
     }
     
     outFile.close() ;
-    
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Barcodes dump into " << pFileName << " end" ;
 }
 
@@ -462,23 +421,13 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr = "" ;
     ItemCodePrice rValues = {0,0,0,0};
-    
-    using namespace boost;
-    //int type = 0 ;
-    regex ean13( "\\d{13}" ) ;
-	regex ean13PriceReq( "2\\d{12}" ) ;
-	regex upc( "\\d{12}" ) ;
-	regex ean8( "\\d{8}" ) ;
-	regex loyCard( "260\\d{9}") ;
-    regex loyCardNoCheck( "260\\d{8}") ;
-    
-    tempStringStream.str( std::string() ) ;
-	tempStringStream.clear() ;
-	tempStringStream << rCode ;
 
     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Barcode: ---" << tempStringStream.str() << "---\n" ;
     
-    //std::cout << tempStringStream.str() << endl ;
+    tempStringStream.str( std::string() ) ;
+    tempStringStream.clear() ;
+    tempStringStream << rCode ;
+    
     rValues.type = BCODE_NOT_RECOGNIZED ;
    
     if (regex_match( tempStringStream.str(), loyCard ) )
@@ -516,15 +465,11 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
     switch (rValues.type)
     {
         case BCODE_EAN13_PRICE_REQ:
-            tempStringStream.str( std::string() ) ;
-            tempStringStream.clear() ;
-            tempStringStream << rCode ;
             barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
             rValues.barcode = atoll(barcodeWrkStr.c_str()) ;
             if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
             {
                 rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-                //rValues.price = atol(tempStringStream.str().substr(7,5).c_str()) ;
             }
             break;
         default:
@@ -532,7 +477,6 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
             if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
             {
                 rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-                //rValues.price = itemsMap[rValues.code].getPrice() ;
             }
             break;
     }
@@ -542,9 +486,7 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
 void BaseSystem::checkForVariationFiles()
 {
 	src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_var ;
-    std::string varFolderName = this->basePath +  "ARCHIVES/" + configurationMap["MainArchivesDir"] + "VARS" ;
     std::string varFileName = "" ;
-    unsigned long varCheckDelaySeconds = atol(configurationMap["MainVarCheckDelaySeconds"].c_str()) * 1000L ;
     bool varsFound = false ;
     std::string line;
     std::string key;
@@ -553,6 +495,10 @@ void BaseSystem::checkForVariationFiles()
     bool r = false ;
     char rowType = 0, rowAction = 0 ;
     Item itmTemp ;
+    std::string::const_iterator s_begin ;
+    std::string::const_iterator s_end ;
+    std::vector<std::string> result;
+    std::pair<std::map<unsigned long long, Item>::iterator,bool> ret;
     
     bool updatedItems = false ;
     bool updatedBarcodes = false ;
@@ -567,8 +513,7 @@ void BaseSystem::checkForVariationFiles()
         {
 			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No " << varFolderName << " subfolder found";
         } else {
-			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - " << varFolderName << " subfolder found";
-            fs::recursive_directory_iterator it(varFolderName);
+			fs::recursive_directory_iterator it(varFolderName);
             fs::recursive_directory_iterator endit;
             while(it != endit)
             {
@@ -584,9 +529,8 @@ void BaseSystem::checkForVariationFiles()
                     {
                         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << line ;
                         std::istringstream is_line(line);
-                        std::string::const_iterator s_begin = line.begin();
-                        std::string::const_iterator s_end = line.end();
-                        std::vector<std::string> result;
+                        s_begin = line.begin();
+                        s_end = line.end();
                         
                         r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
                         assert(r == true);
@@ -636,24 +580,18 @@ void BaseSystem::checkForVariationFiles()
                         {
                             case 'I':
                             {
-                                //std::cout << itmTemp.toStr() << std::endl ;
                                 if (itmTemp.getCode()>0)
                                 {
-                                    std::pair<std::map<unsigned long long, Item>::iterator,bool> ret;
                                     ret = itemsMap.insert( std::pair<unsigned long long, Item>(itmTemp.getCode(), itmTemp)) ;
                                     if ( !ret.second )
                                     {
-                                        //std::cout << "Gia esistente, aggiorno" << std::endl ;
-                                        itmTemp.setQuantity(0) ;
                                         itemsMap[itmTemp.getCode()] = itmTemp ;
-                                        //std::cout << itemsMap[itmTemp.getCode()].getPrice() << std::endl ;
                                     }
                                 }
                                 break ;
                             }
                             default:
                             {
-                                //std::cout << "row type not recognized" << std::endl ;
                                 break;
                             }
                         }
@@ -725,7 +663,6 @@ void BaseSystem::loadCartsInProgress()
     std::map<unsigned long long, Cart>::iterator itCarts ;
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr = "" ;
-    std::string cartsDir = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS";
     unsigned long currentTmpCartNumber = 0, nextCartNumberTmp = 0 ;
     char rAction = ' ' ;
     char rObject = ' ' ;
@@ -737,19 +674,22 @@ void BaseSystem::loadCartsInProgress()
     Cart* myCart = nullptr;
     Item tempItm ;
     Department tempDepartment ;
+    std::string::const_iterator s_begin ;
+    std::string::const_iterator s_end ;
+    std::vector<std::string> result ;
     
     nextCartNumber = 1 ;
     
-	if (!fs::exists(cartsDir))
+	if (!fs::exists(cartFolderName))
     {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "No " << cartsDir << " subfolder found" ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "No " << cartFolderName << " subfolder found" ;
         exit(-1);
     }
     
-	if (fs::is_directory(cartsDir))
+	if (fs::is_directory(cartFolderName))
     {
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "CARTS subfolder found" ;
-		fs::recursive_directory_iterator it(cartsDir);
+		fs::recursive_directory_iterator it(cartFolderName);
         fs::recursive_directory_iterator endit;
         while(it != endit)
         {
@@ -786,11 +726,9 @@ void BaseSystem::loadCartsInProgress()
                 while( std::getline(tmpTransactonFileToLoad, line) )
                 {
                     //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << line ;
-                    std::istringstream is_line(line);
-                    std::string::const_iterator s_begin = line.begin();
-                    std::string::const_iterator s_end = line.end();
-                    std::vector<std::string> result;
-                    
+                    std::istringstream is_line(line) ;
+                    s_begin = line.begin();
+                    s_end = line.end();
                     r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
                     assert(r == true);
                     assert(s_begin == s_end);
@@ -952,12 +890,14 @@ void BaseSystem::loadCartsInProgress()
     }
 }
 
+/*
 void BaseSystem::sendRespMsg(socket_ptr pSock, string pMsg)
 {
     boost::asio::write(*pSock, boost::asio::buffer(pMsg, pMsg.size()));
     //std::cout << "pMsg: " << pMsg ;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "pMsg: " << pMsg << ", size: " << pMsg.size() ;
 }
+*/
 
 std::string BaseSystem::fromLongToStringWithDecimals( unsigned long long pValue )
 {
@@ -987,6 +927,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     unsigned long requestId = 0, qty = 0 ;
     unsigned long long barcode = 0 ;
     std::map <unsigned long long, Totals> tmpTotalsMap ;
+    std::map <unsigned long long, Cart>::iterator mainIterator ;
     Cart* myCart = nullptr;
     ItemCodePrice itmCodePrice ;
     long rc = 0 ;

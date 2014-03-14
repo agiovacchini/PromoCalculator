@@ -12,16 +12,14 @@
 #include "BaseTypes.h"
 #include <boost/asio.hpp>
 #include <cstdlib>
-//#include <thread>
 #include <iostream>
 #include <string>
 #include <sstream>
 
 #include <boost/thread/thread.hpp>
-//#include <boost/bind.hpp>
-//#include <boost/smart_ptr.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/regex.hpp>
 
 #include "Department.h"
 #include "Item.h"
@@ -42,17 +40,25 @@ class BaseSystem {
     bool baseSystemRunning ;
     bool dummyRCS ;
     bool cartsPriceChangesWhileShopping ;
-public:
     std::map <string, string> configurationMap ;
     std::map <unsigned long long, Department> deparmentsMap ;
     std::map <unsigned long long, Item> itemsMap ;
     std::map <unsigned long long, Barcodes> barcodesMap ;
     std::map <unsigned long long, Cart> cartsMap ;
     std::map <unsigned long long, unsigned long long> allLoyCardsMap ;
-    
-    typedef boost::shared_ptr<tcp::socket> socket_ptr;
-	std::map<unsigned long long, Cart>::iterator mainIterator ;
+    //typedef boost::shared_ptr<tcp::socket> socket_ptr;
+    boost::regex ean13 ;
+    boost::regex ean13PriceReq ;
+    boost::regex upc ;
+    boost::regex ean8 ;
+    boost::regex loyCard ;
+    boost::regex loyCardNoCheck ;
+    std::string varFolderName ;
+    std::string cartFolderName ;
+    unsigned long varCheckDelaySeconds ;
 
+
+public:
     BaseSystem( string pBasePath, string pIniFileName ) ;
     string getBasePath() const ;
     void setBasePath( string pBasePath ) ;
@@ -77,7 +83,7 @@ public:
     //void salesSession(socket_ptr sock) ;
     string salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap);
 
-    void sendRespMsg( socket_ptr pSock, string pMsg ) ;
+    //void sendRespMsg( socket_ptr pSock, string pMsg ) ;
     unsigned long newCart( unsigned int pAction ) ;
     Cart* getCart( unsigned long pCartNumber ) ;
     bool persistCarts( ) ;

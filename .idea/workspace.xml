@@ -2,28 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c53156f1-7971-4283-8b65-6fcac891fa91" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional-tests/kStore/cucumberLoop.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMineLinkedItem.feature" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/promoCalculator.pid" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/project.xcworkspace/xcuserdata/andreagiovacchini.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/ARCHIVES/001/12003/VARS/20140307_001.VAR.OLD" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/ARCHIVES/001/12003/VARS/20140307_001.VAR.OLD" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/BaseSystem.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/BaseSystem.h" afterPath="$PROJECT_DIR$/PromoCalculator/BaseSystem.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" afterPath="$PROJECT_DIR$/PromoCalculator.xcodeproj/xcuserdata/andreagiovacchini.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" afterPath="$PROJECT_DIR$/PromoCalculator/Cart.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Cart.h" afterPath="$PROJECT_DIR$/PromoCalculator/Cart.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/SCANIN/POS001.IN" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/SCANIN/POS001.IN" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculatorLnx.ini" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculatorLnx.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculatorOsx.ini" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculatorOsx.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculatorWin.ini" afterPath="$PROJECT_DIR$/PromoCalculator.deploy/PromoCalculatorWin.ini" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PromoCalculator/Item.h" afterPath="$PROJECT_DIR$/PromoCalculator/Item.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.feature" afterPath="$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.feature" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/functional-tests/kStore/cucumberLoop.sh" afterPath="$PROJECT_DIR$/functional-tests/kStore/cucumberLoop.sh" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="PromoCalculator.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394620683240" ignored="false" />
-    <file path="/config.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394620989948" ignored="false" />
+    <file path="/Dummy.txt" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394701214704" ignored="false" />
+    <file path="/config.yml" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394658183499" ignored="false" />
     <file path="/env.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1389715334158" ignored="false" />
     <file path="/kStore.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394491963117" ignored="false" />
     <file path="/kStoreSteps.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394497313700" ignored="false" />
@@ -47,6 +37,7 @@
     <file path="$PROJECT_DIR$/../../../workspace/kWallet/build-ci.properties" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1391505931660" ignored="false" />
     <file path="/kStoreMine.rb" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394492093167" ignored="false" />
     <file path="/kStoreMine.feature" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394629830153" ignored="false" />
+    <file path="/cucumberLoop.sh" changelist="c53156f1-7971-4283-8b65-6fcac891fa91" time="1394646496805" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +87,7 @@
       <file leaf-file-name="kStoreSteps.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="35" selection-start="1817" selection-end="1817" vertical-scroll-proportion="0.0">
+            <state line="64" column="35" selection-start="1861" selection-end="1861" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -132,7 +123,7 @@
       <file leaf-file-name="config.yml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="87" column="4" selection-start="3848" selection-end="3848" vertical-scroll-proportion="0.0">
+            <state line="65" column="42" selection-start="2960" selection-end="2960" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -141,16 +132,7 @@
       <file leaf-file-name="cucumberLoop.sh" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/functional-tests/kStore/cucumberLoop.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="21" selection-start="127" selection-end="127" vertical-scroll-proportion="0.16773163">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.yml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/support.old/config.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="5" selection-start="66" selection-end="66" vertical-scroll-proportion="0.0">
+            <state line="3" column="56" selection-start="34" selection-end="100" vertical-scroll-proportion="0.07165605">
               <folding />
             </state>
           </provider>
@@ -174,7 +156,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/functional-tests/kWalletWebServicesTests/features/step_definitions/kStoreSteps.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/kStoreMultiThreadedTester.rb" />
         <option value="$PROJECT_DIR$/functional-tests/Gemfile" />
         <option value="$PROJECT_DIR$/Rakefile.rb" />
@@ -188,13 +169,14 @@
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.rb" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb" />
         <option value="$PROJECT_DIR$/functional-tests/kStore/kStore.rb" />
-        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" />
         <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMine.feature" />
+        <option value="$PROJECT_DIR$/functional-tests/kStore/cucumberLoop.sh" />
+        <option value="$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="690" />
+    <option name="x" value="-6" />
     <option name="y" value="22" />
     <option name="width" value="1280" />
     <option name="height" value="774" />
@@ -488,15 +470,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="690" y="22" width="1280" height="774" extended-state="0" />
-    <editor active="true" />
+    <frame x="-6" y="22" width="1280" height="774" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20988655" sideWeight="0.67157584" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21636952" sideWeight="0.67157584" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -618,13 +600,6 @@
         <state line="22" column="3" selection-start="350" selection-end="350" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="35" selection-start="1817" selection-end="1817" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/kStore/kStore.rb">
       <provider selected="true" editor-type-id="text-editor">
         <state line="89" column="4" selection-start="2913" selection-end="2913" vertical-scroll-proportion="0.0">
@@ -635,13 +610,6 @@
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/kStore.feature">
       <provider selected="true" editor-type-id="text-editor">
         <state line="240" column="22" selection-start="8536" selection-end="8536" vertical-scroll-proportion="5.7507987" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/support.old/config.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="5" selection-start="66" selection-end="66" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/kStoreMineLinkedItem.feature">
@@ -658,16 +626,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/step_definitions/kStoreSteps.rb">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="35" selection-start="1861" selection-end="1861" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/support.old/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="5" selection-start="66" selection-end="66" vertical-scroll-proportion="0.11942675" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/servicesTest/features/support/config.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="87" column="4" selection-start="3848" selection-end="3848" vertical-scroll-proportion="0.0">
+        <state line="65" column="42" selection-start="2960" selection-end="2960" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/functional-tests/kStore/cucumberLoop.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="21" selection-start="127" selection-end="127" vertical-scroll-proportion="0.16773163">
+        <state line="3" column="56" selection-start="34" selection-end="100" vertical-scroll-proportion="0.07165605">
           <folding />
         </state>
       </provider>
