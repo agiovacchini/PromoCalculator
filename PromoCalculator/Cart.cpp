@@ -179,6 +179,7 @@ long Cart::removeLoyCard( unsigned long long pLoyCardNumber )
 bool Cart::updateLocalItemMap(Item& pItem)
 {
     std::stringstream tempStringStream;
+	BOOST_LOG_SEV(my_logger_ca, lt::debug) << "- CA - Brucia all'inferno updateLocalItemMap - " << pItem.getDepartment().getCode();
 
     if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
     {
@@ -206,7 +207,9 @@ long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int p
 {
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr ;
-    
+
+	BOOST_LOG_SEV(my_logger_ca, lt::debug) << "- CA - Brucia all'inferno getItemPrice - " << pItem.getDepartment().getCode();
+
     if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
     {
         if (!pPriceChangesWhileShopping)

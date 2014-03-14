@@ -1,7 +1,12 @@
 g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Barcodes.o Barcodes.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o BaseSystem.o BaseSystem.cpp
+g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o BaseTypes.o BaseTypes.cpp
 g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Cart.o Cart.cpp
-g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Department.o Department.cpp
-g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o Item.o Item.cpp
-g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o main.o main.cpp
-g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710   -c -o stdafx.o stdafx.cpp
-g++ -O3 -DNDEBUG -fpermissive -g -w -std=c++11 -Wall -Lc:\mingw\lib -Ic:\mingw\include -D_WIN32_WINNT=0x0601 -DWINVER=0x0601 -DMSVCRT_VERSION=710 -o promoCalculator Barcodes.o BaseSystem.o Cart.o Department.o Item.o main.o stdafx.o -lws2_32 -lboost_log-mgw48-mt-d-1_55 -lboost_date_time-mgw48-mt-d-1_55 -lboost_regex-mgw48-mt-d-1_55 -lboost_log_setup-mgw48-mt-d-1_55 -lboost_chrono-mgw48-mt-d-1_55 -lboost_system-mgw48-mt-d-1_55 -lboost_filesystem-mgw48-mt-d-1_55 -lboost_iostreams-mgw48-mt-d-1_55 -lboost_thread-mgw48-mt-d-1_55
+Cart.cpp:28:1: error: 'mutex' in namespace 'std' does not name a type
+ std::mutex cart_sendtopos_mutex ;
+ ^
+Cart.cpp: In member function 'long int Cart::sendToPos(long unsigned int, std::string, std::string)':
+Cart.cpp:423:9: error: 'cart_sendtopos_mutex' was not declared in this scope
+         cart_sendtopos_mutex.lock() ;
+         ^
+make: *** [Cart.o] Error 1

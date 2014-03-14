@@ -962,7 +962,6 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
         mainIterator = cartsMap.find(cartId) ;
         
         //unsigned long posNumber = 0 ;
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - InitResp - pos: " << pUrlParamsMap["payStationID"] << " sess: " << strCartId ;
         if (mainIterator != cartsMap.end()) {
             myCart = &(mainIterator->second);
             requestId = myCart->getNextRequestId() ;
@@ -993,6 +992,9 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             {
                                 //std::cout << "1-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
                                 //std::cout << "2-" << itemsMap[itmCodePrice.code].getPrice() << std::endl ;
+								//Department *deptTmp;
+								//*deptTmp = itemsMap[itmCodePrice.code].getDepartment();
+								//BOOST_LOG_SEV(my_logger_bs, lt::debug) << "- BS - Brucia all'inferno - " << itemsMap[itmCodePrice.code].getDepartment().getCode() << " - " << deptTmp->getCode() << " - " << itemsMap[itmCodePrice.code].getDescription();
                                 itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
                                 //rc = myCart->addItemByBarcode(itemsMap[barcodesMap[barcodeWrk].getItemCode()], barcode, qty, itemPrice, bCodeType) ;
 
@@ -1172,10 +1174,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     }
                     break ;
                 case WEBI_CUSTOMER_VOID:
-                    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_REMOVE_CUSTOMER - Cool - rc:" << rc ;
                     barcode = atoll(pUrlParamsMap["customerId"].c_str()) ;
                     rc = myCart->removeLoyCard(barcode) ;
-                    if (rc == RC_OK)
+					BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_REMOVE_CUSTOMER - Cool - rc:" << rc;
+					if (rc == RC_OK)
                     {
                         allLoyCardsMap.erase( barcode ) ;
                         respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}" ;
