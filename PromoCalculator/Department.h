@@ -18,22 +18,22 @@ using namespace std;
 
 class Department {
     
-    unsigned long long int code ;
-    unsigned long long int parentCode ;
+    unsigned long long code ;
+    unsigned long long parentCode ;
     string description ;
 
 public:
 	Department();
 
-	Department(unsigned long long int pCode, unsigned long long int pParentCode, string pDescription);
+	Department(unsigned long long pCode, unsigned long long pParentCode, string pDescription);
 
-    void setCode( unsigned long long int pCode ) ;
+    void setCode( unsigned long long pCode ) ;
     
-    unsigned long long int getCode() const ;
+    unsigned long long getCode() const ;
 
-    void setParentCode( unsigned long long int pParentCode ) ;
+    void setParentCode( unsigned long long pParentCode ) ;
     
-    unsigned long long int getParentCode() const ;
+    unsigned long long getParentCode() const ;
 
     void setDescription( string pDescription ) ;
     

@@ -22,12 +22,13 @@ class Item {
     unsigned long long int code ;
     long price ;
     string description ;
-    long quantity ;
-    Department *department ;
+	unsigned long long int departmentCode ;
     unsigned long long int linkedBarCode ;
 
 public:
-    Item() ;
+	Item();
+
+	Item(unsigned long long pCode, long pPrice, string pDescription, unsigned long long int pDepartment);
     
     void setCode( unsigned long long int pCode ) ;
     
@@ -41,11 +42,9 @@ public:
     
     string getDescription() const ;
 
-    void setDepartment( Department& pDepartment ) ;
-    
-    void setDepartmentByCode( Department& pDepartment ) ;
-    
-    Department& getDepartment() const ;
+	void setDepartmentCode( unsigned long long int pDepartmentCode );
+        
+	unsigned long long int getDepartmentCode() ;
         
     void setLinkedBarCode( unsigned long long int pLinkedBarCode ) ;
     
@@ -75,10 +74,8 @@ public:
         code = other.code ;
         price = other.price ;
         description = other.description ;
-        quantity = other.quantity ;
-        department = other.department ;
+		departmentCode = other.departmentCode;
         linkedBarCode = other.linkedBarCode ;
-
         return *this;
     }
     

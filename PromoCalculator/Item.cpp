@@ -10,10 +10,18 @@
 
 Item::Item()
 {
-    this->code = 0 ;
-    this->price = 0 ;
+	this->code = 0 ;
+	this->price = 0 ;
 	this->description = "" ;
-    this->department = nullptr ;
+	this->departmentCode = 0 ;
+}
+
+Item::Item(unsigned long long pCode, long pPrice, string pDescription, unsigned long long int pDepartmentCode )
+{
+    this->code = pCode ;
+    this->price = pPrice ;
+	this->description = pDescription ;
+	this->departmentCode = pDepartmentCode ;
 }
 
 void Item::setCode( unsigned long long int pCode ) {
@@ -41,12 +49,12 @@ string Item::getDescription() const {
 }
 
 //E' una referenza all'oggetto reparto
-void Item::setDepartment( Department& pDepartment ) {
-    this->department = &pDepartment ;
+void Item::setDepartmentCode(unsigned long long int pDepartmentCode) {
+	this->departmentCode = pDepartmentCode;
 }
 
-Department& Item::getDepartment() const {
-    return *department ;
+unsigned long long int Item::getDepartmentCode() {
+    return this->departmentCode ;
 }
 
 void Item::setLinkedBarCode( unsigned long long int pLinkedBarCode ) {
@@ -63,7 +71,7 @@ string Item::toStr() {
 	tempStringStream.clear();
 	tempStringStream << this->code
 		<< ",\"" << this->description << "\""
-        << "," << this->department->getCode()
+        << "," << this->departmentCode
         << "," << this->price
         << "," << this->linkedBarCode
     ;

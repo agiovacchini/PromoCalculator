@@ -72,7 +72,7 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
 
         this->readArchives() ;
 
-		this->dumpArchivesFromMemory();
+		//this->dumpArchivesFromMemory();
 
         this->loadCartsInProgress() ;
 
@@ -233,7 +233,7 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             }
             column++ ;
         }
-		deparmentsMap.insert(std::pair<unsigned long long, Department>(tempDepartment.getCode(), std::move(tempDepartment)));
+		departmentsMap.insert(std::pair<unsigned long long, Department>(tempDepartment.getCode(), std::move(tempDepartment)));
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName ;
 }
@@ -244,7 +244,7 @@ void BaseSystem::dumpDepartmentArchive( string pFileName )
     std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
 
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Departments dump into " << pFileName << " start" ;
-    for(depts iterator = deparmentsMap.begin(); iterator != deparmentsMap.end(); iterator++) {
+    for(depts iterator = departmentsMap.begin(); iterator != departmentsMap.end(); iterator++) {
         outFile << iterator->second.toStr() << std::endl ;
     }
     
@@ -300,7 +300,7 @@ void BaseSystem::readItemArchive( string pFileName )
                     tempItm.setDescription(i) ;
                     break;
                 case 2:
-                    tempItm.setDepartment(deparmentsMap[strtoull(i.c_str(),nullptr,10)]);
+					tempItm.setDepartmentCode(strtoull(i.c_str(), nullptr, 10));
                     break;
                 case 3:
 					tempItm.setPrice(strtol(i.c_str(), nullptr, 10));
@@ -513,7 +513,7 @@ void BaseSystem::checkForVariationFiles()
 		BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Checking for variation files";
         if (!fs::exists(varFolderName))
         {
-			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No " << varFolderName << " subfolder found";
+			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No " << this->varFolderName << " subfolder found";
         } else {
 			fs::recursive_directory_iterator it(varFolderName);
             fs::recursive_directory_iterator endit;
@@ -563,7 +563,7 @@ void BaseSystem::checkForVariationFiles()
                                                     itmTemp.setDescription(i) ;
                                                     break;
                                                 case 4:
-													itmTemp.setDepartment(deparmentsMap[strtoull(i.c_str(), nullptr, 10)]);
+													itmTemp.setDepartmentCode(strtoull(i.c_str(), nullptr, 10));
                                                     break;
                                                 case 5:
 													itmTemp.setPrice(strtol(i.c_str(), nullptr, 10));
@@ -624,7 +624,7 @@ void BaseSystem::checkForVariationFiles()
             }
             if (updatedBarcodes==true)
             {
-                if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
+                if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES.OLD") )
                 {
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Rename old file ok";
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Start";
@@ -636,7 +636,7 @@ void BaseSystem::checkForVariationFiles()
             }
             if (updatedDepts==true)
             {
-                if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD") )
+                if ( fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS.CSV", this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS.OLD") )
                 {
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Rename old file ok";
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Start";
@@ -797,7 +797,7 @@ void BaseSystem::loadCartsInProgress()
                                                         tempItm.setDescription(i) ;
                                                         break;
                                                     case 5:
-                                                        tempItm.setDepartment(deparmentsMap[strtoull(i.c_str(),nullptr,10)]);
+                                                        tempItm.setDepartmentCode(strtoull(i.c_str(),nullptr,10));
                                                         break;
                                                     case 6:
 														tempItm.setPrice(strtol(i.c_str(), nullptr, 10));
@@ -863,7 +863,7 @@ void BaseSystem::loadCartsInProgress()
                                 case 'I':
                                     if (!cartsPriceChangesWhileShopping)
                                     {
-                                        myCart->updateLocalItemMap(tempItm) ; ;
+                                        myCart->updateLocalItemMap(tempItm, departmentsMap[tempItm.getDepartmentCode()]) ;
                                     }
                                     break;
                                 case 'D':
@@ -1005,7 +1005,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 
                                 if (!cartsPriceChangesWhileShopping)
                                 {
-                                    myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
+									myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], departmentsMap[itemsMap[itmCodePrice.code].getDepartmentCode()]);
                                 }
                                 
                                 rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price ) ;
@@ -1019,7 +1019,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                     
                                     if (!cartsPriceChangesWhileShopping)
                                     {
-                                        myCart->updateLocalItemMap(itemsMap[barcodesMap[barCodeTmp].getItemCode()]) ;
+										myCart->updateLocalItemMap(itemsMap[barcodesMap[barCodeTmp].getItemCode()], departmentsMap[itemsMap[barcodesMap[barCodeTmp].getItemCode()].getDepartmentCode()]);
                                     }
                                     
                                     long rcLinked  = myCart->addItemByBarcode(itemsMap[barcodesMap[barCodeTmp].getItemCode()], barCodeTmp, qty, itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice() );

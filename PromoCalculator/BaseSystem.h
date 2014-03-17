@@ -41,7 +41,7 @@ class BaseSystem {
     bool dummyRCS ;
     bool cartsPriceChangesWhileShopping ;
     std::map <string, string> configurationMap ;
-    std::map <unsigned long long, Department> deparmentsMap ;
+    std::map <unsigned long long, Department> departmentsMap ;
     std::map <unsigned long long, Item> itemsMap ;
     std::map <unsigned long long, Barcodes> barcodesMap ;
     std::map <unsigned long long, Cart> cartsMap ;

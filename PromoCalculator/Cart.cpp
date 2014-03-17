@@ -176,10 +176,10 @@ long Cart::removeLoyCard( unsigned long long pLoyCardNumber )
     }
 }
 
-bool Cart::updateLocalItemMap(Item& pItem)
+bool Cart::updateLocalItemMap(Item& pItem, Department& pDept)
 {
     std::stringstream tempStringStream;
-	BOOST_LOG_SEV(my_logger_ca, lt::debug) << "- CA - Brucia all'inferno updateLocalItemMap - " << pItem.getDepartment().getCode();
+	//BOOST_LOG_SEV(my_logger_ca, lt::debug) << "- CA - Brucia all'inferno updateLocalItemMap - " << pItem.getDepartment().getCode();
 
     if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
     {
@@ -190,7 +190,7 @@ bool Cart::updateLocalItemMap(Item& pItem)
         {
             tempStringStream.str(std::string());
             tempStringStream.clear();
-            tempStringStream << "K,D," << pItem.getDepartment().toStr() ;
+            tempStringStream << "K,D," << pDept.toStr() ;
             this->writeTransactionRow(tempStringStream.str() );
             tempStringStream.str(std::string());
             tempStringStream.clear();
@@ -208,7 +208,7 @@ long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int p
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr ;
 
-	BOOST_LOG_SEV(my_logger_ca, lt::debug) << "- CA - Brucia all'inferno getItemPrice - " << pItem.getDepartment().getCode();
+	//BOOST_LOG_SEV(my_logger_ca, lt::debug) << "- CA - Brucia all'inferno getItemPrice - " << pItem.getDepartment().getCode();
 
     if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
     {
@@ -252,8 +252,8 @@ long Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned 
             
             totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
             totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pPrice * pQtyItem ) ;
-            totalsMap[pItem.getDepartment().getCode()].itemsNumber = totalsMap[pItem.getDepartment().getCode()].itemsNumber + pQtyItem ;
-            totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount + ( pPrice * pQtyItem ) ;
+            totalsMap[pItem.getDepartmentCode()].itemsNumber = totalsMap[pItem.getDepartmentCode()].itemsNumber + pQtyItem ;
+            totalsMap[pItem.getDepartmentCode()].totalAmount = totalsMap[pItem.getDepartmentCode()].totalAmount + ( pPrice * pQtyItem ) ;
             
             itemsNumber = itemsNumber + pQtyItem ;
             
@@ -304,8 +304,8 @@ long Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsign
             qtyBarcode = barcodesMap[pBarcode] - 1 ;
             totalsMap[0].itemsNumber-- ;
             totalsMap[0].totalAmount = totalsMap[0].totalAmount - pPrice ;
-            totalsMap[pItem.getDepartment().getCode()].itemsNumber-- ;
-            totalsMap[pItem.getDepartment().getCode()].totalAmount = totalsMap[pItem.getDepartment().getCode()].totalAmount - pPrice;
+            totalsMap[pItem.getDepartmentCode()].itemsNumber-- ;
+            totalsMap[pItem.getDepartmentCode()].totalAmount = totalsMap[pItem.getDepartmentCode()].totalAmount - pPrice;
             
             itemsNumber-- ;
             
@@ -369,7 +369,7 @@ long Cart::printCart()
             switch (key.type) {
                 case ITEM:
                     itmRow = (Item*)iterator->first;
-                    BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity ;
+                    //BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << itmRow->getDescription() << " - " << itmRow->getPrice() << " - " << itmRow->getDepartment().getDescription() << " qty: " << key.quantity ;
                     break;
                 case DEPT:
                     break;
