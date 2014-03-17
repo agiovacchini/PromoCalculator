@@ -126,6 +126,7 @@ int main(int argc, char* argv[])
         std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
         http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
         boost::thread t(boost::bind(&http::server3::server::run, &s));
+        
         BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server" ;
         
         
@@ -371,8 +372,7 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
 	
 	http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
-
-	boost::thread t(boost::bind(&http::server3::server::run, &s));
+    boost::thread t(boost::bind(&http::server3::server::run, &s));
 
 	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Started http server";
 	ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0);

@@ -78,9 +78,11 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
 
         boost::thread newThread(boost::bind(&BaseSystem::checkForVariationFiles, this));
         
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "System initialized." ;
+        boost::this_thread::sleep(boost::posix_time::milliseconds(10000));
+        
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - System initialized." ;
     } else {
-        BOOST_LOG_SEV(my_logger_bs, fatal) << "- BS - " << "Bad configuration error, aborting start" ;
+        BOOST_LOG_SEV(my_logger_bs, fatal) << "- BS - Bad configuration error, aborting start" ;
     }
 }
 
@@ -323,13 +325,13 @@ void BaseSystem::dumpItemArchive( string pFileName )
     typedef std::map<unsigned long long, Item>::iterator items ;
     std::ofstream outFile( this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName );
     
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Items dump into " << pFileName << " start" ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Items dump into " << pFileName << " start" ;
     for(items iterator = itemsMap.begin(); iterator != itemsMap.end(); iterator++) {
         outFile << iterator->second.toStr() << std::endl ;
     }
     
     outFile.close() ;
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Items dump into " << pFileName << " end" ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Items dump into " << pFileName << " end" ;
 }
 
 void BaseSystem::readBarcodesArchive( string pFileName )
@@ -350,10 +352,10 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     Barcodes tempBarcode ;
     
     if (!archiveFile) {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "File " + archiveFileName + " not found" ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - File " + archiveFileName + " not found" ;
         exit(-1);
     } else {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "File " + archiveFileName + " loaded" ;
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - File " + archiveFileName + " loaded" ;
     }
     
     std::string line;
@@ -497,10 +499,6 @@ void BaseSystem::checkForVariationFiles()
     bool r = false ;
     char rowType = 0, rowAction = 0 ;
     Item itmTemp ;
-    std::string::const_iterator s_begin ;
-    std::string::const_iterator s_end ;
-    std::vector<std::string> result;
-    std::pair<std::map<unsigned long long, Item>::iterator,bool> ret;
     
     bool updatedItems = false ;
     bool updatedBarcodes = false ;
@@ -531,6 +529,10 @@ void BaseSystem::checkForVariationFiles()
                     {
                         //BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "\n" << line ;
                         std::istringstream is_line(line);
+                        
+                        std::string::const_iterator s_begin ;
+                        std::string::const_iterator s_end ;
+                        std::vector<std::string> result;
                         s_begin = line.begin();
                         s_end = line.end();
                         
@@ -538,6 +540,8 @@ void BaseSystem::checkForVariationFiles()
                         assert(r == true);
                         assert(s_begin == s_end);
                         column = 0 ;
+                        //std::cout << "ooo " << is_line.str() << std::endl ;
+                        
                         for (auto i : result)
                         {
                             if (column == 0 )
@@ -556,7 +560,7 @@ void BaseSystem::checkForVariationFiles()
                                             switch (column)
                                             {
                                                 case 2:
-                                                    //std::cout << i.c_str() << "\n" ;
+                                                    //std::cout << i.c_str() << std::endl ;
 													itmTemp.setCode(strtoull(i.c_str(), nullptr, 10));
                                                     break;
                                                 case 3:
@@ -584,11 +588,8 @@ void BaseSystem::checkForVariationFiles()
                             {
                                 if (itmTemp.getCode()>0)
                                 {
-                                    ret = itemsMap.insert( std::pair<unsigned long long, Item>(itmTemp.getCode(), itmTemp)) ;
-                                    if ( !ret.second )
-                                    {
-                                        itemsMap[itmTemp.getCode()] = itmTemp ;
-                                    }
+                                    //std::cout << " - " << itmTemp.toStr() << std::endl ;
+                                    itemsMap[itmTemp.getCode()] = itmTemp ;
                                 }
                                 break ;
                             }
@@ -598,6 +599,7 @@ void BaseSystem::checkForVariationFiles()
                             }
                         }
                     }
+                    
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Renaming Var file " << varFileName << " in " << varFileName + ".OLD";
                     fileMove(varFolderName + "/" + varFileName, varFolderName + "/" + varFileName + ".OLD") ;
                     varsFound = true ;
@@ -605,6 +607,7 @@ void BaseSystem::checkForVariationFiles()
                 ++it;
             }
         }
+        
         if (!varsFound)
         {
 			BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No variation files found";
