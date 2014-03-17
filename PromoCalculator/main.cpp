@@ -63,9 +63,12 @@ src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_main;
 
 void init(string pMainPath, string pIniFileName)
 {
+	fileDelete(mainPath + "LOGS/Promocalculator.log.prev");
+	fileMove(mainPath + "LOGS/Promocalculator.log", mainPath + "LOGS/Promocalculator.log.prev");
+
     logging::add_file_log
     (
-     keywords::file_name = pMainPath + "LOGS/PromoCalculator_%N.log",
+     keywords::file_name = pMainPath + "LOGS/PromoCalculator.log",
      keywords::auto_flush = true, 
      // This makes the sink to write log records that look like this:
      // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message

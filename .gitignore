@@ -6,3 +6,5 @@
 Debug/
 Release/
 x64/
+PromoCalculator.log.prev
+*.transaction_in_progress
