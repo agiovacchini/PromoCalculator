@@ -65,7 +65,7 @@ unsigned long long int Item::getLinkedBarCode() const {
     return this->linkedBarCode ;
 }
 
-string Item::toStr() {
+string Item::toStr() const {
 	std::stringstream tempStringStream;
 	tempStringStream.str(std::string());
 	tempStringStream.clear();

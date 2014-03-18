@@ -7,6 +7,7 @@
 //
 
 #include "Barcodes.h"
+#include "BaseTypes.h"
 
 void Barcodes::setCode( unsigned long long int pCode ) {
     this->code = pCode ;

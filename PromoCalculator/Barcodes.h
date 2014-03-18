@@ -9,12 +9,13 @@
 #ifndef __PromoCalculator__Barcodes__
 #define __PromoCalculator__Barcodes__
 
-#include "BaseTypes.h"
 #include <iostream>
 #include <string>
+#include "base/Archive.h"
+
 using namespace std;
 
-class Barcodes {
+class Barcodes : public Archive {
     
     unsigned long long int code ;
     unsigned long long int itemCode ;

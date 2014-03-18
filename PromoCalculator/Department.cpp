@@ -47,7 +47,7 @@ string Department::getDescription() const {
     return this->description ;
 }
 
-string Department::toStr() {
+string Department::toStr() const {
 	std::stringstream tempStringStream;
     tempStringStream.str(std::string());
     tempStringStream.clear();

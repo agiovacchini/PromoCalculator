@@ -14,10 +14,11 @@ using namespace std;
 #define __PromoCalculator__Item__
 
 #include "Department.h"
+#include "base/Archive.h"
 #include <sstream>
 
 
-class Item {
+class Item : public Archive {
     
     unsigned long long int code ;
     long price ;
@@ -50,7 +51,7 @@ public:
     
     unsigned long long int getLinkedBarCode() const ;
     
-    string toStr() ;
+    string toStr() const ;
     
     //Per la mappa, le funzioni che chiamano devono avere il modificatore const per attestare che non
     //hanno effetti collaterali

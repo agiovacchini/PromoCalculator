@@ -67,11 +67,30 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
     if ( this->loadConfiguration() == 0 )
     {
         this->printConfiguration() ;
+        /*
+        ArchiveMap<Item> itemsArchiveMap ;
+        Item itmRItem(1,123,"Prova",45) ;
+        itemsArchiveMap.addElement(itmRItem);
+        std::cout << itemsArchiveMap.getElementStr(1) << std::endl ;
+        itemsArchiveMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "items_pupu.txt" ) ;
+
+        
+        ArchiveMap<Department> departmentsArchiveMap ;
+        Department deptRDept1(0,0,"Reparto 0") ;
+        Department deptRDept2(1,0,"Reparto 1") ;
+        departmentsArchiveMap.addElement(deptRDept1);
+        departmentsArchiveMap.addElement(deptRDept2);
+        std::cout << departmentsArchiveMap.getElementStr(1) << std::endl ;
+        std::cout << departmentsArchiveMap[0].toStr() << std::endl ;
+        departmentsArchiveMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "depts_pupu.txt" ) ;
+        exit(1) ;
+        */
         
         this->baseSystemRunning = true ;
 
         this->readArchives() ;
-
+        this->departmentsMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS_DUMP.CSV" ) ;
+        
 		//this->dumpArchivesFromMemory();
 
         this->loadCartsInProgress() ;
@@ -235,11 +254,13 @@ void BaseSystem::readDepartmentArchive( string pFileName )
             }
             column++ ;
         }
-		departmentsMap.insert(std::pair<unsigned long long, Department>(tempDepartment.getCode(), std::move(tempDepartment)));
+		//departmentsMap.insert(std::pair<unsigned long long, Department>(tempDepartment.getCode(), std::move(tempDepartment)));
+        departmentsMap.addElement(tempDepartment) ;
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName ;
 }
 
+/*
 void BaseSystem::dumpDepartmentArchive( string pFileName )
 {
     typedef std::map<unsigned long long, Department>::iterator depts ;
@@ -253,6 +274,7 @@ void BaseSystem::dumpDepartmentArchive( string pFileName )
     outFile.close() ;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Departments dump into " << pFileName << " end" ;
 }
+*/
 
 void BaseSystem::readItemArchive( string pFileName )
 {
@@ -315,11 +337,13 @@ void BaseSystem::readItemArchive( string pFileName )
             }
             column++ ;
         }
-		itemsMap.insert(std::pair<unsigned long long, Item>(tempItm.getCode(), std::move(tempItm)));
+		//itemsMap.insert(std::pair<unsigned long long, Item>(tempItm.getCode(), std::move(tempItm)));
+        itemsMap.addElement(tempItm) ;
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName ;
 }
 
+/*
 void BaseSystem::dumpItemArchive( string pFileName )
 {
     typedef std::map<unsigned long long, Item>::iterator items ;
@@ -333,6 +357,7 @@ void BaseSystem::dumpItemArchive( string pFileName )
     outFile.close() ;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Items dump into " << pFileName << " end" ;
 }
+*/
 
 void BaseSystem::readBarcodesArchive( string pFileName )
 {
@@ -387,11 +412,13 @@ void BaseSystem::readBarcodesArchive( string pFileName )
             }
             column++ ;
         }
-		barcodesMap.insert(std::pair<unsigned long long, Barcodes>(tempBarcode.getCode(), std::move(tempBarcode)));
+		//barcodesMap.insert(std::pair<unsigned long long, Barcodes>(tempBarcode.getCode(), std::move(tempBarcode)));
+        barcodesMap.addElement(tempBarcode);
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
 }
 
+/*
 void BaseSystem::dumpBarcodesArchive( string pFileName )
 {
     typedef std::map<unsigned long long, Barcodes>::iterator barcodes ;
@@ -405,6 +432,7 @@ void BaseSystem::dumpBarcodesArchive( string pFileName )
     outFile.close() ;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS -  Barcodes dump into " << pFileName << " end" ;
 }
+*/
 
 void BaseSystem::readArchives()
 {
@@ -415,9 +443,12 @@ void BaseSystem::readArchives()
 
 void BaseSystem::dumpArchivesFromMemory()
 {
-    this->dumpDepartmentArchive( "DEPARTMENTS_DUMP.CSV" ) ;
-    this->dumpItemArchive( "ITEMS_DUMP.CSV" ) ;
-    this->dumpBarcodesArchive( "BARCODES_DUMP.CSV" ) ;
+    //this->dumpDepartmentArchive( "DEPARTMENTS_DUMP.CSV" ) ;
+    this->departmentsMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS_DUMP.CSV" ) ;
+    //this->dumpItemArchive( "ITEMS_DUMP.CSV" ) ;
+    this->itemsMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS_DUMP.CSV" ) ;
+    //this->dumpBarcodesArchive( "BARCODES_DUMP.CSV" ) ;
+    this->barcodesMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES_DUMP.CSV" ) ;
 }
 
 ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
@@ -471,19 +502,17 @@ ItemCodePrice BaseSystem::decodeBarcode( unsigned long long rCode )
         case BCODE_EAN13_PRICE_REQ:
             barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
             rValues.barcode = atoll(barcodeWrkStr.c_str()) ;
-            if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
-            {
-                rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-            }
             break;
         default:
             rValues.barcode = rCode ;
-            if ((barcodesMap.find(rValues.barcode) != barcodesMap.end()))
-            {
-                rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
-            }
             break;
     }
+    
+    if ((barcodesMap[rValues.barcode].getCode() == rValues.barcode))
+    {
+        rValues.code = barcodesMap[rValues.barcode].getItemCode() ;
+    }
+    
     return rValues ;
 }
 
@@ -618,8 +647,9 @@ void BaseSystem::checkForVariationFiles()
                 {
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: Rename old file ok";
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: Start";
-                    this->dumpItemArchive( "ITEMS.CSV" ) ;
-					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: End ";
+                    //this->dumpItemArchive( "ITEMS.CSV" ) ;
+					this->itemsMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV" ) ;
+                    BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: End ";
                 } else {
 					BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping ITEMS: Rename old file failed";
                 }
@@ -631,8 +661,9 @@ void BaseSystem::checkForVariationFiles()
                 {
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Rename old file ok";
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Start";
-                    this->dumpBarcodesArchive( "BARCODES.CSV" ) ;
-					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: End ";
+                    //this->dumpBarcodesArchive( "BARCODES.CSV" ) ;
+					this->barcodesMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES.CSV" ) ;
+                    BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: End ";
                 } else {
 					BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping BARCODES: Rename old file failed";
                 }
@@ -643,8 +674,9 @@ void BaseSystem::checkForVariationFiles()
                 {
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Rename old file ok";
 					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Start";
-                    this->dumpDepartmentArchive( "DEPARTMENTS.CSV" ) ;
-					BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: End ";
+                    //this->dumpDepartmentArchive( "DEPARTMENTS.CSV" ) ;
+					this->departmentsMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS.CSV" ) ;
+                    BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: End ";
                 } else {
 					BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping DEPARTMENTS: Rename old file failed";
                 }
@@ -1085,8 +1117,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     qty = -1 ;
                     try {
                         //tItemCode = barcodesMap[barcodeWrk].getItemCode();
-                        map < unsigned long long, Item>::iterator it = itemsMap.find(itmCodePrice.code);
-                        if (it != itemsMap.end())
+                        if (itemsMap[itmCodePrice.code].getCode()==itmCodePrice.code)
                         {
                             //myCart->updateLocalItemMap(itemsMap[itmCodePrice.code]) ;
                             itmCodePrice.price = myCart->getItemPrice(itemsMap[itmCodePrice.code], barcode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
@@ -1206,11 +1237,11 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_END - Cool - rc:" << rc ;
                     break;
                 case WEBI_GET_ALL_CART:
-                    respStringStream << myCart->getAllCartJson( itemsMap, false ) ;
+                    //respStringStream << myCart->getAllCartJson( itemsMap, false ) ;
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_GET_ALL_CART - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_GET_ALL_CART_WITH_BARCODES:
-                    respStringStream << myCart->getAllCartJson( itemsMap, true ) ;
+                    //respStringStream << myCart->getAllCartJson( itemsMap, true ) ;
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_ALL_CART_WITH_BARCODES - Cool - result:" << respStringStream.str() ;
                     break;
                 case WEBI_SESSION_VOID:

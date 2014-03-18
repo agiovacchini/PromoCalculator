@@ -110,6 +110,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		450C58A118D8F17500ADC4B9 /* Archive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Archive.h; sourceTree = "<group>"; };
+		450C58A218D8F4D500ADC4B9 /* ArchiveMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArchiveMap.h; sourceTree = "<group>"; };
 		4546CE3218784B9100198E29 /* PromoCalculator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PromoCalculator; sourceTree = BUILT_PRODUCTS_DIR; };
 		4546CE3518784B9100198E29 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		4546CE3718784B9100198E29 /* PromoCalculator.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PromoCalculator.1; sourceTree = "<group>"; };
@@ -180,6 +182,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		450C58A018D8F17500ADC4B9 /* base */ = {
+			isa = PBXGroup;
+			children = (
+				450C58A118D8F17500ADC4B9 /* Archive.h */,
+				450C58A218D8F4D500ADC4B9 /* ArchiveMap.h */,
+			);
+			path = base;
+			sourceTree = "<group>";
+		};
 		4546CE2918784B9000198E29 = {
 			isa = PBXGroup;
 			children = (
@@ -202,6 +213,7 @@
 		4546CE3418784B9100198E29 /* PromoCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				450C58A018D8F17500ADC4B9 /* base */,
 				45DC82A1187DA17200F27E91 /* Barcodes.cpp */,
 				45DC82A2187DA17200F27E91 /* Barcodes.h */,
 				4587107A187D5E11007EFF50 /* BaseSystem.cpp */,
@@ -212,8 +224,8 @@
 				45D45D6518797E6B00D5FC36 /* BaseTypes.h */,
 				4546CE41187860B600198E29 /* Cart.cpp */,
 				4546CE42187860B600198E29 /* Cart.h */,
-				4546CE3E18785A5700198E29 /* Item.cpp */,
 				4546CE3F18785A5700198E29 /* Item.h */,
+				4546CE3E18785A5700198E29 /* Item.cpp */,
 				4546CE3518784B9100198E29 /* main.cpp */,
 				4546CE3718784B9100198E29 /* PromoCalculator.1 */,
 				45D88B9C189C0C0C00397C7A /* libboost_date_time-mt.dylib */,

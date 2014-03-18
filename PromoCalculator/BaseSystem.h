@@ -25,6 +25,7 @@
 #include "Item.h"
 #include "Barcodes.h"
 #include "Cart.h"
+#include "base/ArchiveMap.h"
 
 using boost::asio::ip::tcp;
 using boost::property_tree::ptree;
@@ -41,9 +42,15 @@ class BaseSystem {
     bool dummyRCS ;
     bool cartsPriceChangesWhileShopping ;
     std::map <string, string> configurationMap ;
-    std::map <unsigned long long, Department> departmentsMap ;
-    std::map <unsigned long long, Item> itemsMap ;
-    std::map <unsigned long long, Barcodes> barcodesMap ;
+    
+    
+    //std::map <unsigned long long, Department> departmentsMap ;
+    ArchiveMap<Department> departmentsMap ;
+    //std::map <unsigned long long, Item> itemsMap ;
+    ArchiveMap<Item> itemsMap ;
+    //std::map <unsigned long long, Barcodes> barcodesMap ;
+    ArchiveMap<Barcodes> barcodesMap ;
+    
     std::map <unsigned long long, Cart> cartsMap ;
     std::map <unsigned long long, unsigned long long> allLoyCardsMap ;
     //typedef boost::shared_ptr<tcp::socket> socket_ptr;

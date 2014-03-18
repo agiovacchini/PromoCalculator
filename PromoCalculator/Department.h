@@ -15,8 +15,9 @@ using namespace std;
 
 #include <iostream>
 #include <sstream>
+#include "base/Archive.h"
 
-class Department {
+class Department : public Archive {
     
     unsigned long long code ;
     unsigned long long parentCode ;
@@ -39,7 +40,7 @@ public:
     
     string getDescription() const ;
 
-    string toStr() ;
+    string toStr() const ;
 
 } ;
 

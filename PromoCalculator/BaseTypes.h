@@ -39,6 +39,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
+#include <sstream>
+
 
 namespace logging = boost::log;
 namespace sinks = boost::log::sinks;
@@ -56,36 +58,6 @@ namespace keywords = boost::log::keywords;
 
 #endif 
 
-
-#include <sstream>
-
-
-
-
-struct Totals {
-    long itemsNumber ;
-    long totalAmount ;
-};
-
-struct CartRow {
-    int type ;
-    long quantity ;
-};
-
-struct ItemCodePrice {
-    unsigned long long code ;
-    unsigned long price ;
-    unsigned long long barcode ;
-    unsigned int type ;
-};
-
-typedef Totals Totals ;
-
-
-struct CardSessionRow {
-    unsigned long long loyCode ;
-    unsigned long long sessionId ;
-};
 
 #define RC_OK                               00000
 #define RC_ERR                              00001
@@ -140,6 +112,32 @@ struct CardSessionRow {
 #define WEBI_GET_ALL_CART_WITH_BARCODES     50041
 #define WEBI_GET_STORE_INFO                 50079
 #define WEBI_ACTION_NOT_RECOGNIZED          50080
+
+struct Totals {
+    long itemsNumber ;
+    long totalAmount ;
+};
+
+struct CartRow {
+    int type ;
+    long quantity ;
+};
+
+struct ItemCodePrice {
+    unsigned long long code ;
+    unsigned long price ;
+    unsigned long long barcode ;
+    unsigned int type ;
+};
+
+typedef Totals Totals ;
+
+
+struct CardSessionRow {
+    unsigned long long loyCode ;
+    unsigned long long sessionId ;
+};
+
 
 namespace lt = boost::log::trivial;
 namespace qi = boost::spirit::qi;
