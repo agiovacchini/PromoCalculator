@@ -4,7 +4,7 @@ lab_ravenna_development:
    kwlUtilServletUrl: 192.168.91:83:8081/KwlUtilServlet/KwlUtilServlet
    ekoLoyServletUrl: 192.168.91.83:8080/EkoLoyServlet/EkoLoyServlet
    LoyaltyWsUrl: http://192.168.91.83:85/LoyaltyWsSSL/manager.asmx?wsdl
-   kStoreServletUrl: 192.168.202.222:9080/kStore/SelfScan
+   kStoreServletUrl: 192.168.202.63:9081/kStore/SelfScan
    debugSteps: false
    Vs5ServerIp: 192.168.202.63
    Vs5KloySvcPort: "3099"
