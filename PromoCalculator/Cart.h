@@ -17,6 +17,7 @@
 #include "Item.h"
 #include "Barcodes.h"
 #include "BaseTypes.h"
+#include "base/ArchiveMap.h"
 
 class Cart {
     //Totals totals ;
@@ -60,7 +61,7 @@ public:
     long printCart() ;
     long persist( ) ;
 	long sendToPos(unsigned long pPosNumber, string pScanInPath, string pStoreId) ;
-    string getAllCartJson( std::map<unsigned long long, Item>& pAllItemsMap, bool pWithBarcodes ) ;
+    string getAllCartJson( ArchiveMap<Item>& pAllItemsMap, bool pWithBarcodes ) ;
     long close( ) ;
     std::map <unsigned long long, Totals> getTotals() ;
     

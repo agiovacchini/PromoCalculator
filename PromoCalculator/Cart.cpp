@@ -483,7 +483,7 @@ long Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStor
     }
 }
 
-string Cart::getAllCartJson( std::map<unsigned long long, Item>& pAllItemsMap, bool pWithBarcodes )
+string Cart::getAllCartJson( ArchiveMap<Item>& pAllItemsMap, bool pWithBarcodes )
 {
     typedef std::map<unsigned int, unsigned long long>::iterator loyCardRows ;
     
