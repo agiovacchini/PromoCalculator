@@ -16,7 +16,7 @@ Item::Item()
 	this->departmentCode = 0 ;
 }
 
-Item::Item(unsigned long long pCode, long pPrice, string pDescription, unsigned long long int pDepartmentCode )
+Item::Item(uint64_t pCode, long pPrice, string pDescription, uint64_t pDepartmentCode )
 {
     this->code = pCode ;
     this->price = pPrice ;
@@ -24,11 +24,11 @@ Item::Item(unsigned long long pCode, long pPrice, string pDescription, unsigned 
 	this->departmentCode = pDepartmentCode ;
 }
 
-void Item::setCode( unsigned long long int pCode ) {
+void Item::setCode( uint64_t pCode ) {
     this->code = pCode ;
 }
 
-unsigned long long int Item::getCode() const {
+uint64_t Item::getCode() const {
     return this->code ;
 }
 
@@ -49,19 +49,19 @@ string Item::getDescription() const {
 }
 
 //E' una referenza all'oggetto reparto
-void Item::setDepartmentCode(unsigned long long int pDepartmentCode) {
+void Item::setDepartmentCode(uint64_t pDepartmentCode) {
 	this->departmentCode = pDepartmentCode;
 }
 
-unsigned long long int Item::getDepartmentCode() {
+uint64_t Item::getDepartmentCode() {
     return this->departmentCode ;
 }
 
-void Item::setLinkedBarCode( unsigned long long int pLinkedBarCode ) {
+void Item::setLinkedBarCode( uint64_t pLinkedBarCode ) {
     this->linkedBarCode = pLinkedBarCode ;
 }
 
-unsigned long long int Item::getLinkedBarCode() const {
+uint64_t Item::getLinkedBarCode() const {
     return this->linkedBarCode ;
 }
 

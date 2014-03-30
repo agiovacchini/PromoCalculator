@@ -21,16 +21,16 @@
 
 class Cart {
     //Totals totals ;
-    std::map <unsigned int, unsigned long long> loyCardsMap ;
+    std::map <unsigned int, uint64_t> loyCardsMap ;
     std::map <void*, CartRow> cartItemsMap ;
-    std::map <unsigned long long, Item> itemsLocalCopyMap ;
+    std::map <uint64_t, Item> itemsLocalCopyMap ;
     
-    std::map <unsigned long long, long> barcodesMap ;
-    std::map <unsigned long long, Totals> totalsMap ;
-    unsigned long number ;
-    unsigned long itemsNumber ;
+    std::map <uint64_t, long> barcodesMap ;
+    std::map <uint64_t, Totals> totalsMap ;
+    uint32_t number ;
+    uint32_t itemsNumber ;
     unsigned int loyCardsNumber ;
-    unsigned long nextRequestId ;
+    uint32_t nextRequestId ;
     long state ;
     string basePath = "./" ;
     string cartFileName ;
@@ -39,31 +39,31 @@ class Cart {
     bool dummyRCS ;
     
 public:
-    Cart( string pBasePath, unsigned long pNumber, unsigned int pAction, bool pDummyRCS ) ;
+    Cart( string pBasePath, uint32_t pNumber, unsigned int pAction, bool pDummyRCS ) ;
     
-    unsigned long getNumber() const ;
-    void setNumber( unsigned long pNumber ) ;
+    uint32_t getNumber() const ;
+    void setNumber( uint32_t pNumber ) ;
     
     void writeTransactionRow( string row ) ;
-    bool updateLocalItemMap(Item& pItem, Department& pDept) ;
-    long getItemPrice( Item& pItem, unsigned long long pBarcode, unsigned int pBCodeType, bool pPriceChangesWhileShopping) ;
-    long addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice ) ;
-    long addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice ) ;
-    long removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice ) ;
-    long addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxLoyCards ) ;
-    long removeLoyCard( unsigned long long pLoyCardNumber ) ;
+    bool updateLocalItemMap(Item pItem, Department pDept) ;
+    long getItemPrice( Item* pItem, uint64_t pBarcode, unsigned int pBCodeType, bool pPriceChangesWhileShopping) ;
+    long addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pPrice ) ;
+    long addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice ) ;
+    long removeItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pPrice ) ;
+    long addLoyCard( uint64_t pLoyCardNumber, unsigned int maxLoyCards ) ;
+    long removeLoyCard( uint64_t pLoyCardNumber ) ;
     long getState() const ;
     void setState( unsigned int pState ) ;
-    unsigned long getRequestId() ;
-    unsigned long getNextRequestId() ;
+    uint32_t getRequestId() ;
+    uint32_t getNextRequestId() ;
     unsigned int getLoyCardsNumber() const ;
     long voidAllCart() ;
     long printCart() ;
     long persist( ) ;
-	long sendToPos(unsigned long pPosNumber, string pScanInPath, string pStoreId) ;
-    string getAllCartJson( ArchiveMap<Item>& pAllItemsMap, bool pWithBarcodes ) ;
+	long sendToPos(uint32_t pPosNumber, string pScanInPath, string pStoreId) ;
+    string getAllCartJson( ArchiveMap<Item> pAllItemsMap, bool pWithBarcodes ) ;
     long close( ) ;
-    std::map <unsigned long long, Totals> getTotals() ;
+    std::map <uint64_t, Totals> getTotals() ;
     
     //const volatile Cart&& operator=(Cart&) volatile const && ;
     

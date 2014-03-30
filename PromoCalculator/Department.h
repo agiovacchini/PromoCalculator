@@ -15,26 +15,27 @@ using namespace std;
 
 #include <iostream>
 #include <sstream>
+#include <stdint.h>
 #include "base/Archive.h"
 
 class Department : public Archive {
     
-    unsigned long long code ;
-    unsigned long long parentCode ;
+    uint64_t code ;
+    uint64_t parentCode ;
     string description ;
 
 public:
 	Department();
 
-	Department(unsigned long long pCode, unsigned long long pParentCode, string pDescription);
+	Department(uint64_t pCode, uint64_t pParentCode, string pDescription);
 
-    void setCode( unsigned long long pCode ) ;
+    void setCode( uint64_t pCode ) ;
     
-    unsigned long long getCode() const ;
+    uint64_t getCode() const ;
 
-    void setParentCode( unsigned long long pParentCode ) ;
+    void setParentCode( uint64_t pParentCode ) ;
     
-    unsigned long long getParentCode() const ;
+    uint64_t getParentCode() const ;
 
     void setDescription( string pDescription ) ;
     

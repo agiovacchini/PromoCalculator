@@ -9,19 +9,19 @@
 #include "Barcodes.h"
 #include "BaseTypes.h"
 
-void Barcodes::setCode( unsigned long long int pCode ) {
+void Barcodes::setCode( uint64_t pCode ) {
     this->code = pCode ;
 }
 
-unsigned long long int Barcodes::getCode() const {
+uint64_t Barcodes::getCode() const {
     return this->code ;
 }
 
-void Barcodes::setItemCode( unsigned long long int pItemCode ) {
+void Barcodes::setItemCode( uint64_t pItemCode ) {
     this->itemCode = pItemCode ;
 }
 
-unsigned long long int Barcodes::getItemCode() const {
+uint64_t Barcodes::getItemCode() const {
     return this->itemCode ;
 }
 

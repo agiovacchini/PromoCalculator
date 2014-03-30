@@ -16,26 +16,26 @@ Department::Department()
 	this->description = "";
 }
 
-Department::Department(unsigned long long int pCode, unsigned long long int pParentCode, string pDescription)
+Department::Department(uint64_t pCode, uint64_t pParentCode, string pDescription)
 {
 	this->code = pCode;
 	this->parentCode = pParentCode;
     this->description = pDescription;
 }
 
-void Department::setCode( unsigned long long int pCode ) {
+void Department::setCode( uint64_t pCode ) {
     this->code = pCode ;
 }
 
-unsigned long long int Department::getCode() const {
+uint64_t Department::getCode() const {
     return this->code ;
 }
 
-void Department::setParentCode( unsigned long long int pParentCode ) {
+void Department::setParentCode( uint64_t pParentCode ) {
     this->parentCode = pParentCode ;
 }
 
-unsigned long long int Department::getParentCode() const {
+uint64_t Department::getParentCode() const {
     return this->parentCode ;
 }
 

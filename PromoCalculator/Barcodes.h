@@ -11,24 +11,25 @@
 
 #include <iostream>
 #include <string>
+#include <inttypes.h>
 #include "base/Archive.h"
 
 using namespace std;
 
 class Barcodes : public Archive {
     
-    unsigned long long int code ;
-    unsigned long long int itemCode ;
+    uint64_t code ;
+    uint64_t itemCode ;
 
 public:
     
-    void setCode( unsigned long long int pCode ) ;
+    void setCode( uint64_t pCode ) ;
     
-    unsigned long long int getCode() const ;
+    uint64_t getCode() const ;
 
-    void setItemCode( unsigned long long int pItemCode ) ;
+    void setItemCode( uint64_t pItemCode ) ;
     
-    unsigned long long int getItemCode() const ;
+    uint64_t getItemCode() const ;
     
     string toStr() const ;
 } ;

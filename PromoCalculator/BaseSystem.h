@@ -36,7 +36,7 @@ using boost::property_tree::write_json;
 class BaseSystem {
     string basePath ;
     string iniFileName ;
-    unsigned long nodeId ;
+    uint32_t nodeId ;
     src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_bs;
     bool baseSystemRunning ;
     bool dummyRCS ;
@@ -44,15 +44,15 @@ class BaseSystem {
     std::map <string, string> configurationMap ;
     
     
-    //std::map <unsigned long long, Department> departmentsMap ;
+    //std::map <uint64_t, Department> departmentsMap ;
     ArchiveMap<Department> departmentsMap ;
-    //std::map <unsigned long long, Item> itemsMap ;
+    //std::map <uint64_t, Item> itemsMap ;
     ArchiveMap<Item> itemsMap ;
-    //std::map <unsigned long long, Barcodes> barcodesMap ;
+    //std::map <uint64_t, Barcodes> barcodesMap ;
     ArchiveMap<Barcodes> barcodesMap ;
     
-    std::map <unsigned long long, Cart> cartsMap ;
-    std::map <unsigned long long, unsigned long long> allLoyCardsMap ;
+    std::map <uint64_t, Cart> cartsMap ;
+    std::map <uint64_t, uint64_t> allLoyCardsMap ;
     //typedef boost::shared_ptr<tcp::socket> socket_ptr;
     boost::regex ean13 ;
     boost::regex ean13PriceReq ;
@@ -62,7 +62,7 @@ class BaseSystem {
     boost::regex loyCardNoCheck ;
     std::string varFolderName ;
     std::string cartFolderName ;
-    unsigned long varCheckDelaySeconds ;
+    uint32_t varCheckDelaySeconds ;
 
 
 public:
@@ -85,18 +85,18 @@ public:
     void loadCartsInProgress( ) ;
     string getCartsList( ) ;
     void checkForVariationFiles( ) ;
-    ItemCodePrice decodeBarcode(unsigned long long rCode);
+    ItemCodePrice decodeBarcode(uint64_t rCode);
     //void salesServer(boost::asio::io_service& io_service, short port) ;
     //void salesSession(socket_ptr sock) ;
     string salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap);
 
     //void sendRespMsg( socket_ptr pSock, string pMsg ) ;
-    unsigned long newCart( unsigned int pAction ) ;
-    Cart* getCart( unsigned long pCartNumber ) ;
+    uint32_t newCart( unsigned int pAction ) ;
+    Cart* getCart( uint32_t pCartNumber ) ;
     bool persistCarts( ) ;
     
-    Item getItemByIntCode( unsigned long long pIntcode ) ;
-    std::string fromLongToStringWithDecimals( unsigned long long pValue ) ;
+    Item getItemByIntCode( uint64_t pIntcode ) ;
+    std::string fromLongToStringWithDecimals( uint64_t pValue ) ;
 };
 
 

@@ -27,7 +27,7 @@ using namespace std;
 
 std::mutex cart_sendtopos_mutex ;
 
-Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction, bool pDummyRCS )
+Cart::Cart( string pBasePath, uint32_t pNumber, unsigned int pAction, bool pDummyRCS )
 {
     std::stringstream tempStringStream;
     std::ofstream tmpTransactionFile;
@@ -67,12 +67,12 @@ Cart::Cart( string pBasePath, unsigned long pNumber, unsigned int pAction, bool 
 }
 
 
-void Cart::setNumber( unsigned long pNumber )
+void Cart::setNumber( uint32_t pNumber )
 {
     this->number = pNumber ;
 }
 
-unsigned long Cart::getNumber() const
+uint32_t Cart::getNumber() const
 {
     return this->number ;
 }
@@ -86,12 +86,12 @@ void Cart::setState( unsigned int pState ) {
     this->state = pState ;
 }
 
-unsigned long Cart::getRequestId()
+uint32_t Cart::getRequestId()
 {
     return this->nextRequestId ;
 }
 
-unsigned long Cart::getNextRequestId()
+uint32_t Cart::getNextRequestId()
 {
     this->nextRequestId++ ;
     return this->nextRequestId ;
@@ -101,7 +101,7 @@ unsigned int Cart::getLoyCardsNumber() const
 {
     return this->loyCardsNumber ;
 }
-/*Totals Cart::addItemByBarcode(unsigned long long pBarcode)
+/*Totals Cart::addItemByBarcode(uint64_t pBarcode)
  {
  //bs.itemsMap[6945339]
  }*/
@@ -114,13 +114,13 @@ void Cart::writeTransactionRow( string row )
     tmpTransactionFile.close() ;
 }
 
-long Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNumber )
+long Cart::addLoyCard( uint64_t pLoyCardNumber, unsigned int maxCardNumber )
 {
     if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
         if (this->loyCardsNumber < maxCardNumber )
         {
-            typedef std::map<unsigned int, unsigned long long>::iterator it_type;
+            typedef std::map<unsigned int, uint64_t>::iterator it_type;
             std::stringstream tempStringStream;
             for(it_type iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
                 if (iterator->second==pLoyCardNumber)
@@ -149,11 +149,11 @@ long Cart::addLoyCard( unsigned long long pLoyCardNumber, unsigned int maxCardNu
     }
 }
 
-long Cart::removeLoyCard( unsigned long long pLoyCardNumber )
+long Cart::removeLoyCard( uint64_t pLoyCardNumber )
 {
     if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
     {
-        typedef std::map<unsigned int, unsigned long long>::iterator itLoyCards;
+        typedef std::map<unsigned int, uint64_t>::iterator itLoyCards;
         std::stringstream tempStringStream;
         for(itLoyCards iterator = loyCardsMap.begin(); iterator != loyCardsMap.end(); iterator++) {
             if (iterator->second==pLoyCardNumber)
@@ -176,7 +176,7 @@ long Cart::removeLoyCard( unsigned long long pLoyCardNumber )
     }
 }
 
-bool Cart::updateLocalItemMap(Item& pItem, Department& pDept)
+bool Cart::updateLocalItemMap(Item pItem, Department pDept)
 {
     std::stringstream tempStringStream;
 	//BOOST_LOG_SEV(my_logger_ca, lt::debug) << "- CA - Brucia all'inferno updateLocalItemMap - " << pItem.getDepartment().getCode();
@@ -197,13 +197,13 @@ bool Cart::updateLocalItemMap(Item& pItem, Department& pDept)
             tempStringStream << "K,I," << pItem.toStr() ;
             this->writeTransactionRow(tempStringStream.str() );
         }
-        itemsLocalCopyMap.insert( std::pair<unsigned long long, Item>(pItem.getCode(), pItem) ) ;
+        itemsLocalCopyMap.insert( std::pair<uint64_t, Item>(pItem.getCode(), pItem) ) ;
         //std::cout << "nf" << std::endl ;
         return true ;
     }
 }
 
-long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int pBCodeType, bool pPriceChangesWhileShopping)
+long Cart::getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType, bool pPriceChangesWhileShopping)
 {
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr ;
@@ -214,14 +214,14 @@ long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int p
     {
         if (!pPriceChangesWhileShopping)
         {
-            if ((itemsLocalCopyMap.find(pItem.getCode()) != itemsLocalCopyMap.end()))
+            if ((itemsLocalCopyMap.find(pItem->getCode()) != itemsLocalCopyMap.end()))
             {
-                return itemsLocalCopyMap[pItem.getCode()].getPrice();
+                return itemsLocalCopyMap[pItem->getCode()].getPrice();
             } else {
-                return pItem.getPrice();
+                return pItem->getPrice();
             }
         } else {
-            return pItem.getPrice();
+            return pItem->getPrice();
         }
     } else {
         tempStringStream.str( std::string() ) ;
@@ -234,13 +234,13 @@ long Cart::getItemPrice(Item& pItem, unsigned long long pBarcode, unsigned int p
 }
 
 
-long Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice )
+long Cart::addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pPrice )
 {
     long pQtyItem = 1 ;
     return addItemByBarcode(pItem, pBarcode, pQtyItem, pPrice) ;
 }
 
-long Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pQtyItem, unsigned long pPrice )
+long Cart::addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice )
 {
     std::stringstream tempStringStream;
     
@@ -252,8 +252,8 @@ long Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned 
             
             totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
             totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pPrice * pQtyItem ) ;
-            totalsMap[pItem.getDepartmentCode()].itemsNumber = totalsMap[pItem.getDepartmentCode()].itemsNumber + pQtyItem ;
-            totalsMap[pItem.getDepartmentCode()].totalAmount = totalsMap[pItem.getDepartmentCode()].totalAmount + ( pPrice * pQtyItem ) ;
+            totalsMap[pItem->getDepartmentCode()].itemsNumber = totalsMap[pItem->getDepartmentCode()].itemsNumber + pQtyItem ;
+            totalsMap[pItem->getDepartmentCode()].totalAmount = totalsMap[pItem->getDepartmentCode()].totalAmount + ( pPrice * pQtyItem ) ;
             
             itemsNumber = itemsNumber + pQtyItem ;
             
@@ -283,7 +283,7 @@ long Cart::addItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned 
     
 }
 
-long Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsigned long pPrice  )
+long Cart::removeItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pPrice  )
 {
     std::stringstream tempStringStream;
     if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
@@ -294,18 +294,18 @@ long Cart::removeItemByBarcode( Item& pItem, unsigned long long pBarcode, unsign
         
         if ((cartItemsMap.find(&pItem) == cartItemsMap.end()))
         {
-            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Not found: " << pItem.getDescription() ;
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Not found: " << pItem->getDescription() ;
             return RC_ERR ;
         }
         else
         {
-            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Found: " << pItem.getDescription() ;
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Found: " << pItem->getDescription() ;
             qtyItem = cartItemsMap[&pItem].quantity - 1 ;
             qtyBarcode = barcodesMap[pBarcode] - 1 ;
             totalsMap[0].itemsNumber-- ;
             totalsMap[0].totalAmount = totalsMap[0].totalAmount - pPrice ;
-            totalsMap[pItem.getDepartmentCode()].itemsNumber-- ;
-            totalsMap[pItem.getDepartmentCode()].totalAmount = totalsMap[pItem.getDepartmentCode()].totalAmount - pPrice;
+            totalsMap[pItem->getDepartmentCode()].itemsNumber-- ;
+            totalsMap[pItem->getDepartmentCode()].totalAmount = totalsMap[pItem->getDepartmentCode()].totalAmount - pPrice;
             
             itemsNumber-- ;
             
@@ -384,7 +384,7 @@ long Cart::printCart()
         }
         BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "State: " << this->getState();
         BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Totals start" ;
-        typedef std::map<unsigned long long, Totals>::iterator configurationRows;
+        typedef std::map<uint64_t, Totals>::iterator configurationRows;
         
         for(configurationRows iterator = totalsMap.begin(); iterator != totalsMap.end(); iterator++) {
             BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Dept: " << iterator->first << ", value: " << iterator->second.totalAmount << ", items: " << iterator->second.itemsNumber ;
@@ -400,8 +400,8 @@ long Cart::printCart()
 long Cart::persist( )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
-    typedef std::map<unsigned long long, long>::iterator barcodesRows;
-    unsigned long long rowBarcode ;
+    typedef std::map<uint64_t, long>::iterator barcodesRows;
+    uint64_t rowBarcode ;
     long qty = 0 ;
     
     BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "cartFileName: " << cartFileName ;
@@ -410,7 +410,7 @@ long Cart::persist( )
     
     for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
     {
-        rowBarcode = (unsigned long long)iterator->first;
+        rowBarcode = (uint64_t)iterator->first;
         qty = iterator->second ;
         cartFile << rowBarcode << "," << qty << "\n";
     }
@@ -419,20 +419,20 @@ long Cart::persist( )
     return RC_OK ;
 }
 
-long Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStoreId )
+long Cart::sendToPos( uint32_t pPosNumber, string pScanInPath, string pStoreId )
 {
     if (this->getState()==CART_STATE_READY_FOR_ITEM)
     {
         cart_sendtopos_mutex.lock() ;
         
         typedef std::map<void*, CartRow>::iterator itemRows;
-        typedef std::map<unsigned long long, long>::iterator barcodesRows;
+        typedef std::map<uint64_t, long>::iterator barcodesRows;
         std::stringstream tempStringStream;
         
         tempStringStream.str(std::string());
         tempStringStream.clear();
         
-        unsigned long long rowBarcode ;
+        uint64_t rowBarcode ;
         long qty = 0 ;
         string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
         string scanInFileName = (boost::format("%s/POS%03lu.IN") % pScanInPath % pPosNumber).str();
@@ -460,7 +460,7 @@ long Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStor
         
         for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
         {
-            rowBarcode = (unsigned long long)iterator->first;
+            rowBarcode = (uint64_t)iterator->first;
             qty = iterator->second ;
             if (qty > 0)
             {
@@ -483,16 +483,16 @@ long Cart::sendToPos( unsigned long pPosNumber, string pScanInPath, string pStor
     }
 }
 
-string Cart::getAllCartJson( ArchiveMap<Item>& pAllItemsMap, bool pWithBarcodes )
+string Cart::getAllCartJson( ArchiveMap<Item> pAllItemsMap, bool pWithBarcodes )
 {
-    typedef std::map<unsigned int, unsigned long long>::iterator loyCardRows ;
+    typedef std::map<unsigned int, uint64_t>::iterator loyCardRows ;
     
     std::stringstream tempStringStream;
     
     tempStringStream.str(std::string());
     tempStringStream.clear();
     
-    unsigned long long rowIntCode, rowCardCode ;
+    uint64_t rowIntCode, rowCardCode ;
     long qty = 0 ;
     bool firstRow = true ;
     
@@ -507,7 +507,7 @@ string Cart::getAllCartJson( ArchiveMap<Item>& pAllItemsMap, bool pWithBarcodes 
         {
             tempStringStream << "," ;
         }
-        rowCardCode = (unsigned long long)iterator->second;
+        rowCardCode = (uint64_t)iterator->second;
         tempStringStream << "{\"loyCard\":" << rowCardCode << "}" ;
         firstRow = false ;
     }
@@ -516,8 +516,8 @@ string Cart::getAllCartJson( ArchiveMap<Item>& pAllItemsMap, bool pWithBarcodes 
     
     if (pWithBarcodes)
     {
-        typedef std::map<unsigned long long, long>::iterator barcodesRows ;
-        unsigned long long rowBarCode ;
+        typedef std::map<uint64_t, long>::iterator barcodesRows ;
+        uint64_t rowBarCode ;
         tempStringStream << ",\"barcodes\":{" ;
         for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
         {
@@ -559,7 +559,7 @@ string Cart::getAllCartJson( ArchiveMap<Item>& pAllItemsMap, bool pWithBarcodes 
     return tempStringStream.str() ;
 }
 
-std::map <unsigned long long, Totals> Cart::getTotals()
+std::map <uint64_t, Totals> Cart::getTotals()
 {
     return totalsMap ;
 }

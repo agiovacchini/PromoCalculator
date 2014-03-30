@@ -38,7 +38,7 @@
 #include <boost/spirit/include/qi.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/thread/shared_mutex.hpp>
-
+#include <inttypes.h>
 #include <sstream>
 
 
@@ -124,9 +124,9 @@ struct CartRow {
 };
 
 struct ItemCodePrice {
-    unsigned long long code ;
-    unsigned long price ;
-    unsigned long long barcode ;
+    uint64_t code ;
+    uint32_t price ;
+    uint64_t barcode ;
     unsigned int type ;
 };
 
@@ -134,8 +134,8 @@ typedef Totals Totals ;
 
 
 struct CardSessionRow {
-    unsigned long long loyCode ;
-    unsigned long long sessionId ;
+    uint64_t loyCode ;
+    uint64_t sessionId ;
 };
 
 

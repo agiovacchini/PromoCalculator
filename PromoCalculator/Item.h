@@ -16,24 +16,24 @@ using namespace std;
 #include "Department.h"
 #include "base/Archive.h"
 #include <sstream>
-
+#include <stdint.h>
 
 class Item : public Archive {
     
-    unsigned long long int code ;
+    uint64_t code ;
     long price ;
     string description ;
-	unsigned long long int departmentCode ;
-    unsigned long long int linkedBarCode ;
+	uint64_t departmentCode ;
+    uint64_t linkedBarCode ;
 
 public:
 	Item();
 
-	Item(unsigned long long pCode, long pPrice, string pDescription, unsigned long long int pDepartment);
+	Item(uint64_t pCode, long pPrice, string pDescription, uint64_t pDepartment);
     
-    void setCode( unsigned long long int pCode ) ;
+    void setCode( uint64_t pCode ) ;
     
-    unsigned long long int getCode() const ;
+    uint64_t getCode() const ;
     
     void setPrice( long pPrice ) ;
     
@@ -43,13 +43,13 @@ public:
     
     string getDescription() const ;
 
-	void setDepartmentCode( unsigned long long int pDepartmentCode );
+	void setDepartmentCode( uint64_t pDepartmentCode );
         
-	unsigned long long int getDepartmentCode() ;
+	uint64_t getDepartmentCode() ;
         
-    void setLinkedBarCode( unsigned long long int pLinkedBarCode ) ;
+    void setLinkedBarCode( uint64_t pLinkedBarCode ) ;
     
-    unsigned long long int getLinkedBarCode() const ;
+    uint64_t getLinkedBarCode() const ;
     
     string toStr() const ;
     
