@@ -124,11 +124,12 @@ int main(int argc, char* argv[])
         
         logging::add_common_attributes();
 
-        BaseSystem bs = BaseSystem(mainPath, iniFileName);
+		BaseSystem *bs = nullptr;
+		bs = new BaseSystem(mainPath, iniFileName);
         
         // Run server in background thread.
-        std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
-        http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
+		std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
+		http::server3::server s(bs->getConfigValue("WebAddress").c_str(), bs->getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
         boost::thread t(boost::bind(&http::server3::server::run, &s));
         
         BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server" ;
@@ -370,12 +371,13 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
     
 	std::cout << mainPath << endl;
 	init(mainPath, iniFileName);
-	BaseSystem bs = BaseSystem(mainPath, iniFileName);
+	BaseSystem *bs = nullptr;
+	bs = new BaseSystem(mainPath, iniFileName);
 
 	// Run server in background thread.
-	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
+	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
 	
-	http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
+	http::server3::server s(bs->getConfigValue("WebAddress").c_str(), bs->getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
     boost::thread t(boost::bind(&http::server3::server::run, &s));
 
 	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Started http server";

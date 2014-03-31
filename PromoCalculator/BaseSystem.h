@@ -41,6 +41,7 @@ class BaseSystem {
     bool baseSystemRunning ;
     bool dummyRCS ;
     bool cartsPriceChangesWhileShopping ;
+    bool mainReturnSeparateLinkedBarcode;
     std::map <string, string> configurationMap ;
     
     
@@ -97,6 +98,7 @@ public:
     
     Item getItemByIntCode( uint64_t pIntcode ) ;
     std::string fromLongToStringWithDecimals( uint64_t pValue ) ;
+	//void printItemsMapAddr(string pPrefix);
 };
 
 

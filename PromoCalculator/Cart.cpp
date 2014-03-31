@@ -234,13 +234,13 @@ long Cart::getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType,
 }
 
 
-long Cart::addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pPrice )
+long Cart::addItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pPrice )
 {
     long pQtyItem = 1 ;
     return addItemByBarcode(pItem, pBarcode, pQtyItem, pPrice) ;
 }
 
-long Cart::addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice )
+long Cart::addItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice )
 {
     std::stringstream tempStringStream;
     
@@ -252,8 +252,8 @@ long Cart::addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pQtyItem, 
             
             totalsMap[0].itemsNumber = totalsMap[0].itemsNumber + pQtyItem ;
             totalsMap[0].totalAmount = totalsMap[0].totalAmount + ( pPrice * pQtyItem ) ;
-            totalsMap[pItem->getDepartmentCode()].itemsNumber = totalsMap[pItem->getDepartmentCode()].itemsNumber + pQtyItem ;
-            totalsMap[pItem->getDepartmentCode()].totalAmount = totalsMap[pItem->getDepartmentCode()].totalAmount + ( pPrice * pQtyItem ) ;
+            totalsMap[pItem.getDepartmentCode()].itemsNumber = totalsMap[pItem.getDepartmentCode()].itemsNumber + pQtyItem ;
+            totalsMap[pItem.getDepartmentCode()].totalAmount = totalsMap[pItem.getDepartmentCode()].totalAmount + ( pPrice * pQtyItem ) ;
             
             itemsNumber = itemsNumber + pQtyItem ;
             
@@ -283,7 +283,7 @@ long Cart::addItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pQtyItem, 
     
 }
 
-long Cart::removeItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pPrice  )
+long Cart::removeItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pPrice  )
 {
     std::stringstream tempStringStream;
     if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
@@ -294,18 +294,18 @@ long Cart::removeItemByBarcode( Item* pItem, uint64_t pBarcode, uint32_t pPrice 
         
         if ((cartItemsMap.find(&pItem) == cartItemsMap.end()))
         {
-            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Not found: " << pItem->getDescription() ;
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Not found: " << pItem.getDescription() ;
             return RC_ERR ;
         }
         else
         {
-            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Found: " << pItem->getDescription() ;
+            BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Found: " << pItem.getDescription() ;
             qtyItem = cartItemsMap[&pItem].quantity - 1 ;
             qtyBarcode = barcodesMap[pBarcode] - 1 ;
             totalsMap[0].itemsNumber-- ;
             totalsMap[0].totalAmount = totalsMap[0].totalAmount - pPrice ;
-            totalsMap[pItem->getDepartmentCode()].itemsNumber-- ;
-            totalsMap[pItem->getDepartmentCode()].totalAmount = totalsMap[pItem->getDepartmentCode()].totalAmount - pPrice;
+            totalsMap[pItem.getDepartmentCode()].itemsNumber-- ;
+            totalsMap[pItem.getDepartmentCode()].totalAmount = totalsMap[pItem.getDepartmentCode()].totalAmount - pPrice;
             
             itemsNumber-- ;
             

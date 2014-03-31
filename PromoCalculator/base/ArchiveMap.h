@@ -15,7 +15,7 @@
 
 template <class T>
 class ArchiveMap {
-    std::map <unsigned long long, T> elementsMap ;
+    std::map <uint64_t, T> elementsMap ;
 public:
     void addElement(T& elem) {elementsMap[elem.getCode()]=elem;};
     

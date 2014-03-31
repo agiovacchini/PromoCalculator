@@ -67,7 +67,7 @@ void init(string pMainPath, string pIniFileName)
     (
      keywords::file_name = pMainPath + "LOGS/PromoCalculator_%N.log",
      keywords::auto_flush = true, 
-     // This makes the sink to write log records that look like this:
+     // This makes the sink to write log	records that look like this:
      // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message
      // YYYY-MM-DD HH:MI:SS: <error> An error severity message
      keywords::format =
@@ -100,14 +100,17 @@ int main(int argc, char* argv[])
 
         std::cout << mainPath << endl;
         init(mainPath, iniFileName);
-        
+				
         logging::add_common_attributes();
+		BaseSystem *bs = nullptr;
+		bs = new BaseSystem(mainPath, iniFileName);
+        //BaseSystem bs = BaseSystem(mainPath, iniFileName);
+		//std::cout << "mainBsAddr: " << &bs << std::endl;
 
-        BaseSystem bs = BaseSystem(mainPath, iniFileName);
 		//bs.dumpItemArchive("BRUCIA");
         // Run server in background thread.
-        std::size_t num_threads = boost::lexical_cast<std::size_t>(bs.getConfigValue("WebThreads").c_str());
-        http::server3::server s(bs.getConfigValue("WebAddress").c_str(), bs.getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
+        std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
+        http::server3::server s(bs->getConfigValue("WebAddress").c_str(), bs->getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
         boost::thread t(boost::bind(&http::server3::server::run, &s));
         BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Started http server" ;
         

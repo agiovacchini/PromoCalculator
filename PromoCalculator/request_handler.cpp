@@ -26,9 +26,10 @@
 namespace http {
     namespace server3 {
         
-        request_handler::request_handler(const std::string& doc_root, BaseSystem& pBaseSystem)
+        request_handler::request_handler(const std::string& doc_root, BaseSystem* pBaseSystem)
         : doc_root_(doc_root), baseSystem(pBaseSystem)
         {
+			//std::cout << "request_handler serverBsAddr: " << &pBaseSystem << std::endl;
         }
         
         void request_handler::handle_request(const request& req, reply& rep)
@@ -168,7 +169,7 @@ namespace http {
                     actionBS = WEBI_GET_STORE_INFO ;
                 }
                 
-                std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
+                //std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
                 
                 if (servletFunctionAction.compare("getCartsList")==0)
                 {
@@ -176,10 +177,13 @@ namespace http {
                     //std::cout << "ooo" << std::endl ;
                 }
                 
-                std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
+                //std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
             }
             //std::cout << "ooo" << actionBS << std::endl ;
-            rep.content.append(baseSystem.salesActionsFromWebInterface(actionBS, urlParamsMap));
+			//std::cout << "request_handler ans serverBsAddr: " << &baseSystem << std::endl;
+			//baseSystem->printItemsMapAddr("bs map bf loadCartsInProgress,it: ");
+
+            rep.content.append(baseSystem->salesActionsFromWebInterface(actionBS, urlParamsMap));
             
             // Fill out the reply to be sent to the client.
             rep.status = reply::ok;
