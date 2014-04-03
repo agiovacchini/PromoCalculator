@@ -45,16 +45,12 @@ class BaseSystem {
     std::map <string, string> configurationMap ;
     
     
-    //std::map <uint64_t, Department> departmentsMap ;
     ArchiveMap<Department> departmentsMap ;
-    //std::map <uint64_t, Item> itemsMap ;
     ArchiveMap<Item> itemsMap ;
-    //std::map <uint64_t, Barcodes> barcodesMap ;
     ArchiveMap<Barcodes> barcodesMap ;
     
     std::map <uint64_t, Cart> cartsMap ;
     std::map <uint64_t, uint64_t> allLoyCardsMap ;
-    //typedef boost::shared_ptr<tcp::socket> socket_ptr;
     boost::regex ean13 ;
     boost::regex ean13PriceReq ;
     boost::regex upc ;
@@ -87,18 +83,14 @@ public:
     string getCartsList( ) ;
     void checkForVariationFiles( ) ;
     ItemCodePrice decodeBarcode(uint64_t rCode);
-    //void salesServer(boost::asio::io_service& io_service, short port) ;
-    //void salesSession(socket_ptr sock) ;
     string salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap);
 
-    //void sendRespMsg( socket_ptr pSock, string pMsg ) ;
     uint32_t newCart( unsigned int pAction ) ;
     Cart* getCart( uint32_t pCartNumber ) ;
     bool persistCarts( ) ;
     
     Item getItemByIntCode( uint64_t pIntcode ) ;
     std::string fromLongToStringWithDecimals( uint64_t pValue ) ;
-	//void printItemsMapAddr(string pPrefix);
 };
 
 

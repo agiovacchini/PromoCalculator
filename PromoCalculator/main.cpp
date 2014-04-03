@@ -126,7 +126,6 @@ int main(int argc, char* argv[])
 
 		BaseSystem *bs = nullptr;
 		bs = new BaseSystem(mainPath, iniFileName);
-        
         // Run server in background thread.
 		std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
 		http::server3::server s(bs->getConfigValue("WebAddress").c_str(), bs->getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
@@ -177,7 +176,8 @@ int main(int argc, const char * argv[])
 	init(mainPath);
     logging::add_common_attributes();
 
-    BaseSystem bs = BaseSystem(mainPath);
+    BaseSystem *bs = nullptr;
+	bs = new BaseSystem(mainPath, iniFileName);
 
 	return 0;
 }

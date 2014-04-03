@@ -29,8 +29,7 @@ namespace http {
         request_handler::request_handler(const std::string& doc_root, BaseSystem* pBaseSystem)
         : doc_root_(doc_root), baseSystem(pBaseSystem)
         {
-			//std::cout << "request_handler serverBsAddr: " << &pBaseSystem << std::endl;
-        }
+			        }
         
         void request_handler::handle_request(const request& req, reply& rep)
         {
@@ -65,26 +64,6 @@ namespace http {
                 extension = request_path.substr(last_dot_pos + 1);
             }
             
-
-            
-            
-            
-            
-            /*GIOVAC
-             *
-             * Gestisci qui le tue risposte
-             *
-             */
-            // Open the file to send back.
-            /*std::string full_path = doc_root_ + request_path;
-            std::ifstream is(full_path.c_str(), std::ios::in | std::ios::binary);
-            if (!is)
-            {
-                rep = reply::stock_reply(reply::not_found);
-                return;
-            }*/
-            
-            //std::cout << "request_path: " << request_path << std::endl ;
             std::string servlet = "" ;
             std::string servletFunction = "" ;
             std::string servletFunctionAction = "" ;
@@ -95,7 +74,6 @@ namespace http {
 
             int actionBS = WEBI_ACTION_NOT_RECOGNIZED ;
             
-            //boost::regex exrp( "((.*))([?]+)((.*))" );
             boost::regex exrpWithParams( "(/(.*))(/(.*))(/(.*))([?]+)((.*))" );
             boost::regex exrpNoParams( "(/(.*))(/(.*))(/(.*))" );
             
@@ -168,29 +146,18 @@ namespace http {
                 {
                     actionBS = WEBI_GET_STORE_INFO ;
                 }
-                
-                //std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
-                
+ 
                 if (servletFunctionAction.compare("getCartsList")==0)
                 {
                     actionBS = WEBI_GET_CARTS_LIST ;
-                    //std::cout << "ooo" << std::endl ;
-                }
-                
-                //std::cout << servletFunctionAction.compare("getCartsList") << " - " << actionBS << std::endl ;
+				}
             }
-            //std::cout << "ooo" << actionBS << std::endl ;
-			//std::cout << "request_handler ans serverBsAddr: " << &baseSystem << std::endl;
-			//baseSystem->printItemsMapAddr("bs map bf loadCartsInProgress,it: ");
 
             rep.content.append(baseSystem->salesActionsFromWebInterface(actionBS, urlParamsMap));
             
             // Fill out the reply to be sent to the client.
             rep.status = reply::ok;
-            
-            //while (is.read(buf, sizeof(buf)).gcount() > 0)
-                //rep.content.append(buf, is.gcount());
-            
+                        
             rep.headers.resize(2);
             rep.headers[0].name = "Content-Length";
             rep.headers[0].value = boost::lexical_cast<std::string>(rep.content.size());

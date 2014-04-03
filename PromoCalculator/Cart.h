@@ -20,7 +20,6 @@
 #include "base/ArchiveMap.h"
 
 class Cart {
-    //Totals totals ;
     std::map <unsigned int, uint64_t> loyCardsMap ;
     std::map <void*, CartRow> cartItemsMap ;
     std::map <uint64_t, Item> itemsLocalCopyMap ;
@@ -65,8 +64,6 @@ public:
     long close( ) ;
     std::map <uint64_t, Totals> getTotals() ;
     
-    //const volatile Cart&& operator=(Cart&) volatile const && ;
-    
     friend bool operator== (const Cart& p1, const Cart& p2)
     {
         return p1.getNumber() == p2.getNumber() ;
@@ -77,8 +74,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Cart& s)
 	{
 		// write out individual members of s with an end of line between each one
-		//os << s.weight << '\n';
-		//os << s.size;
 		os << s.basePath << s.cartFileName ;
 		return os;
 	}
@@ -87,7 +82,6 @@ public:
 	friend std::istream& operator>>(std::istream& is, Cart& s)
 	{
 		// read in individual members of s
-		//is >> s.weight >> s.size;
 		is >> s.basePath >> s.cartFileName;
 		return is;
 	}
