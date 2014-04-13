@@ -21,7 +21,7 @@
 
 class Cart {
     std::map <unsigned int, uint64_t> loyCardsMap ;
-    std::map <void*, CartRow> cartItemsMap ;
+    std::map <const void*, CartRow> cartItemsMap ;
     std::map <uint64_t, Item> itemsLocalCopyMap ;
     
     std::map <uint64_t, long> barcodesMap ;
@@ -46,9 +46,9 @@ public:
     void writeTransactionRow( string row ) ;
     bool updateLocalItemMap(Item pItem, Department pDept) ;
     long getItemPrice( Item* pItem, uint64_t pBarcode, unsigned int pBCodeType, bool pPriceChangesWhileShopping) ;
-    long addItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pPrice ) ;
-    long addItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice ) ;
-    long removeItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pPrice ) ;
+    long addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice ) ;
+    long addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice ) ;
+    long removeItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice ) ;
     long addLoyCard( uint64_t pLoyCardNumber, unsigned int maxLoyCards ) ;
     long removeLoyCard( uint64_t pLoyCardNumber ) ;
     long getState() const ;

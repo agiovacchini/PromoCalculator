@@ -234,13 +234,13 @@ long Cart::getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType,
 }
 
 
-long Cart::addItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pPrice )
+long Cart::addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice )
 {
     long pQtyItem = 1 ;
     return addItemByBarcode(pItem, pBarcode, pQtyItem, pPrice) ;
 }
 
-long Cart::addItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice )
+long Cart::addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice )
 {
     std::stringstream tempStringStream;
     
@@ -283,7 +283,7 @@ long Cart::addItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, 
     
 }
 
-long Cart::removeItemByBarcode( Item& pItem, uint64_t pBarcode, uint32_t pPrice  )
+long Cart::removeItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice  )
 {
     std::stringstream tempStringStream;
     if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )
@@ -359,7 +359,8 @@ long Cart::voidAllCart()
 long Cart::printCart()
 {
     if ( (this->state!=CART_STATE_VOIDED) && (this->state!=CART_STATE_CLOSED) )
-    {   typedef std::map<void*, CartRow>::iterator itemRows;
+    {
+        typedef std::map<const void*, CartRow>::iterator itemRows;
         Item* itmRow ;
         //Totals* totalsRow ;
         
@@ -534,7 +535,7 @@ string Cart::getAllCartJson( ArchiveMap<Item> pAllItemsMap, bool pWithBarcodes )
             }
         }
     } else {
-        typedef std::map<void*, CartRow>::iterator itemRows ;
+        typedef std::map<const void*, CartRow>::iterator itemRows ;
         Item* tempItm ;
         tempStringStream << ",\"items\":{" ;
 

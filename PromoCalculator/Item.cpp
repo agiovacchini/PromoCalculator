@@ -53,7 +53,7 @@ void Item::setDepartmentCode(uint64_t pDepartmentCode) {
 	this->departmentCode = pDepartmentCode;
 }
 
-uint64_t Item::getDepartmentCode() {
+uint64_t Item::getDepartmentCode() const {
     return this->departmentCode ;
 }
 

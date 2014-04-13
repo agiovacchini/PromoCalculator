@@ -45,7 +45,7 @@ public:
 
 	void setDepartmentCode( uint64_t pDepartmentCode );
         
-	uint64_t getDepartmentCode() ;
+	uint64_t getDepartmentCode() const ;
         
     void setLinkedBarCode( uint64_t pLinkedBarCode ) ;
     
