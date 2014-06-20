@@ -19,12 +19,12 @@ class ArchiveMap {
 public:
     void addElement(T& elem) {elementsMap[elem.getCode()]=elem;};
     
-    std::string getElementStr(unsigned long long key) {return elementsMap[key].toStr();} ;
+    std::string getElementStr(uint64_t key) {return elementsMap[key].toStr();} ;
     
     bool dumpToFile(std::string pFileName)
     {
         std::ofstream outFile( pFileName );
-        for(typename std::map<unsigned long long, T>::iterator it = elementsMap.begin(); it != elementsMap.end(); it++) {
+        for(typename std::map<uint64_t, T>::iterator it = elementsMap.begin(); it != elementsMap.end(); it++) {
             outFile << it->second.toStr() << std::endl ;
         }        
         outFile.close() ;
@@ -32,7 +32,7 @@ public:
         return true;
     }
     
-    T& operator[](unsigned long long key) { return
+    T& operator[](uint64_t key) { return
         elementsMap[key] ; } ;
 };
 
