@@ -34,8 +34,6 @@ public:
     
     T& operator[](unsigned long long key) { return
         elementsMap[key] ; } ;
-    
-    
 };
 
 #endif

@@ -83,6 +83,7 @@ public:
     string getCartsList( ) ;
     void checkForVariationFiles( ) ;
     ItemCodePrice decodeBarcode(uint64_t rCode);
+    long getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType);
     string salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap);
 
     uint32_t newCart( unsigned int pAction ) ;

@@ -86,7 +86,6 @@ namespace http {
                 std::string::iterator begin = servletFunctionPar.begin();
                 std::string::iterator end = servletFunctionPar.end();
                 bool result = qi::parse(begin, end, paramsParser, urlParamsMap);   // returns true if successful
-                
                 if (servletFunctionAction.compare("initSession")==0)
                 {
                     actionBS = WEBI_SESSION_INIT ;
@@ -116,10 +115,15 @@ namespace http {
                 {
                     actionBS = WEBI_ITEM_ADD ;
                 }
-                
+               
                 if (servletFunctionAction.compare("voidItem")==0)
                 {
                     actionBS = WEBI_ITEM_VOID ;
+                }
+
+                if (servletFunctionAction.compare("getItemInfo")==0)
+                {
+                    actionBS = WEBI_ITEM_INFO ;
                 }
                 
                 if (servletFunctionAction.compare("getTotals")==0)

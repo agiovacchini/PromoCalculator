@@ -63,17 +63,17 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
     this->ean8 = "\\d{8}" ;
     this->loyCard = "260\\d{9}" ;
     this->loyCardNoCheck = "260\\d{8}" ;
-
+    
     if ( this->loadConfiguration() == 0 )
     {
         this->printConfiguration() ;
         
         this->baseSystemRunning = true ;
-
+        
         this->readArchives() ;
-
+        
 		this->loadCartsInProgress();
-
+        
         boost::thread newThread(boost::bind(&BaseSystem::checkForVariationFiles, this));
         
         boost::this_thread::sleep(boost::posix_time::milliseconds(10000));
@@ -385,13 +385,13 @@ ItemCodePrice BaseSystem::decodeBarcode( uint64_t rCode )
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr = "" ;
     ItemCodePrice rValues = {0,0,0,0};
-
+    
     tempStringStream.str( std::string() ) ;
     tempStringStream.clear() ;
     tempStringStream << rCode ;
     
     rValues.type = BCODE_NOT_RECOGNIZED ;
-   
+    
     if (regex_match( tempStringStream.str(), loyCard ) )
     {
         rValues.type = BCODE_LOYCARD ;
@@ -527,7 +527,7 @@ void BaseSystem::checkForVariationFiles()
                                             }
                                         }
                                     }
-
+                                    
                                 }
                             }
                             column++ ;
@@ -653,7 +653,7 @@ void BaseSystem::loadCartsInProgress()
             if (fs::is_regular_file(*it) && it->path().extension() == ".transaction_in_progress")
             {
                 currentTmpCartNumber = atol(it->path().stem().string().c_str()) ;
-
+                
 				nextCartNumberTmp = nextCartNumber ;
                 nextCartNumber = currentTmpCartNumber ;
                 BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "==================================" ;
@@ -695,66 +695,66 @@ void BaseSystem::loadCartsInProgress()
                                 break;
                             default:
                                 switch (rObject)
+                            {
+                                case 'I':
+                                case 'L':
+                                    switch (column)
                                 {
-                                    case 'I':
-                                    case 'L':
-                                        switch (column)
-                                        {
-                                            case 3:
-												rCode = strtoull(i.c_str(), nullptr, 10);
-                                                break;
-                                            case 4:
-                                                rQty = atol(i.c_str()) ;
-                                                break;
-                                            default:
-                                                break ;
-                                        }
-                                        break ;
-                                    case 'K':
-                                        switch (rAction)
-                                        {
-                                            case 'D':
-                                                switch (column)
-                                                {
-                                                    case 3:
-                                                        tempDepartment.setCode(strtoull(i.c_str(),nullptr,10)) ;
-                                                        break;
-                                                    case 4:
-                                                        tempDepartment.setParentCode(strtoull(i.c_str(),nullptr,10)) ;
-                                                        break;
-                                                    case 5:
-                                                        tempDepartment.setDescription(i) ;
-                                                        break;
-                                                }
-                                                break;
-                                            case 'I':
-                                                switch (column)
-                                                {
-                                                    case 3:
-                                                        tmp = std::string(i);
-														tempItm.setCode(strtoull(i.c_str(), nullptr, 10));
-                                                        break;
-                                                    case 4:
-                                                        tempItm.setDescription(i) ;
-                                                        break;
-                                                    case 5:
-                                                        tempItm.setDepartmentCode(strtoull(i.c_str(),nullptr,10));
-                                                        break;
-                                                    case 6:
-														tempItm.setPrice(strtol(i.c_str(), nullptr, 10));
-                                                        break;
-                                                    case 7:
-                                                        tempItm.setLinkedBarCode(strtoull(i.c_str(),nullptr,10)) ;
-                                                        break;
-                                                    default:
-                                                        break;
-                                                }
-                                                break ;
-                                        }
-                                        break ;
+                                    case 3:
+                                        rCode = strtoull(i.c_str(), nullptr, 10);
+                                        break;
+                                    case 4:
+                                        rQty = atol(i.c_str()) ;
+                                        break;
                                     default:
                                         break ;
                                 }
+                                    break ;
+                                case 'K':
+                                    switch (rAction)
+                                {
+                                    case 'D':
+                                        switch (column)
+                                    {
+                                        case 3:
+                                            tempDepartment.setCode(strtoull(i.c_str(),nullptr,10)) ;
+                                            break;
+                                        case 4:
+                                            tempDepartment.setParentCode(strtoull(i.c_str(),nullptr,10)) ;
+                                            break;
+                                        case 5:
+                                            tempDepartment.setDescription(i) ;
+                                            break;
+                                    }
+                                        break;
+                                    case 'I':
+                                        switch (column)
+                                    {
+                                        case 3:
+                                            tmp = std::string(i);
+                                            tempItm.setCode(strtoull(i.c_str(), nullptr, 10));
+                                            break;
+                                        case 4:
+                                            tempItm.setDescription(i) ;
+                                            break;
+                                        case 5:
+                                            tempItm.setDepartmentCode(strtoull(i.c_str(),nullptr,10));
+                                            break;
+                                        case 6:
+                                            tempItm.setPrice(strtol(i.c_str(), nullptr, 10));
+                                            break;
+                                        case 7:
+                                            tempItm.setLinkedBarCode(strtoull(i.c_str(),nullptr,10)) ;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                        break ;
+                                }
+                                    break ;
+                                default:
+                                    break ;
+                            }
                         }
                         column++ ;
                     }
@@ -804,18 +804,18 @@ void BaseSystem::loadCartsInProgress()
                             break;
                         case 'K':
                             switch (rAction)
-                            {
-                                case 'I':
-									BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Debug recupero riga carrello, KI";
-                                    if (!cartsPriceChangesWhileShopping)
-                                    {
-                                        myCart->updateLocalItemMap(tempItm, departmentsMap[tempItm.getDepartmentCode()]) ;
-                                    }
-                                    break;
-                                case 'D':
-									BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Debug recupero riga carrello, KD";
-									break;
-                            }
+                        {
+                            case 'I':
+                                BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Debug recupero riga carrello, KI";
+                                if (!cartsPriceChangesWhileShopping)
+                                {
+                                    myCart->updateLocalItemMap(tempItm, departmentsMap[tempItm.getDepartmentCode()]) ;
+                                }
+                                break;
+                            case 'D':
+                                BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Debug recupero riga carrello, KD";
+                                break;
+                        }
                             break;
                         default:
                             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Row action not recognized" ;
@@ -856,6 +856,24 @@ std::string BaseSystem::fromLongToStringWithDecimals( uint64_t pValue )
     return returnStream.str() ;
 }
 
+long BaseSystem::getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType)
+{
+    std::stringstream tempStringStream ;
+    std::string barcodeWrkStr ;
+    
+    if (pBCodeType!=BCODE_EAN13_PRICE_REQ)
+    {
+        return pItem->getPrice();
+    } else {
+        tempStringStream.str( std::string() ) ;
+        tempStringStream.clear() ;
+        tempStringStream << pBarcode ;
+        barcodeWrkStr = tempStringStream.str().substr(0,7) + "000000" ;
+        return atol(tempStringStream.str().substr(7,5).c_str()) ;
+    }
+    
+}
+
 string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap)
 {
     uint64_t cartId = 0 ;
@@ -883,6 +901,49 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
     } else if (pAction==WEBI_GET_CARTS_LIST) {
         respStringStream << this->getCartsList( ) ;
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_CARTS_LIST - Cool - result:" << respStringStream.str() ;
+    } else if (pAction==WEBI_ITEM_INFO) {
+        if ( barcode == 0 )
+        {
+            barcode = strtoull(pUrlParamsMap["barcode"].c_str(), nullptr, 10);
+        }
+        qty = 1 ;
+        
+        itmCodePrice = decodeBarcode( barcode ) ;
+        
+        itmCodePrice.price = getItemPrice(&itemsMap[itmCodePrice.code], barcode, itmCodePrice.type) ;
+        if ( itmCodePrice.type != BCODE_NOT_RECOGNIZED )
+        {
+            try {
+                if ( itmCodePrice.code != 0 )
+                {
+                    respStringStream << "{" ;
+                    respStringStream << "\"status\":\"0\",\"itemInfo\":{\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << "}" ;
+                    respStringStream << "}" ;
+                    
+                }
+                else {
+                    rc = BCODE_ITEM_NOT_FOUND;
+                    if ((rc>0)&&(dummyRCS))
+                    {
+                        rc = 3 ;
+                    }
+                    respStringStream << "{\"status\":" << rc << "}" ;
+                }
+            }
+            catch (std::exception const& e)
+            {
+                BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - " << "Sales session error: " << e.what();
+            }
+            BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_INFO - Cool - rc:" << rc << ", barcode: " << barcode << ", qty: " << qty << ",addr: " << &itemsMap[itmCodePrice.code] ;
+        } else {
+            rc = BCODE_NOT_RECOGNIZED ;
+            if ((rc>0)&&(dummyRCS))
+            {
+                rc = 3 ;
+            }
+            respStringStream << "{\"status\":" << rc << "}" ;
+        }
+        
     } else if (pAction==WEBI_ACTION_NOT_RECOGNIZED) {
         rc = WEBI_ACTION_NOT_RECOGNIZED ;
         if ((rc>0)&&(dummyRCS))
@@ -923,9 +984,9 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
 								{
 									myCart->updateLocalItemMap(itemsMap[itmCodePrice.code], departmentsMap[itemsMap[itmCodePrice.code].getDepartmentCode()]);
 								}
-
+                                
 								itmCodePrice.price = myCart->getItemPrice(&itemsMap[itmCodePrice.code], barcode, itmCodePrice.type, cartsPriceChangesWhileShopping) ;
-
+                                
                                 respStringStream << "{" ;
                                 
                                 rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price ) ;
@@ -955,7 +1016,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                     }
                                 }
                                 respStringStream << "\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}" ;
-
+                                
                                 tmpTotalsMap = myCart->getTotals();
                                 
                                 respStringStream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
@@ -982,7 +1043,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         }
                         respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}" ;
                     }
-
+                    
                     break;
                 case WEBI_GET_TOTALS:
                     tmpTotalsMap = myCart->getTotals();
@@ -1027,7 +1088,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                             }
                             tmpTotalsMap = myCart->getTotals();
                             respStringStream << "\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(itmCodePrice.price) << ",\"voidFlag\":\"true\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}" ;
-                            respStringStream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;                            
+                            respStringStream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) << "}}" ;
                         }
                         else {
                             rc = BCODE_ITEM_NOT_FOUND;
@@ -1040,9 +1101,9 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_ITEM_VOID - Cool - rc:" << rc ;
                     }
                     catch (std::exception const& e)
-                    {
-                        BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Sales session error: " << e.what();
-                    }
+                {
+                    BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - Sales session error: " << e.what();
+                }
                     break;
                 case WEBI_CUSTOMER_ADD:
 					barcode = strtoull(pUrlParamsMap["customerId"].c_str(), nullptr, 10);
@@ -1139,7 +1200,7 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
 		}
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << respStringStream.str() ;
-
+    
     return respStringStream.str() ;
 }
 

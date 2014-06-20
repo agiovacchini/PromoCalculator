@@ -106,6 +106,7 @@ namespace keywords = boost::log::keywords;
 #define WEBI_CUSTOMER_VOID                  50011
 #define WEBI_ITEM_ADD                       50020
 #define WEBI_ITEM_VOID                      50021
+#define WEBI_ITEM_INFO                      50026
 #define WEBI_GET_TOTALS                     50030
 #define WEBI_GET_CARTS_LIST                 50039
 #define WEBI_GET_ALL_CART                   50040
