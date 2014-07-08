@@ -16,7 +16,7 @@ Item::Item()
 	this->departmentCode = 0 ;
 }
 
-Item::Item(uint64_t pCode, long pPrice, string pDescription, uint64_t pDepartmentCode )
+Item::Item(uint64_t pCode, int32_t pPrice, string pDescription, uint64_t pDepartmentCode )
 {
     this->code = pCode ;
     this->price = pPrice ;
@@ -32,11 +32,11 @@ uint64_t Item::getCode() const {
     return this->code ;
 }
 
-void Item::setPrice( long pPrice ) {
+void Item::setPrice( int64_t pPrice ) {
     this->price = pPrice ;
 }
 
-long Item::getPrice() const {
+int64_t Item::getPrice() const {
     return this->price ;
 }
 

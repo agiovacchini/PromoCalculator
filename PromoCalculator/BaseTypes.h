@@ -116,7 +116,7 @@ namespace keywords = boost::log::keywords;
 
 struct Totals {
     long itemsNumber ;
-    long totalAmount ;
+    int64_t totalAmount ;
 };
 
 struct CartRow {
@@ -126,7 +126,7 @@ struct CartRow {
 
 struct ItemCodePrice {
     uint64_t code ;
-    uint32_t price ;
+    int64_t price ;
     uint64_t barcode ;
     unsigned int type ;
 };

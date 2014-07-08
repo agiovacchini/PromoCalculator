@@ -46,9 +46,9 @@ public:
     void writeTransactionRow( string row ) ;
     bool updateLocalItemMap(Item pItem, Department pDept) ;
     long getItemPrice( Item* pItem, uint64_t pBarcode, unsigned int pBCodeType, bool pPriceChangesWhileShopping) ;
-    long addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice ) ;
-    long addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice ) ;
-    long removeItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice ) ;
+    long addItemByBarcode( const Item& pItem, uint64_t pBarcode, int64_t pPrice ) ;
+    long addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, int64_t pPrice ) ;
+    long removeItemByBarcode( const Item& pItem, uint64_t pBarcode, int64_t pPrice ) ;
     long addLoyCard( uint64_t pLoyCardNumber, unsigned int maxLoyCards ) ;
     long removeLoyCard( uint64_t pLoyCardNumber ) ;
     long getState() const ;

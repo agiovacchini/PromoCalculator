@@ -234,13 +234,13 @@ long Cart::getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType,
 }
 
 
-long Cart::addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice )
+long Cart::addItemByBarcode( const Item& pItem, uint64_t pBarcode, int64_t pPrice )
 {
-    long pQtyItem = 1 ;
+    uint32_t pQtyItem = 1 ;
     return addItemByBarcode(pItem, pBarcode, pQtyItem, pPrice) ;
 }
 
-long Cart::addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, uint32_t pPrice )
+long Cart::addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pQtyItem, int64_t pPrice )
 {
     std::stringstream tempStringStream;
     
@@ -283,7 +283,7 @@ long Cart::addItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pQty
     
 }
 
-long Cart::removeItemByBarcode( const Item& pItem, uint64_t pBarcode, uint32_t pPrice  )
+long Cart::removeItemByBarcode( const Item& pItem, uint64_t pBarcode, int64_t pPrice  )
 {
     std::stringstream tempStringStream;
     if ( (this->getState()==CART_STATE_TMPFILE_LOADING) || (this->getState()==CART_STATE_READY_FOR_ITEM) )

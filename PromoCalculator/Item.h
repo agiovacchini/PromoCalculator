@@ -21,7 +21,7 @@ using namespace std;
 class Item : public Archive {
     
     uint64_t code ;
-    long price ;
+    int64_t price ;
     string description ;
 	uint64_t departmentCode ;
     uint64_t linkedBarCode ;
@@ -29,15 +29,15 @@ class Item : public Archive {
 public:
 	Item();
 
-	Item(uint64_t pCode, long pPrice, string pDescription, uint64_t pDepartment);
+	Item(uint64_t pCode, int32_t pPrice, string pDescription, uint64_t pDepartment);
     
     void setCode( uint64_t pCode ) ;
     
     uint64_t getCode() const ;
     
-    void setPrice( long pPrice ) ;
+    void setPrice( int64_t pPrice ) ;
     
-    long getPrice() const ;
+    int64_t getPrice() const ;
     
     void setDescription( string pDescription ) ;
     

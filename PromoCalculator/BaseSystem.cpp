@@ -621,7 +621,7 @@ void BaseSystem::loadCartsInProgress()
     char rAction = ' ' ;
     char rObject = ' ' ;
     uint64_t rCode = 0 ;
-    long rQty = 0 ;
+    uint32_t rQty = 0 ;
     bool r = false ;
     int column = 0 ;
     ItemCodePrice itmCodePrice ;
@@ -840,12 +840,15 @@ void BaseSystem::loadCartsInProgress()
 }
 
 
-std::string BaseSystem::fromLongToStringWithDecimals( uint64_t pValue )
+std::string BaseSystem::fromLongToStringWithDecimals( int64_t pValue )
 {
     std::ostringstream tempStringStream, returnStream ;
     tempStringStream.str( std::string() ) ;
     tempStringStream.clear() ;
     tempStringStream << pValue ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - PrezziStrani - pValue: " << pValue ;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - PrezziStrani - tempStringStream: " << tempStringStream.str() ;
+    
     if (tempStringStream.str().size()<3)
     {
         returnStream << "0." << tempStringStream.str() ;
@@ -856,7 +859,7 @@ std::string BaseSystem::fromLongToStringWithDecimals( uint64_t pValue )
     return returnStream.str() ;
 }
 
-long BaseSystem::getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType)
+int64_t BaseSystem::getItemPrice(Item* pItem, uint64_t pBarcode, unsigned int pBCodeType)
 {
     std::stringstream tempStringStream ;
     std::string barcodeWrkStr ;
