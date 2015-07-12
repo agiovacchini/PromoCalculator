@@ -24,6 +24,7 @@
 #include "Department.h"
 #include "Item.h"
 #include "Barcodes.h"
+#include "Promotion.h"
 #include "Cart.h"
 #include "base/ArchiveMap.h"
 
@@ -48,6 +49,7 @@ class BaseSystem {
     ArchiveMap<Department> departmentsMap ;
     ArchiveMap<Item> itemsMap ;
     ArchiveMap<Barcodes> barcodesMap ;
+    ArchiveMap<Promotion> promotionsMap ;
     
     std::map <uint64_t, Cart> cartsMap ;
     std::map <uint64_t, uint64_t> allLoyCardsMap ;
@@ -77,6 +79,9 @@ public:
     void dumpItemArchive( string pFileName ) ;
     void readBarcodesArchive( string pFileName ) ;
     void dumpBarcodesArchive( string pFileName ) ;
+   void readPromotionsArchive( string pFileName );
+    void dumpPromotionsArchive( string pFileName ) ;
+    
     void readArchives( ) ;
     void dumpArchivesFromMemory( ) ;
     void loadCartsInProgress( ) ;

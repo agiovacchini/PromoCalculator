@@ -30,6 +30,7 @@
 
 #include "Item.h"
 #include "Department.h"
+#include "Promotion.h"
 
 #include "BaseSystem.h"
 
@@ -366,11 +367,77 @@ void BaseSystem::readBarcodesArchive( string pFileName )
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
 }
 
+
+void BaseSystem::readPromotionsArchive( string pFileName )
+{
+    //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
+    
+    // Tokenizer
+    typedef boost::tokenizer< boost::escaped_list_separator<char> , std::string::const_iterator, std::string> Tokenizer;
+    boost::escaped_list_separator<char> seps('\\', ',', '\"');
+    
+    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName ;
+    std::ifstream archiveFile( archiveFileName );
+    string tmp = "" ;
+    bool r = false ;
+    int column = 0 ;
+    Promotion tempPromotion ;
+    
+    if (!archiveFile) {
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - File " + archiveFileName + " not found" ;
+        exit(-1);
+    } else {
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - File " + archiveFileName + " loaded" ;
+    }
+    
+    std::string line;
+    while( std::getline(archiveFile, line) )
+    {
+        
+        // Boost Spirit Qi
+        std::string::const_iterator s_begin = line.begin();
+        std::string::const_iterator s_end = line.end();
+        std::vector<std::string> result;
+        
+        r = boost::spirit::qi::parse(s_begin, s_end, csv_parser, result);
+        assert(r == true);
+        assert(s_begin == s_end);
+        column = 0 ;
+        for (auto i : result)
+        {
+            switch (column)
+            {
+                case 0:
+                    tempPromotion.setCode(strtoull(i.c_str(),nullptr,10)) ;
+                    break;
+                case 1:
+                    tempPromotion.setItemCode(strtoull(i.c_str(),nullptr,10)) ;
+                    break;
+                case 2:
+                    tempPromotion.setDiscount(strtoull(i.c_str(),nullptr,10)) ;
+                    break;
+                case 3:
+                    tempPromotion.setDiscountType(strtoull(i.c_str(),nullptr,10)) ;
+                    break;
+                case 4:
+                    tempPromotion.setDescription(std::string(i)) ;
+                    break;
+            }
+            column++ ;
+        }
+        promotionsMap.addElement(tempPromotion);
+        cout << tempPromotion.toStr() << endl;
+    }
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName ;
+}
+
+
 void BaseSystem::readArchives()
 {
     this->readDepartmentArchive( "DEPARTMENTS.CSV" ) ;
     this->readItemArchive( "ITEMS.CSV" ) ;
     this->readBarcodesArchive( "BARCODES.CSV" ) ;
+    this->readPromotionsArchive( "PROMOTIONS.CSV" ) ;
 }
 
 void BaseSystem::dumpArchivesFromMemory()
@@ -992,7 +1059,14 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 
                                 respStringStream << "{" ;
                                 
+                                // L'articolo ha una promozione
+                                if (promotionsMap[itmCodePrice.code] != nullptr) {
+                                    
+                                }
+                                
                                 rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty, itmCodePrice.price ) ;
+                                
+                                
 								if ((rc>0)&&(dummyRCS))
                                 {
                                     rc = 3 ;

@@ -31,7 +31,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "623"
             endingLineNumber = "623"
-            landmarkName = "BaseSystem::loadCartsInProgress()"
+            landmarkName = "BaseSystem::checkForVariationFiles()"
             landmarkType = "5">
             <Locations>
                <Location
@@ -40,6 +40,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "BaseSystem::checkForVariationFiles()"
                   moduleName = "PromoCalculator"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
                   timestampString = "416735642.085208"
                   startingColumnNumber = "9223372036854775807"
@@ -54,6 +55,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "BaseSystem::checkForVariationFiles()"
                   moduleName = "PromoCalculator"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/andreagiovacchini/Documents/Sviluppo/Siti/PromoCalculator/PromoCalculator/BaseSystem.cpp"
                   timestampString = "416735642.085631"
                   startingColumnNumber = "9223372036854775807"
@@ -93,7 +95,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "893"
             endingLineNumber = "893"
-            landmarkName = "BaseSystem::salesActionsFromWebInterface(int pAction, std::map&lt;std::string, std::string&gt; pUrlParamsMap)"
+            landmarkName = "BaseSystem::loadCartsInProgress()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

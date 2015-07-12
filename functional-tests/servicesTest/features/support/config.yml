@@ -67,6 +67,30 @@ local:
    Vs5ServerIp: 192.168.202.63
    Vs5KloySvcPort: "3099"
 
+ra_243:
+   authServiceUrl: 192.168.1.68:88/auth.php
+   kwlServletUrl: 192.168.1.68:8081/KwlServlet/KwlServlet
+   kwlUtilServletUrl: 192.168.1.68:8081/KwlUtilServlet/KwlUtilServlet
+   ekoLoyServletUrl: 192.168.1.68:8081/EkoLoyServlet/EkoLoyServlet
+   LoyaltyWsUrl: http://192.168.91.83:85/LoyaltyWsSSL/manager.asmx?wsdl
+   kStoreServletUrl: 192.168.202.243:9081/kStore/SelfScan
+   #kStoreServletUrl: 192.168.202.69:8085/kStore/SelfScan
+   debugSteps: false
+   Vs5ServerIp: 192.168.202.63
+   Vs5KloySvcPort: "3099"
+
+ra_bugzilla:
+   authServiceUrl: 192.168.1.68:88/auth.php
+   kwlServletUrl: 192.168.1.68:8081/KwlServlet/KwlServlet
+   kwlUtilServletUrl: 192.168.1.68:8081/KwlUtilServlet/KwlUtilServlet
+   ekoLoyServletUrl: 192.168.1.68:8081/EkoLoyServlet/EkoLoyServlet
+   LoyaltyWsUrl: http://192.168.91.83:85/LoyaltyWsSSL/manager.asmx?wsdl
+   kStoreServletUrl: bugzilla.konvergence.it/kStore/SelfScan
+   #kStoreServletUrl: 192.168.202.69:8085/kStore/SelfScan
+   debugSteps: false
+   Vs5ServerIp: 192.168.202.63
+   Vs5KloySvcPort: "3099"
+
 ovh:
    authServiceUrl: 192.168.1.68:88/auth.php
    kwlServletUrl: 192.168.1.68:8081/KwlServlet/KwlServlet

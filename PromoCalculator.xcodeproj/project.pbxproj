@@ -12,6 +12,7 @@
 		4546CE4018785A5700198E29 /* Item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4546CE3E18785A5700198E29 /* Item.cpp */; };
 		4546CE43187860B600198E29 /* Cart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4546CE41187860B600198E29 /* Cart.cpp */; };
 		4587107C187D5E11007EFF50 /* BaseSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4587107A187D5E11007EFF50 /* BaseSystem.cpp */; };
+		458D8F291B4FDECD001A69F1 /* Promotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 458D8F281B4FDECD001A69F1 /* Promotion.cpp */; };
 		45973AF1187F7921003D045A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45973AF0187F7921003D045A /* main.cpp */; };
 		45973AF3187F7921003D045A /* tests.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45973AF2187F7921003D045A /* tests.1 */; };
 		45973B00187F7974003D045A /* gtest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45D54B8F187E871D0001DA04 /* gtest.framework */; };
@@ -112,6 +113,7 @@
 /* Begin PBXFileReference section */
 		450C58A118D8F17500ADC4B9 /* Archive.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Archive.h; sourceTree = "<group>"; };
 		450C58A218D8F4D500ADC4B9 /* ArchiveMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArchiveMap.h; sourceTree = "<group>"; };
+		452989231B45219500B59513 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		4546CE3218784B9100198E29 /* PromoCalculator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PromoCalculator; sourceTree = BUILT_PRODUCTS_DIR; };
 		4546CE3518784B9100198E29 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		4546CE3718784B9100198E29 /* PromoCalculator.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = PromoCalculator.1; sourceTree = "<group>"; };
@@ -121,6 +123,8 @@
 		4546CE42187860B600198E29 /* Cart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cart.h; sourceTree = "<group>"; };
 		4587107A187D5E11007EFF50 /* BaseSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseSystem.cpp; sourceTree = "<group>"; };
 		4587107B187D5E11007EFF50 /* BaseSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSystem.h; sourceTree = "<group>"; };
+		458D8F1E1B4FDD2C001A69F1 /* Promotion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Promotion.h; sourceTree = "<group>"; };
+		458D8F281B4FDECD001A69F1 /* Promotion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Promotion.cpp; sourceTree = "<group>"; };
 		45973AEE187F7921003D045A /* tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tests; sourceTree = BUILT_PRODUCTS_DIR; };
 		45973AF0187F7921003D045A /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		45973AF2187F7921003D045A /* tests.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = tests.1; sourceTree = "<group>"; };
@@ -226,6 +230,8 @@
 				4546CE42187860B600198E29 /* Cart.h */,
 				4546CE3F18785A5700198E29 /* Item.h */,
 				4546CE3E18785A5700198E29 /* Item.cpp */,
+				458D8F281B4FDECD001A69F1 /* Promotion.cpp */,
+				458D8F1E1B4FDD2C001A69F1 /* Promotion.h */,
 				4546CE3518784B9100198E29 /* main.cpp */,
 				4546CE3718784B9100198E29 /* PromoCalculator.1 */,
 				45D88B9C189C0C0C00397C7A /* libboost_date_time-mt.dylib */,
@@ -250,6 +256,7 @@
 				45D3C229189FB5E9005DB28F /* request_parser.hpp */,
 				45D0539218A05817008A1227 /* server.cpp */,
 				45D0539318A05817008A1227 /* server.hpp */,
+				452989231B45219500B59513 /* readme.txt */,
 			);
 			path = PromoCalculator;
 			sourceTree = "<group>";
@@ -409,6 +416,7 @@
 				4546CE43187860B600198E29 /* Cart.cpp in Sources */,
 				4587107C187D5E11007EFF50 /* BaseSystem.cpp in Sources */,
 				45D3C23B189FBD4D005DB28F /* request_handler.cpp in Sources */,
+				458D8F291B4FDECD001A69F1 /* Promotion.cpp in Sources */,
 				4546CE4018785A5700198E29 /* Item.cpp in Sources */,
 				45EDAC3918C4FE150021DAB9 /* BaseTypes.cpp in Sources */,
 				4546CE3618784B9100198E29 /* main.cpp in Sources */,

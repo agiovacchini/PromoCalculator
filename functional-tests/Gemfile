@@ -1,1 +1,5 @@
 gem 'json', '~> 1.7.7'
+gem 'savon'
+gem 'cucumber'
+gem 'watir-webdriver'
+gem 'httparty'
