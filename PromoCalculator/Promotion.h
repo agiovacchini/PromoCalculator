@@ -19,25 +19,25 @@ using namespace std;
 
 class Promotion : public Archive {
     
-    uint64_t code ;
+    uint64_t promoCode ;
     uint64_t itemCode ;
     int64_t discount ;
-    int64_t discountType ;
+    unsigned int discountType ;
     string description ;
     
 public:
     Promotion();
     
-    Promotion(uint64_t pCode, uint64_t pItemCode, int64_t pDiscount, int64_t pDiscountType, string pDescription);
+    Promotion(uint64_t pCode, uint64_t pItemCode, int64_t pDiscount, unsigned int pDiscountType, string pDescription);
     
-    void setCode( uint64_t pCode ) ;
+    void setPromoCode( uint64_t pCode ) ;
+    
+    uint64_t getPromoCode() const ;
+    
+    
+    void setCode( uint64_t pItemCode ) ;
     
     uint64_t getCode() const ;
-    
-    
-    void setItemCode( uint64_t pItemCode ) ;
-    
-    uint64_t getItemCode() const ;
     
     
     void setDiscount( uint64_t pDiscount ) ;
@@ -45,9 +45,9 @@ public:
     uint64_t getDiscount() const ;
     
     
-    void setDiscountType( uint64_t pDiscountType ) ;
+    void setDiscountType( unsigned int pDiscountType ) ;
     
-    uint64_t getDiscountType() const ;
+    unsigned int getDiscountType() const ;
     
     
     void setDescription( string pDescription ) ;
@@ -75,7 +75,7 @@ public:
     
     //Copy constructor
     Promotion& operator=( const Promotion& other ) {
-        code = other.code ;
+        promoCode = other.promoCode ;
         itemCode = other.itemCode ;
         discount = other.discount ;
         discountType = other.discountType;

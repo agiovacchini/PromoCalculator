@@ -10,16 +10,16 @@
 
 Promotion::Promotion()
 {
-    this->code = 0 ;
+    this->promoCode = 0 ;
     this->itemCode = 0 ;
     this->discount = 0 ;
     this->discountType = 0 ;
     this->description = "" ;
 }
 
-Promotion::Promotion(uint64_t pCode, uint64_t pItemCode, int64_t pDiscount, int64_t pDiscountType, string pDescription)
+Promotion::Promotion(uint64_t pPromoCode, uint64_t pItemCode, int64_t pDiscount, unsigned int pDiscountType, string pDescription)
 {
-    this->code = pCode ;
+    this->promoCode = pPromoCode ;
     this->itemCode = pItemCode ;
     this->discount = pDiscount ;
     this->discountType = pDiscountType ;
@@ -27,19 +27,19 @@ Promotion::Promotion(uint64_t pCode, uint64_t pItemCode, int64_t pDiscount, int6
 }
 
 void Promotion::setCode( uint64_t pCode ) {
-    this->code = pCode ;
+    this->itemCode = pCode ;
 }
 
 uint64_t Promotion::getCode() const {
-    return this->code ;
-}
-
-void Promotion::setItemCode( uint64_t pItemCode ) {
-    this->itemCode = pItemCode ;
-}
-
-uint64_t Promotion::getItemCode() const {
     return this->itemCode ;
+}
+
+void Promotion::setPromoCode( uint64_t pPromoCode ) {
+    this->promoCode = pPromoCode ;
+}
+
+uint64_t Promotion::getPromoCode() const {
+    return this->promoCode ;
 }
 
 void Promotion::setDiscount( uint64_t pDiscount ) {
@@ -50,11 +50,11 @@ uint64_t Promotion::getDiscount() const {
     return this->discount ;
 }
 
-void Promotion::setDiscountType( uint64_t pDiscountType ) {
+void Promotion::setDiscountType( unsigned int pDiscountType ) {
     this->discountType = pDiscountType ;
 }
 
-uint64_t Promotion::getDiscountType() const {
+unsigned int Promotion::getDiscountType() const {
     return this->discountType ;
 }
 
@@ -71,7 +71,7 @@ string Promotion::toStr() const {
     std::stringstream tempStringStream;
     tempStringStream.str(std::string());
     tempStringStream.clear();
-    tempStringStream << this->code
+    tempStringStream << this->promoCode
     << "," << this->itemCode
     << "," << this->discount
     << "," << this->discountType

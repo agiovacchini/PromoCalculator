@@ -63,7 +63,6 @@ class BaseSystem {
     std::string cartFolderName ;
     uint32_t varCheckDelaySeconds ;
 
-
 public:
     BaseSystem( string pBasePath, string pIniFileName ) ;
     string getBasePath() const ;

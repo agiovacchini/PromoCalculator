@@ -99,6 +99,9 @@ namespace keywords = boost::log::keywords;
 #define RC_LOY_CARD_IN_ANOTHER_TRANSACTION  41092
 #define RC_LOY_MAX_CARD_NUMBER              41099
 
+#define PROMO_TYPE_DSC_PERC                 42000
+#define PROMO_TYPE_DSC_VAL                  42001
+
 #define WEBI_SESSION_INIT                   50001
 #define WEBI_SESSION_END                    50002
 #define WEBI_SESSION_VOID                   50003
@@ -113,10 +116,12 @@ namespace keywords = boost::log::keywords;
 #define WEBI_GET_ALL_CART_WITH_BARCODES     50041
 #define WEBI_GET_STORE_INFO                 50079
 #define WEBI_ACTION_NOT_RECOGNIZED          50080
+#define WEBI_MANAGE_RESCAN                  50081
 
 struct Totals {
     long itemsNumber ;
     int64_t totalAmount ;
+    int64_t totalDiscount ;
 };
 
 struct CartRow {

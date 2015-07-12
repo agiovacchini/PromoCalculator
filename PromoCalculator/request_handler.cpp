@@ -141,6 +141,11 @@ namespace http {
                 {
                     actionBS = WEBI_GET_ALL_CART_WITH_BARCODES ;
                 }
+                
+                if (servletFunctionAction.compare("manageRescan")==0)
+                {
+                    actionBS = WEBI_MANAGE_RESCAN ;
+                }
             } else if ( regex_search( request_path, what, exrpNoParams ) ) {
                 servlet = std::string( what[2].first, what[2].second );
                 servletFunction = std::string( what[4].first, what[4].second );
