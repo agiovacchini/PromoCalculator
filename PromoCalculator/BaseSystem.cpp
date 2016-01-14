@@ -1293,7 +1293,8 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                     {
                         rc = 3 ;
                     }
-                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
+                    // respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
+                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}" ;
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_END - Cool - rc:" << rc ;
                     break;
                 }
