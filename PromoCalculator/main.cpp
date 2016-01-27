@@ -51,7 +51,8 @@
 	VOID ReportSvcStatus( DWORD, DWORD, DWORD );
 	VOID SvcInit( DWORD, LPTSTR * ); 
 	VOID SvcReportEvent( LPTSTR );
-	
+	void WinMainNoSvc();
+	void WinMainSvc();
 #endif 
 
 using namespace std;
@@ -64,12 +65,13 @@ src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_main;
 
 void init(string pMainPath, string pIniFileName)
 {
-	fileDelete(mainPath + "LOGS/Promocalculator.log.prev");
-	fileMove(mainPath + "LOGS/Promocalculator.log", mainPath + "LOGS/Promocalculator.log.prev");
+	std::cout << pMainPath + "LOGS/Promocalculator.log";
+	fileDelete(pMainPath + "LOGS/Promocalculator.log.prev");
+	fileMove(pMainPath + "LOGS/Promocalculator.log", mainPath + "LOGS/Promocalculator.log.prev");
 
     logging::add_file_log
     (
-     keywords::file_name = pMainPath + "LOGS/PromoCalculator.log",
+     keywords::file_name = pMainPath + "LOGS\\PromoCalculator.log",
      keywords::auto_flush = true, 
      // This makes the sink to write log records that look like this:
      // YYYY-MM-DD HH:MI:SS: <normal> A normal severity message
@@ -185,6 +187,16 @@ int main(int argc, const char * argv[])
 */
 
 #if defined _WIN32
+
+short keepRunning = 1;
+
+BOOL CtrlHandler(DWORD fdwCtrlType)
+{
+	printf("Received stop event\n\n");
+	keepRunning = 0;
+	return TRUE;
+}
+
 int __cdecl _tmain(int argc, TCHAR *argv[]) 
 { 
     // If command-line parameter is "install", install the service. 
@@ -203,28 +215,81 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	mainPath = argv[1] ;
 	iniFileName = argv[2];
 
-    if( lstrcmpi( argv[1], TEXT("install")) == 0 )
-    {
-        SvcInstall();
-        return 0;
-    }
-
-    // TO_DO: Add any additional services for the process to this table.
-    SERVICE_TABLE_ENTRY DispatchTable[] = 
-    { 
-        { SVCNAME, (LPSERVICE_MAIN_FUNCTION) SvcMain }, 
-        { NULL, NULL } 
-    }; 
- 
-    // This call returns when the service has stopped. 
-    // The process should simply terminate when the call returns.
-
-    if (!StartServiceCtrlDispatcher( DispatchTable )) 
-    { 
-        SvcReportEvent(TEXT("StartServiceCtrlDispatcher")); 
-    } 
+	if (strcmp(argv[3], "SVZ") == 0) {
+		WinMainSvc();
+	} else {
+		WinMainNoSvc();
+	}
 
 } 
+
+void WinMainNoSvc() {
+	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);
+	std::cout << mainPath << endl;
+	init(mainPath, iniFileName);
+	BaseSystem *bs = nullptr;
+	bs = new BaseSystem(mainPath, iniFileName);
+
+	// Run server in background thread.
+	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
+
+	http::server3::server s(bs->getConfigValue("WebAddress").c_str(), bs->getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
+	boost::thread t(boost::bind(&http::server3::server::run, &s));
+
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Started http server";
+	// ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0);
+
+
+	std::string pidFileName = mainPath + "/promoCalculator.pid";
+	std::ofstream pidFile;
+	pidFile.open(pidFileName);
+	pidFile << _getpid() << std::endl;
+	pidFile.close();
+
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Service running with pid: " << _getpid();
+	
+	while (keepRunning == 1)
+	{
+	}
+	// Check whether to stop the service.
+
+		
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Received stop request";
+
+	std::cout << "Process exit " << fileDelete(pidFileName) << std::endl;
+
+	ReportSvcStatus(SERVICE_STOPPED, NO_ERROR, 0);
+
+	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Finished processing stop request";
+
+	keepRunning = 2;
+
+	return;
+	
+}
+
+void WinMainSvc() {
+	//    if( lstrcmpi( argv[1], TEXT("install")) == 0 )
+	//    {
+	SvcInstall();
+	//        return 0;
+	//    }
+
+	// TO_DO: Add any additional services for the process to this table.
+	SERVICE_TABLE_ENTRY DispatchTable[] =
+	{
+		{ SVCNAME, (LPSERVICE_MAIN_FUNCTION)SvcMain },
+		{ NULL, NULL }
+	};
+
+	// This call returns when the service has stopped. 
+	// The process should simply terminate when the call returns.
+
+	if (!StartServiceCtrlDispatcher(DispatchTable))
+	{
+		SvcReportEvent(TEXT("StartServiceCtrlDispatcher"));
+	}
+}
 
 //
 // Purpose: 
@@ -369,44 +434,7 @@ VOID SvcInit( DWORD dwArgc, LPTSTR *lpszArgv)
 
     // Report running status when initialization is complete.
     
-	std::cout << mainPath << endl;
-	init(mainPath, iniFileName);
-	BaseSystem *bs = nullptr;
-	bs = new BaseSystem(mainPath, iniFileName);
-
-	// Run server in background thread.
-	std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
-	
-	http::server3::server s(bs->getConfigValue("WebAddress").c_str(), bs->getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
-    boost::thread t(boost::bind(&http::server3::server::run, &s));
-
-	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Started http server";
-	ReportSvcStatus(SERVICE_RUNNING, NO_ERROR, 0);
-	
-	
-	std::string pidFileName = mainPath + "/promoCalculator.pid";
-	std::ofstream pidFile;
-	pidFile.open(pidFileName);
-	pidFile << _getpid() << std::endl;
-	pidFile.close();
-
-	BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Service running with pid: " << _getpid();
-
-    while(1)
-    {
-        // Check whether to stop the service.
-		
-        WaitForSingleObject(ghSvcStopEvent, INFINITE);
-
-		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Received stop request";
-
-		std::cout << "Process exit " << fileDelete(pidFileName) << std::endl;
-
-        ReportSvcStatus( SERVICE_STOPPED, NO_ERROR, 0 );
-
-		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - Finished processing stop request";
-		return;
-    }
+	WinMainSvc();
 }
 
 //

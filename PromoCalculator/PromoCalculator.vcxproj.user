@@ -5,15 +5,17 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>d:\Listati\Siti\PromoCalculator\PromoCalculator.deploy\ PromoCalculatorWin.ini</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\ws-visualstudio\promoCalculator\PromoCalculator.deploy\ PromoCalculatorWin.ini</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=%PATH%;C:\ws-visualstudio\Libs\boost_1_60_0-msvc-14.0-64\lib64-msvc-14.0;</LocalDebuggerEnvironment>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerCommandArguments>d:\Listati\Siti\PromoCalculator\PromoCalculator.deploy\ PromoCalculatorWin.ini</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>d:\Listati\Siti\PromoCalculator\PromoCalculator.deploy\ PromoCalculatorWin.ini</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\ws-visualstudio\promoCalculator\PromoCalculator.deploy\ PromoCalculatorWin.ini</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>PATH=%PATH%;C:\ws-visualstudio\Libs\boost_1_60_0-msvc-14.0-64\lib64-msvc-14.0;</LocalDebuggerEnvironment>
   </PropertyGroup>
 </Project>

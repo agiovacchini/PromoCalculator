@@ -11,10 +11,6 @@
 #ifndef HTTP_SERVER3_REPLY_HPP
 #define HTTP_SERVER3_REPLY_HPP
 
-#if defined _WIN32 && !defined(_WIN32_WINNT)
-	#define _WIN32_WINNT 0x0502
-#endif
-
 #include <string>
 #include <vector>
 #include <boost/asio.hpp>

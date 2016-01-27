@@ -66,6 +66,9 @@
     <ClInclude Include="reply.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="Promotion.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -108,6 +111,9 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="BaseTypes.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="Promotion.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

@@ -11,10 +11,6 @@
 #ifndef HTTP_SERVER3_CONNECTION_HPP
 #define HTTP_SERVER3_CONNECTION_HPP
 
-#if defined _WIN32 && !defined(_WIN32_WINNT)
-	#define _WIN32_WINNT 0x0502
-#endif
-
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <boost/noncopyable.hpp>

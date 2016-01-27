@@ -5,8 +5,7 @@
 //  Created by Andrea Giovacchini on 08/01/14.
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
-
-#include "BaseTypes.h"
+#pragma pack(push, 1)
 
 #include <cstdlib>
 #include <iostream>
@@ -22,6 +21,9 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
+#pragma pack(pop)
+
+#include "BaseTypes.h"
 
 #include "reply.hpp"
 #include "request.hpp"
@@ -102,7 +104,13 @@ void BaseSystem::setBasePath( string pBasePath )
 
 long BaseSystem::loadConfiguration()
 {
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config file: " << this->basePath << this->iniFileName ;
+	try {
+		BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config file: " << this->basePath << this->iniFileName ;
+	}
+	catch (std::exception const& e)
+	{
+		cout << "Momama" << endl;
+	}
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config load start" ;
     boost::property_tree::ptree pt;
     long rc = 0 ;
