@@ -101,6 +101,9 @@ namespace keywords = boost::log::keywords;
 
 #define PROMO_TYPE_DSC_PERC                 42000
 #define PROMO_TYPE_DSC_VAL                  42001
+#define PROMO_TYPE_PRICE_CUT                42003
+#define PROMO_TYPE_POINTS                   42004
+
 
 #define WEBI_SESSION_INIT                   50001
 #define WEBI_SESSION_END                    50002

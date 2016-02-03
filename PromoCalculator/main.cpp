@@ -107,16 +107,15 @@ int main(int argc, char* argv[])
 {
     try
     {
-        // Check command line arguments.
         if (argc != 3)
         {
             std::cerr << "Usage: promoCalculator rootPath iniFileName" << std::endl ;
             return 1;
         }
         
-        mainPath = argv[1] ;
+        mainPath = argv[1];
         iniFileName = argv[2] ;
-
+        
         init(mainPath, iniFileName);
         
         sigset_t new_mask;

@@ -1089,7 +1089,6 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                 
                                 cout << "Prezzo: " << itmCodePrice.price << ", sconto: " << promoVal << ", descr: " << promotionsMap[itmCodePrice.code].getDescription() << std::endl ;
                                 
-                                
                                 if (promotionsMap[itmCodePrice.code].getCode() == itmCodePrice.code) {
                                     // cout << "Disc: " << promotionsMap[itmCodePrice.code].toStr() << ", type: " << promotionsMap[itmCodePrice.code].getDiscountType() << std::endl;
                                     switch (promotionsMap[itmCodePrice.code].getDiscountType()) {
@@ -1099,6 +1098,10 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                             break;
                                         case PROMO_TYPE_DSC_PERC:
                                             promoVal = ( itmCodePrice.price / 100.) * promotionsMap[itmCodePrice.code].getDiscount();
+                                            // cout << "val" << endl;
+                                            break;
+                                        case PROMO_TYPE_PRICE_CUT:
+                                            promoVal = itmCodePrice.price - promoVal;
                                             // cout << "val" << endl;
                                             break;
                                     }
