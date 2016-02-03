@@ -5,7 +5,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>C:\ws-visualstudio\promoCalculator\PromoCalculator.deploy\ PromoCalculatorWin.ini</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>C:\ws-visualstudio\promoCalculator\PromoCalculator.deploy\ PromoCalculatorWin.ini NOSVC</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerEnvironment>PATH=%PATH%;C:\ws-visualstudio\Libs\boost_1_60_0-msvc-14.0-64\lib64-msvc-14.0;</LocalDebuggerEnvironment>
   </PropertyGroup>

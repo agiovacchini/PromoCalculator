@@ -1101,8 +1101,8 @@ string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::strin
                                             // cout << "val" << endl;
                                             break;
                                         case PROMO_TYPE_PRICE_CUT:
-                                            promoVal = itmCodePrice.price - promoVal;
-                                            // cout << "val" << endl;
+                                            promoVal = itmCodePrice.price - promotionsMap[itmCodePrice.code].getDiscount();
+                                            // cout << "itmCodePrice.price: " << itmCodePrice.price << ", promoVal: " << promoVal << endl;
                                             break;
                                     }
                                 }
