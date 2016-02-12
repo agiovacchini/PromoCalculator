@@ -5,8 +5,6 @@
 //  Created by Andrea Giovacchini on 08/01/14.
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
-#pragma pack(push, 1)
-
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -15,13 +13,13 @@
 #include <boost/tokenizer.hpp>
 #include <stdlib.h>
 
+
 #include <boost/spirit/include/qi.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
-#pragma pack(pop)
 
 #include "BaseTypes.h"
 
@@ -35,8 +33,6 @@
 #include "Promotion.h"
 
 #include "BaseSystem.h"
-
-const int max_length = 8192;
 
 static uint32_t nextCartNumber ;
 boost::mutex cartnumber_mutex ;
@@ -53,7 +49,7 @@ using namespace std;
 BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
 {
     using namespace logging::trivial;
-    
+
     this->basePath = pBasePath ;
     this->iniFileName = pIniFileName ;
     this->nodeId = 0 ;
@@ -85,6 +81,7 @@ BaseSystem::BaseSystem( string pBasePath, string pIniFileName )
     } else {
         BOOST_LOG_SEV(my_logger_bs, fatal) << "- BS - Bad configuration error, aborting start" ;
     }
+    
 }
 
 string BaseSystem::getConfigValue( string pParamName )
@@ -104,39 +101,33 @@ void BaseSystem::setBasePath( string pBasePath )
 
 long BaseSystem::loadConfiguration()
 {
-	try {
-		BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config file: " << this->basePath << this->iniFileName ;
-	}
-	catch (std::exception const& e)
-	{
-		cout << "Momama" << endl;
-	}
+	BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config file: " << this->basePath << this->iniFileName ;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config load start" ;
-    boost::property_tree::ptree pt;
     long rc = 0 ;
-    
+    boost::property_tree::ptree pConfigTree ;
+    boost::property_tree::ini_parser::read_ini(this->basePath + this->iniFileName, pConfigTree);
+
     try {
-        boost::property_tree::ini_parser::read_ini(this->basePath + this->iniFileName, pt);
-        rc = rc + setConfigValue("MainStoreChannel", "Main.StoreChannel", &pt );
-        rc = rc + setConfigValue("MainStoreLoyChannel", "Main.StoreLoyChannel", &pt );
-        rc = rc + setConfigValue("MainStoreId", "Main.StoreId", &pt );
-        rc = rc + setConfigValue("MainVarCheckDelaySeconds", "Main.VarCheckDelaySeconds", &pt );
-        rc = rc + setConfigValue("MainReturnSeparateLinkedBarcode", "Main.ReturnSeparateLinkedBarcode", &pt );
-        rc = rc + setConfigValue("MainDummyRCS", "Main.DummyRCS", &pt );
-        rc = rc + setConfigValue("CartsPriceChangesWhileShopping", "Carts.PriceChangesWhileShopping", &pt );
-        rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pt );
-        rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pt );
-        rc = rc + setConfigValue("LoyCardPrefix", "Loy.CardPrefix", &pt );
-        rc = rc + setConfigValue("LoyMaxCardsPerTransaction", "Loy.MaxCardsPerTransaction", &pt );
-        rc = rc + setConfigValue("LoyOnlyOneShoppingSessionPerCard", "Loy.OnlyOneShoppingSessionPerCard", &pt );
-        rc = rc + setConfigValue("BarcodesType01", "Barcodes.Type", &pt );
-        rc = rc + setConfigValue("NodeId", "Node.Id", &pt );
-        rc = rc + setConfigValue("WebAddress", "Web.Address", &pt );
-        rc = rc + setConfigValue("WebPort", "Web.Port", &pt );
-        rc = rc + setConfigValue("WebThreads", "Web.Threads", &pt );
+        rc = rc + setConfigValue("MainStoreChannel", "Main.StoreChannel", &pConfigTree );
+        rc = rc + setConfigValue("MainStoreLoyChannel", "Main.StoreLoyChannel", &pConfigTree );
+        rc = rc + setConfigValue("MainStoreId", "Main.StoreId", &pConfigTree );
+        rc = rc + setConfigValue("MainVarCheckDelaySeconds", "Main.VarCheckDelaySeconds", &pConfigTree );
+        rc = rc + setConfigValue("MainReturnSeparateLinkedBarcode", "Main.ReturnSeparateLinkedBarcode", &pConfigTree );
+        rc = rc + setConfigValue("MainDummyRCS", "Main.DummyRCS", &pConfigTree );
+        rc = rc + setConfigValue("CartsPriceChangesWhileShopping", "Carts.PriceChangesWhileShopping", &pConfigTree );
+        rc = rc + setConfigValue("SelfScanScanInDir", "SelfScan.ScanInDir", &pConfigTree );
+        rc = rc + setConfigValue("SelfScanScanOutDir", "SelfScan.ScanOutDir", &pConfigTree );
+        rc = rc + setConfigValue("LoyCardPrefix", "Loy.CardPrefix", &pConfigTree );
+        rc = rc + setConfigValue("LoyMaxCardsPerTransaction", "Loy.MaxCardsPerTransaction", &pConfigTree );
+        rc = rc + setConfigValue("LoyOnlyOneShoppingSessionPerCard", "Loy.OnlyOneShoppingSessionPerCard", &pConfigTree );
+        rc = rc + setConfigValue("BarcodesType01", "Barcodes.Type", &pConfigTree );
+        rc = rc + setConfigValue("NodeId", "Node.Id", &pConfigTree );
+        rc = rc + setConfigValue("WebAddress", "Web.Address", &pConfigTree );
+        rc = rc + setConfigValue("WebPort", "Web.Port", &pConfigTree );
+        rc = rc + setConfigValue("WebThreads", "Web.Threads", &pConfigTree );
 		configurationMap["MainArchivesDir"] = configurationMap["MainStoreChannel"] + "/" + configurationMap["MainStoreId"] + "/";
         
-        this->nodeId = pt.get<uint32_t>("Node.Id") ;
+        this->nodeId = pConfigTree.get<uint32_t>("Node.Id") ;
         
         if (atoi(configurationMap["MainDummyRCS"].c_str()) == 1)
 		{
@@ -163,7 +154,7 @@ long BaseSystem::loadConfiguration()
 		}
         this->varFolderName = this->basePath +  "ARCHIVES/" + configurationMap["MainArchivesDir"] + "VARS" ;
         this->cartFolderName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS" ;
-        this->varCheckDelaySeconds = atol(configurationMap["MainVarCheckDelaySeconds"].c_str()) * 1000L ;
+        this->varCheckDelaySeconds = atol(configurationMap["MainVarCheckDelaySeconds"].c_str()) * 1000UL ;
     }
     catch (std::exception const& e)
     {

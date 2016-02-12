@@ -17,6 +17,7 @@
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 #include "server.hpp"
 
@@ -57,10 +58,8 @@
 
 using namespace std;
 
-const int max_length = 1024;
-
-string mainPath = "" ;
-string iniFileName = "" ;
+string mainPath ;
+string iniFileName ;
 src::severity_logger_mt< boost::log::trivial::severity_level > my_logger_main;
 
 void init(string pMainPath, string pIniFileName)
@@ -125,10 +124,12 @@ int main(int argc, char* argv[])
         
         logging::add_common_attributes();
 
-		BaseSystem *bs = nullptr;
-		bs = new BaseSystem(mainPath, iniFileName);
+        BaseSystem *bs = nullptr;
+        bs = new BaseSystem(mainPath, iniFileName);
+        
         // Run server in background thread.
-		std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
+     
+        std::size_t num_threads = boost::lexical_cast<std::size_t>(bs->getConfigValue("WebThreads").c_str());
 		http::server3::server s(bs->getConfigValue("WebAddress").c_str(), bs->getConfigValue("WebPort").c_str(), mainPath + "/DocRoot/", num_threads, bs);
         boost::thread t(boost::bind(&http::server3::server::run, &s));
         

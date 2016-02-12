@@ -1,0 +1,21 @@
+CXX		=	g++
+CXXFLAGS	=	-O3 -DNDEBUG -w -std=c++11 -Wall -I/Users/andreagiovacchini/Documents/Sviluppo/boost_1_60_0 
+NLIB		=	-L/Users/andreagiovacchini/Documents/Sviluppo/boost_1_60_0/stage/lib -lboost_regex-xgcc42-mt-d-1_60 -lboost_log-xgcc42-mt-d-1_60 -lboost_system-xgcc42-mt-d-1_60 -lboost_log_setup-xgcc42-mt-d-1_60 -lboost_date_time-xgcc42-mt-d-1_60 -lboost_log-xgcc42-mt-d-1_60 -lboost_filesystem-xgcc42-mt-d-1_60 -lboost_thread-xgcc42-mt-d-1_60 -lboost_iostreams-xgcc42-mt-d-1_60 
+
+BIN=promoCalculator
+
+SRC=$(wildcard *.cpp)
+SRC-FILES=$(filter-out stdafx.cpp, $(SRC))
+
+OBJ=$(SRC-FILES:%.cpp=%.o)
+
+all: $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $(BIN) $^  $(NLIB)
+
+%.o: %.c
+	$(CXX) $@ -c $<
+
+clean:
+	rm -f *.o
+	rm $(BIN)
+
