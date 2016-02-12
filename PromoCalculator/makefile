@@ -1,6 +1,6 @@
 CXX		=	g++
-CXXFLAGS	=	-O3 -DNDEBUG -w -std=c++11 -Wall -L/lib -I/usr/include -pthread 
-NLIB		=	-lboost_system-mt -lboost_filesystem-mt -lboost_iostreams-mt -lboost_log-mt -lboost_date_time-mt -lboost_regex-mt -lboost_log_setup-mt -lboost_chrono-mt -lboost_thread-mt
+CXXFLAGS	=	-O3 -DNDEBUG -w -std=c++11 -Wall -L/home/utente/ws-cpp/libs/boost_1_60_0/stage/lib -I/home/utente/ws-cpp/libs/boost_1_60_0.build/include -pthread 
+NLIB		=	-lboost_atomic-gcc49-mt-1_60 -lboost_system-gcc49-mt-1_60 -lboost_filesystem-gcc49-mt-1_60 -lboost_iostreams-gcc49-mt-1_60 -lboost_log-gcc49-mt-1_60 -lboost_date_time-gcc49-mt-1_60 -lboost_regex-gcc49-mt-1_60 -lboost_log_setup-gcc49-mt-1_60 -lboost_chrono-gcc49-mt-1_60 -lboost_thread-gcc49-mt-1_60
 
 BIN=promoCalculator
 
