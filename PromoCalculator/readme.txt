@@ -39,11 +39,11 @@ Elenco carrelli
 /getCartsList
 
 Intero carrello con intcodes e descrizioni
-http://bugzilla.konvergence.it/kStore/SelfScan/getAllCart?devId=1001&devReqId=64&devSessId=128
+http://ip_addr/kStore/SelfScan/getAllCart?devId=1001&devReqId=64&devSessId=128
 
 
 Intero carrello con barcodes al posto delle descrizioni
-http://bugzilla.konvergence.it/kStore/SelfScan/getAllCartWithBarcodes?devId=1001&devReqId=64&devSessId=128
+http://ip_addr/kStore/SelfScan/getAllCartWithBarcodes?devId=1001&devReqId=64&devSessId=128
 
 Informazioni sul prodotto
 /getItemInfo
