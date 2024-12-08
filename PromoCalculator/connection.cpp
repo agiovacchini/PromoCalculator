@@ -9,8 +9,6 @@
 //
 
 #include "connection.hpp"
-#include <vector>
-#include <boost/bind.hpp>
 #include "request_handler.hpp"
 
 namespace http {
@@ -24,7 +22,7 @@ namespace http {
         {
         }
         
-        boost::asio::ip::tcp::socket& connection::socket()
+        tcp::socket& connection::socket()
         {
             return socket_;
         }

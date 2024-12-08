@@ -11,7 +11,6 @@
 #include <iostream>
 #include <string>
 //#include <thread>
-#include <sstream>
 #include <csignal>
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
@@ -150,7 +149,7 @@ int main(int argc, char* argv[])
         sigaddset(&wait_mask, SIGINT);
         sigaddset(&wait_mask, SIGQUIT);
         sigaddset(&wait_mask, SIGTERM);
-        pthread_sigmask(SIG_BLOCK, &wait_mask, 0);
+        pthread_sigmask(SIG_BLOCK, &wait_mask, nullptr);
         int sig = 0;
         sigwait(&wait_mask, &sig);
 		BOOST_LOG_SEV(my_logger_main, lt::info) << "- MA - " << "Received stop request";

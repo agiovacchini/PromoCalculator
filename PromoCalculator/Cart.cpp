@@ -11,7 +11,6 @@
 
 #include <sstream>
 #include <stdio.h>
-#include <chrono>
 #include <ctime>
 #include <locale>
 #include <fstream>
@@ -413,7 +412,6 @@ long Cart::persist( )
 {
     typedef std::map<void*, CartRow>::iterator itemRows;
     typedef std::map<uint64_t, long>::iterator barcodesRows;
-    uint64_t rowBarcode ;
     long qty = 0 ;
     
     BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "cartFileName: " << cartFileName ;
@@ -422,7 +420,7 @@ long Cart::persist( )
     
     for(barcodesRows iterator = barcodesMap.begin(); iterator != barcodesMap.end(); iterator++)
     {
-        rowBarcode = (uint64_t)iterator->first;
+        uint64_t rowBarcode = iterator->first;
         qty = iterator->second ;
         cartFile << rowBarcode << "," << qty << "\n";
     }
@@ -449,7 +447,7 @@ long Cart::sendToPos( uint32_t pPosNumber, string pScanInPath, string pStoreId )
         string scanInTmpFileName = (boost::format("%s/POS%03lu.TMP") % pScanInPath % pPosNumber).str();
         string scanInFileName = (boost::format("%s/POS%03lu.IN") % pScanInPath % pPosNumber).str();
         BOOST_LOG_SEV(my_logger_ca, lt::info) << "- CART# " << this->number << " - " << "Sending to pos with file: " << cartFileName ;
-        boost::posix_time::time_facet *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
+        auto *facet = new boost::posix_time::time_facet("%H%M%S%Y%m%d");
         std::stringstream date_stream;
         date_stream.imbue(std::locale(date_stream.getloc(), facet));
         date_stream << boost::posix_time::microsec_clock::universal_time();

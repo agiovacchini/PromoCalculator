@@ -42,7 +42,7 @@ class BaseSystem {
     bool baseSystemRunning ;
     bool dummyRCS ;
     bool cartsPriceChangesWhileShopping ;
-    bool mainReturnSeparateLinkedBarcode;
+    bool mainReturnSeparateLinkedBarcode{};
     std::map <string, string> configurationMap ;
     
     
@@ -61,7 +61,7 @@ class BaseSystem {
     boost::regex loyCardNoCheck ;
     std::string varFolderName ;
     std::string cartFolderName ;
-    uint32_t varCheckDelaySeconds ;
+    uint32_t varCheckDelaySeconds{} ;
 
 public:
     BaseSystem( string pBasePath, string pIniFileName ) ;

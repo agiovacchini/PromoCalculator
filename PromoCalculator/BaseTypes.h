@@ -24,8 +24,6 @@
 #include <boost/log/attributes/timer.hpp>
 #include <boost/log/common.hpp>
 #include <boost/log/expressions.hpp>
-#include <boost/log/sources/channel_feature.hpp>
-#include <boost/log/sources/channel_logger.hpp>
 #include <boost/log/sources/logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/sources/severity_logger.hpp>
@@ -37,9 +35,7 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/spirit/include/qi.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/thread/shared_mutex.hpp>
 #include <inttypes.h>
-#include <sstream>
 
 
 namespace logging = boost::log;

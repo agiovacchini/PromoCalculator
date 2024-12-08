@@ -11,7 +11,6 @@
 
 
 #include "request_handler.hpp"
-#include <fstream>
 #include <sstream>
 #include <string>
 #include <boost/lexical_cast.hpp>
@@ -70,7 +69,6 @@ namespace http {
             std::string servletFunctionPar = "" ;
             keys_and_values<std::string::iterator> paramsParser;    // create instance of parser
             std::map<std::string, std::string> urlParamsMap;        // map to receive results
-            typedef std::map<std::string, std::string>::iterator urlParamRows;
 
             int actionBS = WEBI_ACTION_NOT_RECOGNIZED ;
             

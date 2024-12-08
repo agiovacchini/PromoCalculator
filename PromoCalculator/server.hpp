@@ -13,9 +13,6 @@
 
 #include <boost/asio.hpp>
 #include <string>
-#include <vector>
-#include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 #include "connection.hpp"
 #include "request_handler.hpp"
 #include "BaseSystem.h"
@@ -25,7 +22,7 @@ namespace http {
         
         /// The top-level class of the HTTP server.
         class server
-        : private boost::noncopyable
+        : boost::noncopyable
         {
         public:
             /// Construct the server to listen on the specified TCP address and port, and

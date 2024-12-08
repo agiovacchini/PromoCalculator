@@ -1,21 +1,24 @@
 CXX		=	g++
-CXXFLAGS	=	-O3 -DNDEBUG -w -std=c++11 -Wall -L/home/utente/ws-cpp/libs/boost_1_60_0/stage/lib -I/home/utente/ws-cpp/libs/boost_1_60_0.build/include -pthread 
-NLIB		=	-lboost_atomic-gcc49-mt-1_60 -lboost_system-gcc49-mt-1_60 -lboost_filesystem-gcc49-mt-1_60 -lboost_iostreams-gcc49-mt-1_60 -lboost_log-gcc49-mt-1_60 -lboost_date_time-gcc49-mt-1_60 -lboost_regex-gcc49-mt-1_60 -lboost_log_setup-gcc49-mt-1_60 -lboost_chrono-gcc49-mt-1_60 -lboost_thread-gcc49-mt-1_60
+CXXFLAGS	=	-O3 -DNDEBUG -w -std=c++17 -Wall -pthread -DBOOST_BIND_GLOBAL_PLACEHOLDERS
+NLIB		=	-lboost_atomic -lboost_system -lboost_filesystem -lboost_iostreams -lboost_log -lboost_date_time -lboost_regex -lboost_log_setup -lboost_chrono -lboost_thread
 
 BIN=promoCalculator
+OBJDIR = obj
 
 SRC=$(wildcard *.cpp)
 SRC-FILES=$(filter-out stdafx.cpp, $(SRC))
 
-OBJ=$(SRC-FILES:%.cpp=%.o)
+OBJ = $(SRC-FILES:%.cpp=$(OBJDIR)/%.o)
 
-all: $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BIN) $^  $(NLIB)
+all: $(OBJDIR) $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $(BIN) $^ $(NLIB)
 
-%.o: %.c
-	$(CXX) $@ -c $<
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o
-	rm $(BIN)
-
+	rm -f $(OBJDIR)/*.o
+	rm -f $(BIN)
