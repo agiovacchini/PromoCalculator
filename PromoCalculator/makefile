@@ -1,28 +1,41 @@
-CXX		=	g++
-CXXFLAGS	=	-O3 -DNDEBUG -w -std=c++17 -Wall -pthread -DBOOST_BIND_GLOBAL_PLACEHOLDERS
-NLIB		=	-lboost_atomic -lboost_system -lboost_filesystem -lboost_iostreams -lboost_log -lboost_date_time -lboost_regex -lboost_log_setup -lboost_chrono -lboost_thread
-
-BIN=promo_calculator
+# Directory paths
 OBJDIR = obj
+INCLUDEDIR = include
+SRCDIR = src
 BINDIR = bin
 
-SRC=$(wildcard *.cpp)
-SRC-FILES=$(filter-out stdafx.cpp, $(SRC))
+# Source and object files
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+SRCFILES=$(filter-out src/stdafx.cpp, $(SRC))
+OBJFILES = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCFILES))
 
-OBJ = $(SRC-FILES:%.cpp=$(OBJDIR)/%.o)
+# Output binary
+BIN = $(BINDIR)/promo-calculator
 
-all: $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $(BINDIR)/$(BIN) $^ $(NLIB)
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -O3 -DNDEBUG -w -std=c++17 -Wall -pthread -DBOOST_BIND_GLOBAL_PLACEHOLDERS -I$(INCLUDEDIR)
+LDFLAGS = -lboost_atomic -lboost_system -lboost_filesystem -lboost_iostreams -lboost_log -lboost_date_time -lboost_regex -lboost_log_setup -lboost_chrono -lboost_thread
 
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+# Default target
+all: $(BIN)
+
+# Link the binary
+$(BIN): $(OBJFILES) | $(BINDIR)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+# Compile source files to object files
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BINDIR):
-	mkdir -p $(BINDIR)
+	@mkdir -p $(BINDIR)
 
-$(OBJDIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(OBJDIR):
+	@mkdir -p $(OBJDIR)
 
+# Clean up build files
 clean:
-	rm -Rf $(OBJDIR)
-	rm -Rf $(BINDIR)
+	rm -rf $(OBJDIR) $(BINDIR)
+
+.PHONY: all clean
