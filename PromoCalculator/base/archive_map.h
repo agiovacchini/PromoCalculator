@@ -1,5 +1,5 @@
 //
-//  ArchiveMap.h
+//  archive_map.h
 //  PromoCalculator
 //
 //  Created by Andrea Giovacchini on 18/03/14.

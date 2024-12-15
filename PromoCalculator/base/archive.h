@@ -1,5 +1,5 @@
 //
-//  Archive.h
+//  archive.h
 //  PromoCalculator
 //
 //  Created by Andrea Giovacchini on 18/03/14.
@@ -12,6 +12,8 @@
 
 class Archive {
 public:
+    virtual ~Archive() = default;
+
     virtual std::string toStr() const = 0 ;
     //virtual bool hello() const = 0 ;
 };

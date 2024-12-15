@@ -5,7 +5,7 @@
 //  Created by Andrea Giovacchini on 04/01/14.
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
-#include "BaseTypes.h"
+#include "base_types.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -23,7 +23,7 @@
 
 //#include "gmock/gmock.h"
 
-#include "BaseSystem.h"
+#include "base_system.h"
 
 #if defined _WIN32
 	#include <windows.h>

@@ -1,5 +1,5 @@
 //
-//  Barcodes.h
+//  barcodes.h
 //  PromoCalculator
 //
 //  Created by Andrea Giovacchini on 08/01/14.
@@ -12,22 +12,22 @@
 #include <iostream>
 #include <string>
 #include <inttypes.h>
-#include "base/Archive.h"
+#include "base/archive.h"
 
 using namespace std;
 
 class Barcodes : public Archive {
     
     uint64_t code ;
-    uint64_t itemCode ;
+    uint64_t item_code ;
 
 public:
     
-    void setCode( uint64_t pCode ) ;
+    void setCode( uint64_t p_code ) ;
     
     uint64_t getCode() const ;
 
-    void setItemCode( uint64_t pItemCode ) ;
+    void setItemCode( uint64_t p_item_code ) ;
     
     uint64_t getItemCode() const ;
     

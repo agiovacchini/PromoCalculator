@@ -1,5 +1,5 @@
 //
-//  Promotion.h
+//  promotion.h
 //  PromoCalculator
 //
 //  Created by Andrea Giovacchini on 10/07/15.
@@ -13,22 +13,22 @@ using namespace std;
 #ifndef PromoCalculator_Promotion_h
 #define PromoCalculator_Promotion_h
 
-#include "base/Archive.h"
+#include "base/archive.h"
 #include <sstream>
 #include <stdint.h>
 
-class Promotion : public Archive {
+class Promotion final : public Archive {
     
-    uint64_t promoCode ;
-    uint64_t itemCode ;
+    uint64_t promo_code ;
+    uint64_t item_code ;
     int64_t discount ;
-    unsigned int discountType ;
+    unsigned int discount_type ;
     string description ;
     
 public:
     Promotion();
     
-    Promotion(uint64_t pCode, uint64_t pItemCode, int64_t pDiscount, unsigned int pDiscountType, string pDescription);
+    Promotion(uint64_t pCode, uint64_t p_item_code, int64_t p_discount, unsigned int p_discount_type, const string &p_description);
     
     void setPromoCode( uint64_t pCode ) ;
     
@@ -40,12 +40,12 @@ public:
     uint64_t getCode() const ;
     
     
-    void setDiscount( uint64_t pDiscount ) ;
+    void setDiscount(int64_t p_discount) ;
     
     uint64_t getDiscount() const ;
     
     
-    void setDiscountType( unsigned int pDiscountType ) ;
+    void setDiscountType( unsigned int p_discount_type ) ;
     
     unsigned int getDiscountType() const ;
     
@@ -54,7 +54,7 @@ public:
     
     string getDescription() const ;
     
-    string toStr() const ;
+    string toStr() const override ;
     
     //Per la mappa, le funzioni che chiamano devono avere il modificatore const per attestare che non
     //hanno effetti collaterali
@@ -75,10 +75,10 @@ public:
     
     //Copy constructor
     Promotion& operator=( const Promotion& other ) {
-        promoCode = other.promoCode ;
-        itemCode = other.itemCode ;
+        promo_code = other.promo_code ;
+        item_code = other.item_code ;
         discount = other.discount ;
-        discountType = other.discountType;
+        discount_type = other.discount_type;
         description = other.description ;
         return *this;
     }

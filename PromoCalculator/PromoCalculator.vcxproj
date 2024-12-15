@@ -162,16 +162,16 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Barcodes.h" />
-    <ClInclude Include="BaseSystem.h" />
-    <ClInclude Include="BaseTypes.h" />
-    <ClInclude Include="Cart.h" />
+    <ClInclude Include="barcodes.h" />
+    <ClInclude Include="base_system.h" />
+    <ClInclude Include="base_types.h" />
+    <ClInclude Include="cart.h" />
     <ClInclude Include="connection.hpp" />
-    <ClInclude Include="Department.h" />
+    <ClInclude Include="department.h" />
     <ClInclude Include="header.hpp" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="mime_types.hpp" />
-    <ClInclude Include="Promotion.h" />
+    <ClInclude Include="promotion.h" />
     <ClInclude Include="reply.hpp" />
     <ClInclude Include="request.hpp" />
     <ClInclude Include="request_handler.hpp" />

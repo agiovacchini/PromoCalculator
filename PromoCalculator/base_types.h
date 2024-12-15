@@ -1,5 +1,5 @@
 //
-//  BaseTypes.h
+//  base_types.h
 //  PromoCalculator
 //
 //  Created by Andrea Giovacchini on 05/01/14.
@@ -118,9 +118,9 @@ namespace keywords = boost::log::keywords;
 #define WEBI_MANAGE_RESCAN                  50081
 
 struct Totals {
-    long itemsNumber ;
-    int64_t totalAmount ;
-    int64_t totalDiscount ;
+    long items_number ;
+    int64_t total_amount ;
+    int64_t total_discount ;
 };
 
 struct CartRow {
@@ -139,8 +139,8 @@ typedef Totals Totals ;
 
 
 struct CardSessionRow {
-    uint64_t loyCode ;
-    uint64_t sessionId ;
+    uint64_t loy_code ;
+    uint64_t session_id ;
 };
 
 
@@ -166,7 +166,7 @@ struct keys_and_values
 
 BOOST_LOG_INLINE_GLOBAL_LOGGER_DEFAULT(my_logger, src::severity_logger_mt< >)
 
-bool fileMove(std::string fileOri, std::string fileDest) ;
-bool fileDelete(std::string pFileName) ;
+bool fileMove(std::string file_ori, std::string file_dest) ;
+bool fileDelete(std::string p_file_name) ;
 
 #endif

@@ -20,12 +20,12 @@
 #include <boost/filesystem.hpp>
 #include <utility>
 
-#include "BaseTypes.h"
+#include "base_types.h"
 
 #include "reply.hpp"
 #include "request_handler.hpp"
 
-#include "BaseSystem.h"
+#include "base_system.h"
 
 static uint32_t next_cart_number;
 boost::mutex cartnumber_mutex;
@@ -39,26 +39,26 @@ qi::rule<std::string::const_iterator, std::vector<std::string>()> csv_parser = i
 
 using namespace std;
 
-BaseSystem::BaseSystem(string pBasePath, string pIniFileName) {
+BaseSystem::BaseSystem(string p_base_path, string p_ini_file_name) {
     using namespace logging::trivial;
 
-    this->basePath = std::move(pBasePath);
-    this->iniFileName = std::move(pIniFileName);
-    this->nodeId = 0;
-    this->baseSystemRunning = false;
-    this->dummyRCS = false;
-    this->cartsPriceChangesWhileShopping = false;
+    this->base_path = std::move(p_base_path);
+    this->ini_file_name_name = std::move(p_ini_file_name);
+    this->node_id = 0;
+    this->base_system_running = false;
+    this->dummy_rcs = false;
+    this->carts_price_changes_while_shopping = false;
     this->ean13 = "\\d{13}";
-    this->ean13PriceReq = "2\\d{12}";
+    this->ean13_price_req = "2\\d{12}";
     this->upc = "\\d{12}";
     this->ean8 = "\\d{8}";
-    this->loyCard = "260\\d{9}";
-    this->loyCardNoCheck = "260\\d{8}";
+    this->loy_card = "260\\d{9}";
+    this->loy_card_no_check = "260\\d{8}";
 
     if (this->loadConfiguration() == 0) {
         this->printConfiguration();
 
-        this->baseSystemRunning = true;
+        this->base_system_running = true;
 
         this->readArchives();
 
@@ -74,24 +74,24 @@ BaseSystem::BaseSystem(string pBasePath, string pIniFileName) {
     }
 }
 
-string BaseSystem::getConfigValue(string pParamName) {
-    return configurationMap[pParamName];
+string BaseSystem::getConfigValue(string p_param_name) {
+    return configuration_map[p_param_name];
 }
 
 string BaseSystem::getBasePath() const {
-    return this->basePath;
+    return this->base_path;
 }
 
 void BaseSystem::setBasePath(string pBasePath) {
-    this->basePath = std::move(pBasePath);
+    this->base_path = std::move(pBasePath);
 }
 
 long BaseSystem::loadConfiguration() {
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config file: " << this->basePath << this->iniFileName;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config file: " << this->base_path << this->ini_file_name_name;
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config load start";
     long rc = 0;
     ptree pConfigTree;
-    read_ini(this->basePath + this->iniFileName, pConfigTree);
+    read_ini(this->base_path + this->ini_file_name_name, pConfigTree);
 
 
     try {
@@ -112,31 +112,31 @@ long BaseSystem::loadConfiguration() {
         rc = rc + setConfigValue("WebAddress", "Web.Address", &pConfigTree);
         rc = rc + setConfigValue("WebPort", "Web.Port", &pConfigTree);
         rc = rc + setConfigValue("WebThreads", "Web.Threads", &pConfigTree);
-        configurationMap["MainArchivesDir"] = configurationMap["MainStoreChannel"] + "/" + configurationMap[
+        configuration_map["MainArchivesDir"] = configuration_map["MainStoreChannel"] + "/" + configuration_map[
                                                   "MainStoreId"] + "/";
 
-        this->nodeId = pConfigTree.get<uint32_t>("Node.Id");
+        this->node_id = pConfigTree.get<uint32_t>("Node.Id");
 
-        if (atoi(configurationMap["MainDummyRCS"].c_str()) == 1) {
-            this->dummyRCS = true;
+        if (atoi(configuration_map["MainDummyRCS"].c_str()) == 1) {
+            this->dummy_rcs = true;
         } else {
-            this->dummyRCS = false;
+            this->dummy_rcs = false;
         }
 
-        if (atoi(configurationMap["CartsPriceChangesWhileShopping"].c_str()) == 1) {
-            this->cartsPriceChangesWhileShopping = true;
+        if (atoi(configuration_map["CartsPriceChangesWhileShopping"].c_str()) == 1) {
+            this->carts_price_changes_while_shopping = true;
         } else {
-            this->cartsPriceChangesWhileShopping = false;
+            this->carts_price_changes_while_shopping = false;
         }
 
-        if (atoi(configurationMap["MainReturnSeparateLinkedBarcode"].c_str()) == 1) {
+        if (atoi(configuration_map["MainReturnSeparateLinkedBarcode"].c_str()) == 1) {
             this->mainReturnSeparateLinkedBarcode = true;
         } else {
             this->mainReturnSeparateLinkedBarcode = false;
         }
-        this->varFolderName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "VARS";
-        this->cartFolderName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS";
-        this->varCheckDelaySeconds = atol(configurationMap["MainVarCheckDelaySeconds"].c_str()) * 1000UL;
+        this->var_folder_name = this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "VARS";
+        this->cart_folder_name = this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "CARTS";
+        this->varCheckDelaySeconds = atol(configuration_map["MainVarCheckDelaySeconds"].c_str()) * 1000UL;
     } catch (std::exception const &e) {
         BOOST_LOG_SEV(my_logger_bs, lt::fatal) << "- BS - Config error: " << e.what();
         return RC_ERR;
@@ -145,8 +145,8 @@ long BaseSystem::loadConfiguration() {
     return rc;
 }
 
-long BaseSystem::setConfigValue(string confMapKey, string treeSearchKey, boost::property_tree::ptree *configTree) {
-    configurationMap[confMapKey] = configTree->get<std::string>(treeSearchKey);
+long BaseSystem::setConfigValue(string conf_map_key, string tree_search_key, boost::property_tree::ptree *config_tree) {
+    configuration_map[conf_map_key] = config_tree->get<std::string>(tree_search_key);
     return RC_OK;
 }
 
@@ -154,20 +154,20 @@ void BaseSystem::printConfiguration() {
     typedef std::map<string, string>::iterator configurationRows;
 
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config print start";
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Node Id: " << this->nodeId;
-    for (configurationRows iterator = configurationMap.begin(); iterator != configurationMap.end(); iterator++) {
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Node Id: " << this->node_id;
+    for (configurationRows iterator = configuration_map.begin(); iterator != configuration_map.end(); iterator++) {
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Key: " << iterator->first << ", value: " << iterator->second;
     }
     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Config print end";
 }
 
-void BaseSystem::readDepartmentArchive(string pFileName) {
+void BaseSystem::readDepartmentArchive(string p_file_name) {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
 
     // Tokenizer
     typedef boost::tokenizer<boost::escaped_list_separator<char>, std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
-    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName;
+    string archiveFileName = this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + p_file_name;
     std::string line;
     std::ifstream archiveFile(archiveFileName);
     bool r = false;
@@ -208,19 +208,19 @@ void BaseSystem::readDepartmentArchive(string pFileName) {
             }
             column++;
         }
-        departmentsMap.addElement(tempDepartment);
+        departments_map.addElement(tempDepartment);
     }
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << p_file_name;
 }
 
-void BaseSystem::readItemArchive(string pFileName) {
+void BaseSystem::readItemArchive(string p_file_name) {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
 
     // Tokenizer
     typedef boost::tokenizer<boost::escaped_list_separator<char>, std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
 
-    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName;
+    string archiveFileName = this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + p_file_name;
     std::ifstream archiveFile(archiveFileName);
     string tmp;
     bool r;
@@ -270,12 +270,12 @@ void BaseSystem::readItemArchive(string pFileName) {
             column++;
         }
         //itemsMap.insert(std::pair<uint64_t, Item>(tempItm.getCode(), std::move(tempItm)));
-        itemsMap.addElement(tempItm);
+        items_map.addElement(tempItm);
     }
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << pFileName;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Finished loading file " << p_file_name;
 }
 
-void BaseSystem::readBarcodesArchive(string pFileName) {
+void BaseSystem::readBarcodesArchive(string p_file_name) {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
 
     ItemCodePrice itmCodePrice;
@@ -283,7 +283,7 @@ void BaseSystem::readBarcodesArchive(string pFileName) {
     typedef boost::tokenizer<boost::escaped_list_separator<char>, std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
 
-    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName;
+    string archiveFileName = this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + p_file_name;
     std::ifstream archiveFile(archiveFileName);
     string tmp = "";
     bool r = false;
@@ -324,20 +324,20 @@ void BaseSystem::readBarcodesArchive(string pFileName) {
             column++;
         }
         //barcodesMap.insert(std::pair<uint64_t, Barcodes>(tempBarcode.getCode(), std::move(tempBarcode)));
-        barcodesMap.addElement(tempBarcode);
+        barcodes_map.addElement(tempBarcode);
     }
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << p_file_name;
 }
 
 
-void BaseSystem::readPromotionsArchive(string pFileName) {
+void BaseSystem::readPromotionsArchive(string p_file_name) {
     //http://stackoverflow.com/questions/18365463/how-to-parse-csv-using-boostspirit
 
     // Tokenizer
     typedef boost::tokenizer<boost::escaped_list_separator<char>, std::string::const_iterator, std::string> Tokenizer;
     boost::escaped_list_separator<char> seps('\\', ',', '\"');
 
-    string archiveFileName = this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + pFileName;
+    string archiveFileName = this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + p_file_name;
     std::ifstream archiveFile(archiveFileName);
     string tmp = "";
     bool r = false;
@@ -382,10 +382,10 @@ void BaseSystem::readPromotionsArchive(string pFileName) {
             }
             column++;
         }
-        promotionsMap.addElement(tempPromotion);
+        promotions_map.addElement(tempPromotion);
         cout << tempPromotion.toStr() << endl;
     }
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << pFileName;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "Finished loading file " << p_file_name;
 }
 
 
@@ -397,34 +397,34 @@ void BaseSystem::readArchives() {
 }
 
 void BaseSystem::dumpArchivesFromMemory() {
-    this->departmentsMap.dumpToFile(
-        this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS_DUMP.CSV");
-    this->itemsMap.dumpToFile(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS_DUMP.CSV");
-    this->barcodesMap.dumpToFile(
-        this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES_DUMP.CSV");
-    this->promotionsMap.dumpToFile(
-        this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "PROMOTIONS_DUMP.CSV");
+    this->departments_map.dumpToFile(
+        this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "DEPARTMENTS_DUMP.CSV");
+    this->items_map.dumpToFile(this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "ITEMS_DUMP.CSV");
+    this->barcodes_map.dumpToFile(
+        this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "BARCODES_DUMP.CSV");
+    this->promotions_map.dumpToFile(
+        this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "PROMOTIONS_DUMP.CSV");
 }
 
-ItemCodePrice BaseSystem::decodeBarcode(uint64_t rCode) {
+ItemCodePrice BaseSystem::decodeBarcode(uint64_t r_code) {
     std::stringstream tempStringStream;
     std::string barcodeWrkStr;
     ItemCodePrice rValues = {0, 0, 0, 0};
 
     tempStringStream.str(std::string());
     tempStringStream.clear();
-    tempStringStream << rCode;
+    tempStringStream << r_code;
 
     rValues.type = BCODE_NOT_RECOGNIZED;
 
-    if (regex_match(tempStringStream.str(), loyCard)) {
+    if (regex_match(tempStringStream.str(), loy_card)) {
         rValues.type = BCODE_LOYCARD;
     } else {
-        if (regex_match(tempStringStream.str(), loyCardNoCheck)) {
+        if (regex_match(tempStringStream.str(), loy_card_no_check)) {
             rValues.type = BCODE_LOYCARD;
         } else {
             if (regex_match(tempStringStream.str(), ean13)) {
-                if (regex_match(tempStringStream.str(), ean13PriceReq)) {
+                if (regex_match(tempStringStream.str(), ean13_price_req)) {
                     rValues.type = BCODE_EAN13_PRICE_REQ;
                 } else {
                     rValues.type = BCODE_EAN13;
@@ -447,12 +447,12 @@ ItemCodePrice BaseSystem::decodeBarcode(uint64_t rCode) {
             rValues.barcode = atoll(barcodeWrkStr.c_str());
             break;
         default:
-            rValues.barcode = rCode;
+            rValues.barcode = r_code;
             break;
     }
 
-    if (barcodesMap[rValues.barcode].getCode() == rValues.barcode) {
-        rValues.code = barcodesMap[rValues.barcode].getItemCode();
+    if (barcodes_map[rValues.barcode].getCode() == rValues.barcode) {
+        rValues.code = barcodes_map[rValues.barcode].getItemCode();
     }
 
     return rValues;
@@ -460,35 +460,35 @@ ItemCodePrice BaseSystem::decodeBarcode(uint64_t rCode) {
 
 void BaseSystem::checkForVariationFiles() {
     src::severity_logger_mt<boost::log::trivial::severity_level> my_logger_var;
-    std::string varFileName = "";
-    bool varsFound = false;
+    std::string var_file_name;
+    bool vars_found = false;
     std::string line;
     std::string key;
     std::string value;
     int column = 0;
     bool r = false;
-    char rowType = 0, rowAction = 0;
+    char row_type = 0, row_action = 0;
     Item itmTemp;
 
-    bool updatedItems = false;
-    bool updatedDepts = false;
-    bool updatedVats = false;
+    bool updated_items = false;
+    bool updated_depts = false;
+    bool updated_vats = false;
 
-    while (baseSystemRunning) {
-        varsFound = false;
+    while (base_system_running) {
+        vars_found = false;
         BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Checking for variation files";
-        if (!fs::exists(varFolderName)) {
-            BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No " << this->varFolderName << " subfolder found";
+        if (!fs::exists(var_folder_name)) {
+            BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No " << this->var_folder_name << " subfolder found";
         } else {
-            fs::recursive_directory_iterator it(varFolderName);
+            fs::recursive_directory_iterator it(var_folder_name);
             fs::recursive_directory_iterator endit;
             while (it != endit) {
                 //std::cout << it->path().stem().string() << " " << it->path().extension() << std::endl ;
-                if (fs::is_regular_file(*it) && it->path().extension() == ".VAR") {
-                    varFileName = it->path().filename().string();
-                    BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Var file found : " << varFileName;
+                if (is_regular_file(*it) && it->path().extension() == ".VAR") {
+                    var_file_name = it->path().filename().string();
+                    BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Var file found : " << var_file_name;
 
-                    std::ifstream varFileToLoad(varFolderName + "/" + varFileName);
+                    std::ifstream varFileToLoad(var_folder_name + "/" + var_file_name);
 
                     while (std::getline(varFileToLoad, line)) {
                         std::istringstream is_line(line);
@@ -506,14 +506,14 @@ void BaseSystem::checkForVariationFiles() {
 
                         for (auto i: result) {
                             if (column == 0) {
-                                rowType = i[0];
+                                row_type = i[0];
                             } else {
                                 if (column == 1) {
-                                    rowAction = i[0];
+                                    row_action = i[0];
                                 } else {
-                                    switch (rowType) {
+                                    switch (row_type) {
                                         case 'I': {
-                                            updatedItems = true;
+                                            updated_items = true;
                                             switch (column) {
                                                 case 2:
                                                     itmTemp.setCode(strtoull(i.c_str(), nullptr, 10));
@@ -536,10 +536,10 @@ void BaseSystem::checkForVariationFiles() {
                             }
                             column++;
                         }
-                        switch (rowType) {
+                        switch (row_type) {
                             case 'I': {
                                 if (itmTemp.getCode() > 0) {
-                                    itemsMap[itmTemp.getCode()] = itmTemp;
+                                    items_map[itmTemp.getCode()] = itmTemp;
                                 }
                                 break ;
                             }
@@ -549,56 +549,56 @@ void BaseSystem::checkForVariationFiles() {
                         }
                     }
 
-                    BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Renaming Var file " << varFileName << " in " <<
- varFileName + ".OLD";
-                    fileMove(varFolderName + "/" + varFileName, varFolderName + "/" + varFileName + ".OLD");
-                    varsFound = true;
+                    BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Renaming Var file " << var_file_name << " in " <<
+ var_file_name + ".OLD";
+                    fileMove(var_folder_name + "/" + var_file_name, var_folder_name + "/" + var_file_name + ".OLD");
+                    vars_found = true;
                 }
                 ++it;
             }
         }
 
-        if (!varsFound) {
+        if (!vars_found) {
             BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - No variation files found";
         } else {
             bool updatedBarcodes = false;
-            if (updatedItems == true) {
-                if (fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV",
-                             this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.OLD")) {
+            if (updated_items == true) {
+                if (fileMove(this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "ITEMS.CSV",
+                             this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "ITEMS.OLD")) {
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: Rename old file ok";
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: Start";
-                    this->itemsMap.dumpToFile(
-                        this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "ITEMS.CSV");
+                    this->items_map.dumpToFile(
+                        this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "ITEMS.CSV");
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping ITEMS: End ";
                 } else {
                     BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping ITEMS: Rename old file failed";
                 }
             }
             if (updatedBarcodes == true) {
-                if (fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES.CSV",
-                             this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES.OLD")) {
+                if (fileMove(this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "BARCODES.CSV",
+                             this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "BARCODES.OLD")) {
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Rename old file ok";
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: Start";
-                    this->barcodesMap.dumpToFile(
-                        this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "BARCODES.CSV");
+                    this->barcodes_map.dumpToFile(
+                        this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "BARCODES.CSV");
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping BARCODES: End ";
                 } else {
                     BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping BARCODES: Rename old file failed";
                 }
             }
-            if (updatedDepts == true) {
-                if (fileMove(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS.CSV",
-                             this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS.OLD")) {
+            if (updated_depts == true) {
+                if (fileMove(this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "DEPARTMENTS.CSV",
+                             this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "DEPARTMENTS.OLD")) {
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Rename old file ok";
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: Start";
-                    this->departmentsMap.dumpToFile(
-                        this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "DEPARTMENTS.CSV");
+                    this->departments_map.dumpToFile(
+                        this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "DEPARTMENTS.CSV");
                     BOOST_LOG_SEV(my_logger_var, lt::info) << "- BS - Dumping DEPARTMENTS: End ";
                 } else {
                     BOOST_LOG_SEV(my_logger_var, lt::error) << "- BS - Dumping DEPARTMENTS: Rename old file failed";
                 }
             }
-            if (updatedVats == true) {
+            if (updated_vats == true) {
                 //todo
             }
         }
@@ -611,63 +611,63 @@ void BaseSystem::loadCartsInProgress() {
     std::string key;
     std::string value;
     std::string tmp;
-    std::stringstream tempStringStream;
-    std::string barcodeWrkStr;
+    std::stringstream temp_string_stream;
+    std::string barcode_wrk_str;
     bool r = false;
 
     next_cart_number = 1;
 
-    if (!fs::exists(cartFolderName)) {
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "No " << cartFolderName << " subfolder found";
+    if (!fs::exists(cart_folder_name)) {
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "No " << cart_folder_name << " subfolder found";
         exit(-1);
     }
 
-    if (fs::is_directory(cartFolderName)) {
+    if (fs::is_directory(cart_folder_name)) {
         std::map<uint64_t, Cart>::iterator itCarts;
         std::vector<std::string> result;
         std::string::const_iterator s_end;
         std::string::const_iterator s_begin;
-        Department tempDepartment;
-        Item tempItm;
-        Cart *myCart = nullptr;
+        Department temp_department;
+        Item temp_itm;
+        Cart *my_cart = nullptr;
         int column = 0;
-        ItemCodePrice itmCodePrice;
-        uint32_t rQty = 0;
-        uint64_t rCode = 0;
-        char rObject = ' ';
-        char rAction = ' ';
-        uint32_t nextCartNumberTmp = 0;
-        uint32_t currentTmpCartNumber = 0;
+        ItemCodePrice itm_code_price{};
+        uint32_t r_qty = 0;
+        uint64_t r_code = 0;
+        char r_object = ' ';
+        char r_action = ' ';
+        uint32_t next_cart_number_tmp = 0;
+        uint32_t current_tmp_cart_number = 0;
         std::string line;
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "CARTS subfolder found";
-        fs::recursive_directory_iterator it(cartFolderName);
+        fs::recursive_directory_iterator it(cart_folder_name);
         fs::recursive_directory_iterator endit;
         while (it != endit) {
-            rAction = ' ';
-            rCode = 0;
-            rQty = 0;
+            r_action = ' ';
+            r_code = 0;
+            r_qty = 0;
             if (fs::is_regular_file(*it) && it->path().extension() == ".transaction_in_progress") {
-                currentTmpCartNumber = atol(it->path().stem().string().c_str());
+                current_tmp_cart_number = atol(it->path().stem().string().c_str());
 
-                nextCartNumberTmp = next_cart_number;
-                next_cart_number = currentTmpCartNumber;
+                next_cart_number_tmp = next_cart_number;
+                next_cart_number = current_tmp_cart_number;
                 BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "==================================";
                 BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "File tmpTrans: " << it->path().filename() <<
- " num: " << currentTmpCartNumber << " next: " << next_cart_number;
+ " num: " << current_tmp_cart_number << " next: " << next_cart_number;
 
                 newCart(GEN_CART_LOAD);
 
-                next_cart_number = nextCartNumberTmp;
+                next_cart_number = next_cart_number_tmp;
 
-                itCarts = cartsMap.find(currentTmpCartNumber);
-                if (itCarts != cartsMap.end()) {
-                    myCart = &(itCarts->second);
+                itCarts = carts_map.find(current_tmp_cart_number);
+                if (itCarts != carts_map.end()) {
+                    my_cart = &(itCarts->second);
                 }
-                std::ifstream tmpTransactonFileToLoad(
-                    this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"] + "CARTS/" + it->path().
+                std::ifstream tmp_transacton_file_to_load(
+                    this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"] + "CARTS/" + it->path().
                     filename().string());
 
-                while (std::getline(tmpTransactonFileToLoad, line)) {
+                while (std::getline(tmp_transacton_file_to_load, line)) {
                     std::istringstream is_line(line);
                     s_begin = line.begin();
                     s_end = line.end();
@@ -683,38 +683,38 @@ void BaseSystem::loadCartsInProgress() {
                                 //timeStamp
                                 break;
                             case 1:
-                                rObject = i[0];
+                                r_object = i[0];
                                 break;
                             case 2:
-                                rAction = i[0];
+                                r_action = i[0];
                                 break;
                             default:
-                                switch (rObject) {
+                                switch (r_object) {
                                     case 'I':
                                     case 'L':
                                         switch (column) {
                                             case 3:
-                                                rCode = strtoull(i.c_str(), nullptr, 10);
+                                                r_code = strtoull(i.c_str(), nullptr, 10);
                                                 break;
                                             case 4:
-                                                rQty = atol(i.c_str());
+                                                r_qty = atol(i.c_str());
                                                 break;
                                             default:
                                                 break ;
                                         }
                                         break ;
                                     case 'K':
-                                        switch (rAction) {
+                                        switch (r_action) {
                                             case 'D':
                                                 switch (column) {
                                                     case 3:
-                                                        tempDepartment.setCode(strtoull(i.c_str(), nullptr, 10));
+                                                        temp_department.setCode(strtoull(i.c_str(), nullptr, 10));
                                                         break;
                                                     case 4:
-                                                        tempDepartment.setParentCode(strtoull(i.c_str(), nullptr, 10));
+                                                        temp_department.setParentCode(strtoull(i.c_str(), nullptr, 10));
                                                         break;
                                                     case 5:
-                                                        tempDepartment.setDescription(i);
+                                                        temp_department.setDescription(i);
                                                         break;
                                                 }
                                                 break;
@@ -722,19 +722,19 @@ void BaseSystem::loadCartsInProgress() {
                                                 switch (column) {
                                                     case 3:
                                                         tmp = std::string(i);
-                                                        tempItm.setCode(strtoull(i.c_str(), nullptr, 10));
+                                                        temp_itm.setCode(strtoull(i.c_str(), nullptr, 10));
                                                         break;
                                                     case 4:
-                                                        tempItm.setDescription(i);
+                                                        temp_itm.setDescription(i);
                                                         break;
                                                     case 5:
-                                                        tempItm.setDepartmentCode(strtoull(i.c_str(), nullptr, 10));
+                                                        temp_itm.setDepartmentCode(strtoull(i.c_str(), nullptr, 10));
                                                         break;
                                                     case 6:
-                                                        tempItm.setPrice(strtol(i.c_str(), nullptr, 10));
+                                                        temp_itm.setPrice(strtol(i.c_str(), nullptr, 10));
                                                         break;
                                                     case 7:
-                                                        tempItm.setLinkedBarCode(strtoull(i.c_str(), nullptr, 10));
+                                                        temp_itm.setLinkedBarCode(strtoull(i.c_str(), nullptr, 10));
                                                         break;
                                                     default:
                                                         break;
@@ -749,61 +749,61 @@ void BaseSystem::loadCartsInProgress() {
                         column++;
                     }
 
-                    myCart->getNextRequestId();
-                    switch (rObject) {
+                    my_cart->getNextRequestId();
+                    switch (r_object) {
                         case 'I':
-                            if (rAction == 'A') {
+                            if (r_action == 'A') {
                                 BOOST_LOG_SEV(my_logger_bs,
-                                              lt::info) << "- BS - Debug recupero riga carrello, IA rcode: " << rCode <<
- " qty:" << rQty << ", addr: " << &itemsMap[itmCodePrice.code];
-                                itmCodePrice = decodeBarcode(rCode);
-                                itmCodePrice.price = myCart->getItemPrice(
-                                    &itemsMap[itmCodePrice.code], rCode, itmCodePrice.type,
-                                    cartsPriceChangesWhileShopping);
-                                myCart->addItemByBarcode(itemsMap[itmCodePrice.code], rCode, rQty, itmCodePrice.price,
+                                              lt::info) << "- BS - Debug recupero riga carrello, IA rcode: " << r_code <<
+ " qty:" << r_qty << ", addr: " << &items_map[itm_code_price.code];
+                                itm_code_price = decodeBarcode(r_code);
+                                itm_code_price.price = my_cart->getItemPrice(
+                                    &items_map[itm_code_price.code], r_code, itm_code_price.type,
+                                    carts_price_changes_while_shopping);
+                                my_cart->addItemByBarcode(items_map[itm_code_price.code], r_code, r_qty, itm_code_price.price,
                                                          0);
                             } else {
                                 BOOST_LOG_SEV(my_logger_bs,
-                                              lt::info) << "- BS - Debug recupero riga carrello, IV rcode: " << rCode <<
- rCode << " qty:" << rQty;
-                                itmCodePrice = decodeBarcode(rCode);
-                                itmCodePrice.price = myCart->getItemPrice(
-                                    &itemsMap[itmCodePrice.code], rCode, itmCodePrice.type,
-                                    cartsPriceChangesWhileShopping);
-                                myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], rCode, itmCodePrice.price, 0);
+                                              lt::info) << "- BS - Debug recupero riga carrello, IV rcode: " << r_code <<
+ r_code << " qty:" << r_qty;
+                                itm_code_price = decodeBarcode(r_code);
+                                itm_code_price.price = my_cart->getItemPrice(
+                                    &items_map[itm_code_price.code], r_code, itm_code_price.type,
+                                    carts_price_changes_while_shopping);
+                                my_cart->removeItemByBarcode(items_map[itm_code_price.code], r_code, itm_code_price.price, 0);
                             }
                             break;
                         case 'L':
-                            if (rAction == 'A') {
+                            if (r_action == 'A') {
                                 BOOST_LOG_SEV(my_logger_bs,
-                                              lt::info) << "- BS - Debug recupero riga carrello, LA rcode: " << rCode;
-                                myCart->addLoyCard(rCode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()));
-                                allLoyCardsMap[rCode] = currentTmpCartNumber;
+                                              lt::info) << "- BS - Debug recupero riga carrello, LA rcode: " << r_code;
+                                my_cart->addLoyCard(r_code, atoi(configuration_map["LoyMaxCardsPerTransaction"].c_str()));
+                                all_loy_cards_map[r_code] = current_tmp_cart_number;
                             } else {
                                 BOOST_LOG_SEV(my_logger_bs,
-                                              lt::info) << "- BS - Debug recupero riga carrello, LV rcode: " << rCode;
-                                myCart->removeLoyCard(rCode);
-                                allLoyCardsMap.erase(rCode);
+                                              lt::info) << "- BS - Debug recupero riga carrello, LV rcode: " << r_code;
+                                my_cart->removeLoyCard(r_code);
+                                all_loy_cards_map.erase(r_code);
                             }
                             break;
                         case 'C':
-                            if (rAction == 'V') {
+                            if (r_action == 'V') {
                                 BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Debug recupero riga carrello, CV";
-                                myCart->setState(CART_STATE_VOIDED);
+                                my_cart->setState(CART_STATE_VOIDED);
                             }
                             break;
-                            if (rAction == 'C') {
+                            if (r_action == 'C') {
                                 BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Debug recupero riga carrello, CC";
-                                myCart->setState(CART_STATE_CLOSED);
+                                my_cart->setState(CART_STATE_CLOSED);
                             }
                             break;
                         case 'K':
-                            switch (rAction) {
+                            switch (r_action) {
                                 case 'I':
                                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - Debug recupero riga carrello, KI";
-                                    if (!cartsPriceChangesWhileShopping) {
-                                        myCart->updateLocalItemMap(
-                                            tempItm, departmentsMap[tempItm.getDepartmentCode()]);
+                                    if (!carts_price_changes_while_shopping) {
+                                        my_cart->updateLocalItemMap(
+                                            temp_itm, departments_map[temp_itm.getDepartmentCode()]);
                                     }
                                     break;
                                 case 'D':
@@ -817,13 +817,13 @@ void BaseSystem::loadCartsInProgress() {
                     }
                 }
 
-                if ((myCart->getState() != CART_STATE_VOIDED) && (myCart->getState() != CART_STATE_CLOSED)) {
-                    myCart->setState(CART_STATE_READY_FOR_ITEM);
+                if ((my_cart->getState() != CART_STATE_VOIDED) && (my_cart->getState() != CART_STATE_CLOSED)) {
+                    my_cart->setState(CART_STATE_READY_FOR_ITEM);
                 }
 
-                tmpTransactonFileToLoad.close();
-                if (currentTmpCartNumber >= next_cart_number) {
-                    next_cart_number = currentTmpCartNumber + 1;
+                tmp_transacton_file_to_load.close();
+                if (current_tmp_cart_number >= next_cart_number) {
+                    next_cart_number = current_tmp_cart_number + 1;
                 }
             }
             ++it;
@@ -832,340 +832,338 @@ void BaseSystem::loadCartsInProgress() {
 }
 
 
-std::string BaseSystem::fromLongToStringWithDecimals(int64_t pValue) {
-    std::ostringstream tempStringStream, returnStream;
-    tempStringStream.str(std::string());
-    tempStringStream.clear();
-    tempStringStream << pValue;
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - PrezziStrani - pValue: " << pValue;
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - PrezziStrani - tempStringStream: " << tempStringStream.str();
+std::string BaseSystem::fromLongToStringWithDecimals(int64_t p_value) {
+    std::ostringstream temp_string_stream, return_stream;
+    temp_string_stream.str(std::string());
+    temp_string_stream.clear();
+    temp_string_stream << p_value;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - PrezziStrani - pValue: " << p_value;
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - PrezziStrani - tempStringStream: " << temp_string_stream.str();
 
-    if (tempStringStream.str().size() < 3) {
-        returnStream << "0." << tempStringStream.str();
+    if (temp_string_stream.str().size() < 3) {
+        return_stream << "0." << temp_string_stream.str();
     } else {
-        returnStream << tempStringStream.str().substr(0, tempStringStream.str().size() - 2) << "." << tempStringStream.
-                str().substr(tempStringStream.str().size() - 2, tempStringStream.str().size());
+        return_stream << temp_string_stream.str().substr(0, temp_string_stream.str().size() - 2) << "." << temp_string_stream.
+                str().substr(temp_string_stream.str().size() - 2, temp_string_stream.str().size());
     }
 
-    return returnStream.str();
+    return return_stream.str();
 }
 
-int64_t BaseSystem::getItemPrice(Item *pItem, uint64_t pBarcode, unsigned int pBCodeType) {
-    std::string barcodeWrkStr;
-
-    if (pBCodeType != BCODE_EAN13_PRICE_REQ) {
-        return pItem->getPrice();
+int64_t BaseSystem::getItemPrice(Item *p_item, uint64_t p_barcode, unsigned int p_bcode_type) {
+    if (p_bcode_type != BCODE_EAN13_PRICE_REQ) {
+        return p_item->getPrice();
     } else {
-        std::stringstream tempStringStream;
-        tempStringStream.str(std::string());
-        tempStringStream.clear();
-        tempStringStream << pBarcode;
-        barcodeWrkStr = tempStringStream.str().substr(0, 7) + "000000";
-        return atol(tempStringStream.str().substr(7, 5).c_str());
+        std::stringstream temp_string_stream;
+        temp_string_stream.str(std::string());
+        temp_string_stream.clear();
+        temp_string_stream << p_barcode;
+        std::string barcode_wrk_str = temp_string_stream.str().substr(0, 7) + "000000";
+        return atol(temp_string_stream.str().substr(7, 5).c_str());
     }
 }
 
-string BaseSystem::salesActionsFromWebInterface(int pAction, std::map<std::string, std::string> pUrlParamsMap) {
-    uint64_t cartId = 0;
-    uint64_t promoVal = 0;
+string BaseSystem::salesActionsFromWebInterface(int p_action, std::map<std::string, std::string> p_url_params_map) {
+    uint64_t cart_id = 0;
+    uint64_t promo_val = 0;
     std::string resp = " ";
-    std::ostringstream respStringStream;
-    std::ostringstream tempStringStream;
-    uint32_t requestId = 0, qty = 0;
+    std::ostringstream resp_string_stream;
+    std::ostringstream temp_string_stream;
+    uint32_t request_id = 0, qty = 0;
     uint64_t barcode = 0;
-    std::map<uint64_t, Totals> tmpTotalsMap;
-    std::map<uint64_t, Cart>::iterator mainIterator;
+    std::map<uint64_t, Totals> tmp_totals_map;
+    std::map<uint64_t, Cart>::iterator main_iterator;
 
-    ItemCodePrice itmCodePrice{};
+    ItemCodePrice itm_code_price{};
     long rc = 0;
-    respStringStream.str(std::string());
-    respStringStream.clear();
+    resp_string_stream.str(std::string());
+    resp_string_stream.clear();
 
-    if (pAction == WEBI_SESSION_INIT) {
-        cartId = this->newCart(GEN_CART_NEW);
-        respStringStream << R"({"status":0,"deviceReqId":1,"sessionId":)" << cartId << "}";
+    if (p_action == WEBI_SESSION_INIT) {
+        cart_id = this->newCart(GEN_CART_NEW);
+        resp_string_stream << R"({"status":0,"deviceReqId":1,"sessionId":)" << cart_id << "}";
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "InitResp - Cool";
-    } else if (pAction == WEBI_GET_STORE_INFO) {
-        respStringStream << R"({"status":0,"loyChannel":)" << configurationMap["MainStoreLoyChannel"] << ",\"Channel\":"
-                << configurationMap["MainStoreChannel"] << ",\"id\":" << configurationMap["MainStoreId"] << "}";
+    } else if (p_action == WEBI_GET_STORE_INFO) {
+        resp_string_stream << R"({"status":0,"loyChannel":)" << configuration_map["MainStoreLoyChannel"] << ",\"Channel\":"
+                << configuration_map["MainStoreChannel"] << ",\"id\":" << configuration_map["MainStoreId"] << "}";
         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << endl << "WEBI_SESSION_GET_STORE_INFO - Cool - result:" <<
- respStringStream.str();
-    } else if (pAction == WEBI_GET_CARTS_LIST) {
-        respStringStream << this->getCartsList();
-        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_CARTS_LIST - Cool - result:" << respStringStream.
+ resp_string_stream.str();
+    } else if (p_action == WEBI_GET_CARTS_LIST) {
+        resp_string_stream << this->getCartsList();
+        BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_CARTS_LIST - Cool - result:" << resp_string_stream.
 str();
-    } else if (pAction == WEBI_ITEM_INFO) {
+    } else if (p_action == WEBI_ITEM_INFO) {
         if (barcode == 0) {
-            barcode = strtoull(pUrlParamsMap["barcode"].c_str(), nullptr, 10);
+            barcode = strtoull(p_url_params_map["barcode"].c_str(), nullptr, 10);
         }
         qty = 1;
 
-        itmCodePrice = decodeBarcode(barcode);
+        itm_code_price = decodeBarcode(barcode);
 
-        itmCodePrice.price = getItemPrice(&itemsMap[itmCodePrice.code], barcode, itmCodePrice.type);
-        if (itmCodePrice.type != BCODE_NOT_RECOGNIZED) {
+        itm_code_price.price = getItemPrice(&items_map[itm_code_price.code], barcode, itm_code_price.type);
+        if (itm_code_price.type != BCODE_NOT_RECOGNIZED) {
             try {
-                if (itmCodePrice.code != 0) {
-                    respStringStream << "{";
-                    respStringStream << "\"status\":\"0\",\"itemInfo\":{\"itemId\":\"" << barcode <<
-                            "\",\"description\":\"" << itemsMap[itmCodePrice.code].getDescription() << "\",\"price\":"
-                            << fromLongToStringWithDecimals(itmCodePrice.price) << "}";
-                    respStringStream << "}";
+                if (itm_code_price.code != 0) {
+                    resp_string_stream << "{";
+                    resp_string_stream << "\"status\":\"0\",\"itemInfo\":{\"itemId\":\"" << barcode <<
+                            "\",\"description\":\"" << items_map[itm_code_price.code].getDescription() << "\",\"price\":"
+                            << fromLongToStringWithDecimals(itm_code_price.price) << "}";
+                    resp_string_stream << "}";
                 } else {
                     rc = BCODE_ITEM_NOT_FOUND;
-                    if ((rc > 0) && (dummyRCS)) {
+                    if ((rc > 0) && (dummy_rcs)) {
                         rc = 3;
                     }
-                    respStringStream << "{\"status\":" << rc << "}";
+                    resp_string_stream << "{\"status\":" << rc << "}";
                 }
             } catch (std::exception const &e) {
                 BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - " << "Sales session error: " << e.what();
             }
             BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_INFO - Cool - rc:" << rc << ", barcode: "
- << barcode << ", qty: " << qty << ",addr: " << &itemsMap[itmCodePrice.code];
+ << barcode << ", qty: " << qty << ",addr: " << &items_map[itm_code_price.code];
         } else {
             rc = BCODE_NOT_RECOGNIZED;
-            if ((rc > 0) && (dummyRCS)) {
+            if (rc > 0 && dummy_rcs) {
                 rc = 3;
             }
-            respStringStream << "{\"status\":" << rc << "}";
+            resp_string_stream << "{\"status\":" << rc << "}";
         }
-    } else if (pAction == WEBI_ACTION_NOT_RECOGNIZED) {
+    } else if (p_action == WEBI_ACTION_NOT_RECOGNIZED) {
         rc = WEBI_ACTION_NOT_RECOGNIZED;
-        if ((rc > 0) && (dummyRCS)) {
+        if (rc > 0 && dummy_rcs) {
             rc = 3;
         }
-        respStringStream << "{\"status\":" << rc << "}";
+        resp_string_stream << "{\"status\":" << rc << "}";
         BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - Web action not recognized :(";
     } else {
-        tempStringStream.str(std::string());
-        tempStringStream.clear();
-        tempStringStream << pUrlParamsMap["devSessId"];
-        std::string strCartId = tempStringStream.str();
-        cartId = atoll(strCartId.c_str());
-        mainIterator = cartsMap.find(cartId);
+        temp_string_stream.str(std::string());
+        temp_string_stream.clear();
+        temp_string_stream << p_url_params_map["devSessId"];
+        std::string strCartId = temp_string_stream.str();
+        cart_id = atoll(strCartId.c_str());
+        main_iterator = carts_map.find(cart_id);
 
-        if (mainIterator != cartsMap.end()) {
-            Cart *myCart = nullptr;
-            myCart = &mainIterator->second;
-            requestId = myCart->getNextRequestId();
+        if (main_iterator != carts_map.end()) {
+            Cart *my_cart = nullptr;
+            my_cart = &main_iterator->second;
+            request_id = my_cart->getNextRequestId();
             barcode = 0;
-            switch (pAction) {
+            switch (p_action) {
                 case WEBI_MANAGE_RESCAN: {
                     bool rescanRequired = false;
                     rc = 0;
 
-                    if (pUrlParamsMap["required"].compare("true") == 0) {
+                    if (p_url_params_map["required"] == "true") {
                         rescanRequired = true;
                     }
 
-                    myCart->setRescan(rescanRequired);
+                    my_cart->setRescan(rescanRequired);
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_MANAGE_RESCAN - Cool - rc:" << rc <<
  ", required: " << rescanRequired;
-                    respStringStream << "{\"status\":" << rc << "}";
+                    resp_string_stream << "{\"status\":" << rc << "}";
                     break;
                 }
                 case WEBI_ITEM_ADD: {
                     if (barcode == 0) {
-                        barcode = strtoull(pUrlParamsMap["barcode"].c_str(), nullptr, 10);
+                        barcode = strtoull(p_url_params_map["barcode"].c_str(), nullptr, 10);
                     }
                     qty = 1;
 
-                    itmCodePrice = decodeBarcode(barcode);
+                    itm_code_price = decodeBarcode(barcode);
 
-                    if (itmCodePrice.type != BCODE_NOT_RECOGNIZED) {
+                    if (itm_code_price.type != BCODE_NOT_RECOGNIZED) {
                         try {
-                            if (itmCodePrice.code != 0) {
-                                if (!cartsPriceChangesWhileShopping) {
-                                    myCart->updateLocalItemMap(itemsMap[itmCodePrice.code],
-                                                               departmentsMap[itemsMap[itmCodePrice.code].
+                            if (itm_code_price.code != 0) {
+                                if (!carts_price_changes_while_shopping) {
+                                    my_cart->updateLocalItemMap(items_map[itm_code_price.code],
+                                                               departments_map[items_map[itm_code_price.code].
                                                                    getDepartmentCode()]);
                                 }
 
 
-                                itmCodePrice.price = myCart->getItemPrice(
-                                    &itemsMap[itmCodePrice.code], barcode, itmCodePrice.type,
-                                    cartsPriceChangesWhileShopping);
+                                itm_code_price.price = my_cart->getItemPrice(
+                                    &items_map[itm_code_price.code], barcode, itm_code_price.type,
+                                    carts_price_changes_while_shopping);
 
-                                respStringStream << "{";
+                                resp_string_stream << "{";
 
-                                cout << "Prezzo: " << itmCodePrice.price << ", sconto: " << promoVal << ", descr: " <<
-                                        promotionsMap[itmCodePrice.code].getDescription() << std::endl;
+                                cout << "Prezzo: " << itm_code_price.price << ", sconto: " << promo_val << ", descr: " <<
+                                        promotions_map[itm_code_price.code].getDescription() << std::endl;
 
-                                if (promotionsMap[itmCodePrice.code].getCode() == itmCodePrice.code) {
+                                if (promotions_map[itm_code_price.code].getCode() == itm_code_price.code) {
                                     // cout << "Disc: " << promotionsMap[itmCodePrice.code].toStr() << ", type: " << promotionsMap[itmCodePrice.code].getDiscountType() << std::endl;
-                                    switch (promotionsMap[itmCodePrice.code].getDiscountType()) {
+                                    switch (promotions_map[itm_code_price.code].getDiscountType()) {
                                         case PROMO_TYPE_DSC_VAL:
-                                            promoVal = promotionsMap[itmCodePrice.code].getDiscount();
+                                            promo_val = promotions_map[itm_code_price.code].getDiscount();
                                         // cout << "perc" << endl;
                                             break;
                                         case PROMO_TYPE_DSC_PERC:
-                                            promoVal = (itmCodePrice.price / 100.) * promotionsMap[itmCodePrice.code].
+                                            promo_val = itm_code_price.price / 100. * promotions_map[itm_code_price.code].
                                                        getDiscount();
                                         // cout << "val" << endl;
                                             break;
                                         case PROMO_TYPE_PRICE_CUT:
-                                            promoVal = itmCodePrice.price - promotionsMap[itmCodePrice.code].
+                                            promo_val = itm_code_price.price - promotions_map[itm_code_price.code].
                                                        getDiscount();
                                         // cout << "itmCodePrice.price: " << itmCodePrice.price << ", promoVal: " << promoVal << endl;
                                             break;
                                     }
                                 }
 
-                                rc = myCart->addItemByBarcode(itemsMap[itmCodePrice.code], barcode, qty,
-                                                              itmCodePrice.price, promoVal);
+                                rc = my_cart->addItemByBarcode(items_map[itm_code_price.code], barcode, qty,
+                                                              itm_code_price.price, promo_val);
 
 
-                                if ((rc > 0) && (dummyRCS)) {
+                                if ((rc > 0) && (dummy_rcs)) {
                                     rc = 3;
                                 }
 
-                                if ((rc == 0) && (itemsMap[itmCodePrice.code].getLinkedBarCode() > 0)) {
-                                    uint64_t barCodeTmp = itemsMap[itmCodePrice.code].getLinkedBarCode();
+                                if ((rc == 0) && (items_map[itm_code_price.code].getLinkedBarCode() > 0)) {
+                                    uint64_t barCodeTmp = items_map[itm_code_price.code].getLinkedBarCode();
 
-                                    if (!cartsPriceChangesWhileShopping) {
-                                        myCart->updateLocalItemMap(itemsMap[barcodesMap[barCodeTmp].getItemCode()],
-                                                                   departmentsMap[itemsMap[barcodesMap[barCodeTmp].
+                                    if (!carts_price_changes_while_shopping) {
+                                        my_cart->updateLocalItemMap(items_map[barcodes_map[barCodeTmp].getItemCode()],
+                                                                   departments_map[items_map[barcodes_map[barCodeTmp].
                                                                        getItemCode()].getDepartmentCode()]);
                                     }
 
-                                    long rcLinked = myCart->addItemByBarcode(
-                                        itemsMap[barcodesMap[barCodeTmp].getItemCode()], barCodeTmp, qty,
-                                        itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice(), 0);
-                                    if ((rcLinked > 0) && (dummyRCS)) {
+                                    long rcLinked = my_cart->addItemByBarcode(
+                                        items_map[barcodes_map[barCodeTmp].getItemCode()], barCodeTmp, qty,
+                                        items_map[barcodes_map[barCodeTmp].getItemCode()].getPrice(), 0);
+                                    if ((rcLinked > 0) && (dummy_rcs)) {
                                         rcLinked = 3;
                                     }
                                     if (mainReturnSeparateLinkedBarcode) {
-                                        respStringStream << "\"addItemResponse\":{\"status\":" << rcLinked <<
-                                                ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barCodeTmp <<
-                                                "\",\"description\":\"" << itemsMap[barcodesMap[barCodeTmp].
+                                        resp_string_stream << "\"addItemResponse\":{\"status\":" << rcLinked <<
+                                                ",\"deviceReqId\":" << request_id << ",\"itemId\":\"" << barCodeTmp <<
+                                                "\",\"description\":\"" << items_map[barcodes_map[barCodeTmp].
                                                     getItemCode()].getDescription() << "\",\"price\":" <<
                                                 fromLongToStringWithDecimals(
-                                                    itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice()) <<
+                                                    items_map[barcodes_map[barCodeTmp].getItemCode()].getPrice()) <<
                                                 ",\"voidFlag\":\"false\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},";
                                     } else {
-                                        itmCodePrice.price =
-                                                itmCodePrice.price + itemsMap[barcodesMap[barCodeTmp].getItemCode()].
+                                        itm_code_price.price =
+                                                itm_code_price.price + items_map[barcodes_map[barCodeTmp].getItemCode()].
                                                 getPrice();
                                     }
                                 }
-                                respStringStream << R"("addItemResponse":{"status":)" << rc << ",\"deviceReqId\":" <<
-                                        requestId << R"(,"itemId":")" << barcode << R"(","description":")" << itemsMap[
-                                            itmCodePrice.code].getDescription() << R"(","price":)" <<
-                                        fromLongToStringWithDecimals(itmCodePrice.price) <<
+                                resp_string_stream << R"("addItemResponse":{"status":)" << rc << ",\"deviceReqId\":" <<
+                                        request_id << R"(,"itemId":")" << barcode << R"(","description":")" << items_map[
+                                            itm_code_price.code].getDescription() << R"(","price":)" <<
+                                        fromLongToStringWithDecimals(itm_code_price.price) <<
                                         R"(,"voidFlag":"false","quantity":1,"itemType":"NormalSaleItem"})";
 
 
-                                if (promoVal != 0) {
-                                    respStringStream << R"(,"promoResponse":{"status":0,"deviceReqId":)" << requestId
-                                            << R"(,"promoItemId":")" << promotionsMap[itmCodePrice.code].getPromoCode()
-                                            << R"(","promoDescr":")" << promotionsMap[itmCodePrice.code].
+                                if (promo_val != 0) {
+                                    resp_string_stream << R"(,"promoResponse":{"status":0,"deviceReqId":)" << request_id
+                                            << R"(,"promoItemId":")" << promotions_map[itm_code_price.code].getPromoCode()
+                                            << R"(","promoDescr":")" << promotions_map[itm_code_price.code].
                                             getDescription() << R"(","promoValue":-)" <<
-                                            fromLongToStringWithDecimals(promoVal) <<
+                                            fromLongToStringWithDecimals(promo_val) <<
                                             R"(,"voidFlag":"false","promoQty":1})";
                                 }
 
 
-                                tmpTotalsMap = myCart->getTotals();
+                                tmp_totals_map = my_cart->getTotals();
 
-                                respStringStream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" <<
-                                        requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber <<
-                                        ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount)
+                                resp_string_stream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" <<
+                                        request_id << ",\"totalItems\":" << tmp_totals_map[0].items_number <<
+                                        ",\"totalAmount\":" << fromLongToStringWithDecimals(tmp_totals_map[0].total_amount)
                                         << ",\"totalDiscounts\":" <<
-                                        fromLongToStringWithDecimals(tmpTotalsMap[0].totalDiscount) <<
+                                        fromLongToStringWithDecimals(tmp_totals_map[0].total_discount) <<
                                         " ,\"amountToPay\":" << fromLongToStringWithDecimals(
-                                            tmpTotalsMap[0].totalAmount) << "}}";
+                                            tmp_totals_map[0].total_amount) << "}}";
                             } else {
                                 rc = BCODE_ITEM_NOT_FOUND;
-                                if (rc > 0 && dummyRCS) {
+                                if (rc > 0 && dummy_rcs) {
                                     rc = 3;
                                 }
-                                respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}";
+                                resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":0}";
                             }
                         } catch (std::exception const &e) {
                             BOOST_LOG_SEV(my_logger_bs, lt::error) << "- BS - " << "Sales session error: " << e.what();
                         }
                         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ITEM_ADD - Cool - rc:" << rc <<
- ", barcode: " << barcode << ", qty: " << qty << ",addr: " << &itemsMap[itmCodePrice.code];
+ ", barcode: " << barcode << ", qty: " << qty << ",addr: " << &items_map[itm_code_price.code];
                     } else {
                         rc = BCODE_NOT_RECOGNIZED;
-                        if (rc > 0 && dummyRCS) {
+                        if (rc > 0 && dummy_rcs) {
                             rc = 3;
                         }
-                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":0}";
+                        resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":0}";
                     }
 
                     break;
                 }
                 case WEBI_GET_TOTALS: {
-                    tmpTotalsMap = myCart->getTotals();
-                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"totalItems\":"
-                            << tmpTotalsMap[0].itemsNumber << ",\"totalAmount\":" <<
-                            fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) <<
+                    tmp_totals_map = my_cart->getTotals();
+                    resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id << ",\"totalItems\":"
+                            << tmp_totals_map[0].items_number << ",\"totalAmount\":" <<
+                            fromLongToStringWithDecimals(tmp_totals_map[0].total_amount) <<
                             R"(,"totalDiscounts":0.0,"amountToPay":)" << fromLongToStringWithDecimals(
-                                tmpTotalsMap[0].totalAmount) << "}";
+                                tmp_totals_map[0].total_amount) << "}";
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_TOTALS - Cool - rc:" << rc;
                     break;
                 }
                 case WEBI_ITEM_VOID: {
                     if (barcode == 0) {
-                        barcode = strtoull(pUrlParamsMap["barcode"].c_str(), nullptr, 10);
+                        barcode = strtoull(p_url_params_map["barcode"].c_str(), nullptr, 10);
                     }
-                    itmCodePrice = decodeBarcode(barcode);
+                    itm_code_price = decodeBarcode(barcode);
 
                     qty = -1;
                     try {
-                        if (itemsMap[itmCodePrice.code].getCode() == itmCodePrice.code) {
-                            itmCodePrice.price = myCart->getItemPrice(&itemsMap[itmCodePrice.code], barcode,
-                                                                      itmCodePrice.type,
-                                                                      cartsPriceChangesWhileShopping);
+                        if (items_map[itm_code_price.code].getCode() == itm_code_price.code) {
+                            itm_code_price.price = my_cart->getItemPrice(&items_map[itm_code_price.code], barcode,
+                                                                      itm_code_price.type,
+                                                                      carts_price_changes_while_shopping);
 
-                            respStringStream << "{";
+                            resp_string_stream << "{";
 
-                            rc = myCart->removeItemByBarcode(itemsMap[itmCodePrice.code], barcode, itmCodePrice.price,
+                            rc = my_cart->removeItemByBarcode(items_map[itm_code_price.code], barcode, itm_code_price.price,
                                                              0);
-                            if (rc > 0 && dummyRCS) {
+                            if (rc > 0 && dummy_rcs) {
                                 rc = 3;
                             }
 
-                            if (rc == 0 && (itemsMap[itmCodePrice.code].getLinkedBarCode() > 0)) {
-                                uint64_t barCodeTmp = itemsMap[itmCodePrice.code].getLinkedBarCode();
-                                long rcLinked = myCart->removeItemByBarcode(
-                                    itemsMap[barcodesMap[barCodeTmp].getItemCode()], barCodeTmp,
-                                    itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice(), 0);
-                                if ((rcLinked > 0) && (dummyRCS)) {
+                            if (rc == 0 && (items_map[itm_code_price.code].getLinkedBarCode() > 0)) {
+                                uint64_t barCodeTmp = items_map[itm_code_price.code].getLinkedBarCode();
+                                long rcLinked = my_cart->removeItemByBarcode(
+                                    items_map[barcodes_map[barCodeTmp].getItemCode()], barCodeTmp,
+                                    items_map[barcodes_map[barCodeTmp].getItemCode()].getPrice(), 0);
+                                if ((rcLinked > 0) && (dummy_rcs)) {
                                     rcLinked = 3;
                                 }
                                 if (mainReturnSeparateLinkedBarcode) {
-                                    respStringStream << "\"addItemResponse\":{\"status\":" << rcLinked <<
-                                            ",\"deviceReqId\":" << requestId << ",\"itemId\":\"" << barCodeTmp <<
-                                            "\",\"description\":\"" << itemsMap[barcodesMap[barCodeTmp].getItemCode()].
+                                    resp_string_stream << "\"addItemResponse\":{\"status\":" << rcLinked <<
+                                            ",\"deviceReqId\":" << request_id << ",\"itemId\":\"" << barCodeTmp <<
+                                            "\",\"description\":\"" << items_map[barcodes_map[barCodeTmp].getItemCode()].
                                             getDescription() << "\",\"price\":" << fromLongToStringWithDecimals(
-                                                itemsMap[barcodesMap[barCodeTmp].getItemCode()].getPrice()) <<
+                                                items_map[barcodes_map[barCodeTmp].getItemCode()].getPrice()) <<
                                             ",\"voidFlag\":\"true\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"},";
                                 } else {
-                                    itmCodePrice.price =
-                                            itmCodePrice.price + itemsMap[barcodesMap[barCodeTmp].getItemCode()].
+                                    itm_code_price.price =
+                                            itm_code_price.price + items_map[barcodes_map[barCodeTmp].getItemCode()].
                                             getPrice();
                                 }
                             }
-                            tmpTotalsMap = myCart->getTotals();
-                            respStringStream << "\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" <<
-                                    requestId << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << itemsMap[
-                                        itmCodePrice.code].getDescription() << "\",\"price\":" <<
-                                    fromLongToStringWithDecimals(itmCodePrice.price) <<
+                            tmp_totals_map = my_cart->getTotals();
+                            resp_string_stream << "\"addItemResponse\":{\"status\":" << rc << ",\"deviceReqId\":" <<
+                                    request_id << ",\"itemId\":\"" << barcode << "\",\"description\":\"" << items_map[
+                                        itm_code_price.code].getDescription() << "\",\"price\":" <<
+                                    fromLongToStringWithDecimals(itm_code_price.price) <<
                                     ",\"voidFlag\":\"true\",\"quantity\":1,\"itemType\":\"NormalSaleItem\"}";
-                            respStringStream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" <<
-                                    requestId << ",\"totalItems\":" << tmpTotalsMap[0].itemsNumber <<
-                                    ",\"totalAmount\":" << fromLongToStringWithDecimals(tmpTotalsMap[0].totalAmount) <<
+                            resp_string_stream << ",\"getTotalResponse\":{\"status\":" << rc << ",\"deviceReqId\":" <<
+                                    request_id << ",\"totalItems\":" << tmp_totals_map[0].items_number <<
+                                    ",\"totalAmount\":" << fromLongToStringWithDecimals(tmp_totals_map[0].total_amount) <<
                                     ",\"totalDiscounts\":0.0,\"amountToPay\":" << fromLongToStringWithDecimals(
-                                        tmpTotalsMap[0].totalAmount) << "}}";
+                                        tmp_totals_map[0].total_amount) << "}}";
                         } else {
                             rc = BCODE_ITEM_NOT_FOUND;
-                            if ((rc > 0) && (dummyRCS)) {
+                            if ((rc > 0) && (dummy_rcs)) {
                                 rc = 3;
                             }
-                            respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}";
+                            resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id << "}";
                         }
                         BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_ITEM_VOID - Cool - rc:" << rc;
                     } catch (std::exception const &e) {
@@ -1174,14 +1172,14 @@ str();
                     break;
                 }
                 case WEBI_CUSTOMER_ADD: {
-                    barcode = strtoull(pUrlParamsMap["customerId"].c_str(), nullptr, 10);
+                    barcode = strtoull(p_url_params_map["customerId"].c_str(), nullptr, 10);
                     typedef std::map<uint64_t, uint64_t>::iterator loyCardsIteratorType;
-                    for (auto &cardIterator: allLoyCardsMap) {
+                    for (auto &cardIterator: all_loy_cards_map) {
                         if (cardIterator.first == barcode) {
-                            if (cardIterator.second == cartId) {
+                            if (cardIterator.second == cart_id) {
                                 rc = RC_LOY_CARD_ALREADY_PRESENT;
                             } else {
-                                if (atoi(configurationMap["LoyOnlyOneShoppingSessionPerCard"].c_str()) == 1) {
+                                if (atoi(configuration_map["LoyOnlyOneShoppingSessionPerCard"].c_str()) == 1) {
                                     rc = RC_LOY_CARD_IN_ANOTHER_TRANSACTION;
                                 }
                             }
@@ -1189,104 +1187,104 @@ str();
                     }
 
                     if (rc == 0) {
-                        allLoyCardsMap[barcode] = cartId;
-                        rc = myCart->addLoyCard(barcode, atoi(configurationMap["LoyMaxCardsPerTransaction"].c_str()));
+                        all_loy_cards_map[barcode] = cart_id;
+                        rc = my_cart->addLoyCard(barcode, atoi(configuration_map["LoyMaxCardsPerTransaction"].c_str()));
                     }
 
-                    if ((rc != 0) && (dummyRCS)) {
+                    if ((rc != 0) && (dummy_rcs)) {
                         rc = 3;
                     }
 
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_ADD_CUSTOMER - Cool - rc:" << rc <<
  ", card: " << barcode;
                     if (rc == RC_OK) {
-                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}";
+                        resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id << "}";
                     } else {
-                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId <<
+                        resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id <<
                                 R"(,"errorCode":"","errorMessage":"","resultExtension":[]})";
                     }
                     break ;
                 }
                 case WEBI_CUSTOMER_VOID: {
-                    barcode = strtoull(pUrlParamsMap["customerId"].c_str(), nullptr, 10);
-                    rc = myCart->removeLoyCard(barcode);
+                    barcode = strtoull(p_url_params_map["customerId"].c_str(), nullptr, 10);
+                    rc = my_cart->removeLoyCard(barcode);
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << "WEBI_REMOVE_CUSTOMER - Cool - rc:" << rc;
                     if (rc == RC_OK) {
-                        allLoyCardsMap.erase(barcode);
-                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}";
+                        all_loy_cards_map.erase(barcode);
+                        resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id << "}";
                     } else {
-                        if ((rc > 0) && (dummyRCS)) {
+                        if ((rc > 0) && (dummy_rcs)) {
                             rc = 3;
                         }
-                        respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId <<
+                        resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id <<
                                 R"(,"errorCode":"","errorMessage":"","resultExtension":[]})";
                     }
 
                     break;
                 }
                 case WEBI_SESSION_END: {
-                    rc = myCart->sendToPos(atol(pUrlParamsMap["payStationID"].c_str()),
-                                           this->configurationMap["SelfScanScanInDir"],
-                                           this->configurationMap["MainStoreId"]);
-                    if ((rc > 0) && (dummyRCS)) {
+                    rc = my_cart->sendToPos(atol(p_url_params_map["payStationID"].c_str()),
+                                           this->configuration_map["SelfScanScanInDir"],
+                                           this->configuration_map["MainStoreId"]);
+                    if ((rc > 0) && (dummy_rcs)) {
                         rc = 3;
                     }
                     // respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" << strCartId << ",\"terminalNum\":" << pUrlParamsMap["payStationID"] << "}" ;
-                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << "}";
+                    resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id << "}";
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_END - Cool - rc:" << rc;
                     break;
                 }
                 case WEBI_GET_ALL_CART: {
-                    respStringStream << myCart->getAllCartJson(itemsMap, false);
+                    resp_string_stream << my_cart->getAllCartJson(items_map, false);
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_GET_ALL_CART - Cool - result:" <<
- respStringStream.str();
+ resp_string_stream.str();
                     break;
                 }
                 case WEBI_GET_ALL_CART_WITH_BARCODES: {
-                    respStringStream << myCart->getAllCartJson(itemsMap, true);
+                    resp_string_stream << my_cart->getAllCartJson(items_map, true);
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_GET_ALL_CART_WITH_BARCODES - Cool - result:"
- << respStringStream.str();
+ << resp_string_stream.str();
                     break;
                 }
                 case WEBI_SESSION_VOID: {
-                    rc = myCart->voidAllCart();
-                    if ((rc > 0) && (dummyRCS)) {
+                    rc = my_cart->voidAllCart();
+                    if ((rc > 0) && (dummy_rcs)) {
                         rc = 3;
                     }
-                    respStringStream << "{\"status\":" << rc << ",\"deviceReqId\":" << requestId << ",\"sessionId\":" <<
+                    resp_string_stream << "{\"status\":" << rc << ",\"deviceReqId\":" << request_id << ",\"sessionId\":" <<
                             strCartId << "}";
                     BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - WEBI_SESSION_VOID - Cool - rc:" << rc;
                     break;
                 }
                 default: {
-                    BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - Web action not recognized :(, " << pAction;
+                    BOOST_LOG_SEV(my_logger_bs, lt::warning) << "- BS - Web action not recognized :(, " << p_action;
                 }
             }
         } else {
             rc = CART_NOT_FOUND;
-            if ((rc > 0) && (dummyRCS)) {
+            if ((rc > 0) && (dummy_rcs)) {
                 rc = 3;
             }
-            respStringStream << "{\"status\":" << rc << ",\"sessionId\":" << strCartId << "}";
+            resp_string_stream << "{\"status\":" << rc << ",\"sessionId\":" << strCartId << "}";
         }
     }
-    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << respStringStream.str();
+    BOOST_LOG_SEV(my_logger_bs, lt::info) << "- BS - " << resp_string_stream.str();
 
-    return respStringStream.str();
+    return resp_string_stream.str();
 }
 
 
-Item BaseSystem::getItemByIntCode(uint64_t pIntcode) {
-    return itemsMap[pIntcode];
+Item BaseSystem::getItemByIntCode(const uint64_t p_intcode) {
+    return items_map[p_intcode];
 }
 
-uint32_t BaseSystem::newCart(unsigned int pAction) {
+uint32_t BaseSystem::newCart(const unsigned int p_action) {
     uint32_t thisCartNumber = next_cart_number;
 
-    Cart newCart(this->basePath + "ARCHIVES/" + configurationMap["MainArchivesDir"], thisCartNumber, pAction,
-                 this->dummyRCS);
+    Cart newCart(this->base_path + "ARCHIVES/" + configuration_map["MainArchivesDir"], thisCartNumber, p_action,
+                 this->dummy_rcs);
 
-    cartsMap.insert({thisCartNumber, std::move(newCart)});
+    carts_map.insert({thisCartNumber, std::move(newCart)});
     //emplace non disponibile nel GCC di Debian 7
     //cartsMap.emplace( std::piecewise_construct, std::make_tuple(thisCartNumber), std::make_tuple(this->basePath,thisCartNumber,pAction) ) ;
 
@@ -1308,7 +1306,7 @@ string BaseSystem::getCartsList() {
     tempStringStream.clear();
     tempStringStream << "{\"Carts\":{";
 
-    for (carts iterator = cartsMap.begin(); iterator != cartsMap.end(); iterator++) {
+    for (carts iterator = carts_map.begin(); iterator != carts_map.end(); iterator++) {
         if (!firstRow) {
             tempStringStream << ",";
         }

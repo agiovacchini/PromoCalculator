@@ -6,17 +6,14 @@
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
 
-#include <iostream>
 #include <string>
 using namespace std;
 
 #ifndef __PromoCalculator__Item__
 #define __PromoCalculator__Item__
 
-#include "Department.h"
-#include "base/Archive.h"
-#include <sstream>
-#include <stdint.h>
+#include "base/archive.h"
+#include <cstdint>
 
 class Item : public Archive {
     
@@ -24,30 +21,30 @@ class Item : public Archive {
     int64_t price ;
     string description ;
 	uint64_t departmentCode ;
-    uint64_t linkedBarCode ;
+    uint64_t linked_barcode ;
 
 public:
 	Item();
 
-	Item(uint64_t pCode, int32_t pPrice, string pDescription, uint64_t pDepartment);
+	Item(uint64_t p_code, int32_t p_price, const string &p_description, uint64_t p_department);
     
-    void setCode( uint64_t pCode ) ;
+    void setCode( uint64_t p_code ) ;
     
     uint64_t getCode() const ;
     
-    void setPrice( int64_t pPrice ) ;
+    void setPrice( int64_t p_price ) ;
     
     int64_t getPrice() const ;
     
-    void setDescription( string pDescription ) ;
+    void setDescription(const string &p_description ) ;
     
     string getDescription() const ;
 
-	void setDepartmentCode( uint64_t pDepartmentCode );
+	void setDepartmentCode( uint64_t p_department_code );
         
 	uint64_t getDepartmentCode() const ;
         
-    void setLinkedBarCode( uint64_t pLinkedBarCode ) ;
+    void setLinkedBarCode( uint64_t p_linked_barcode ) ;
     
     uint64_t getLinkedBarCode() const ;
     
@@ -76,7 +73,7 @@ public:
         price = other.price ;
         description = other.description ;
 		departmentCode = other.departmentCode;
-        linkedBarCode = other.linkedBarCode ;
+        linked_barcode = other.linked_barcode ;
         return *this;
     }
     

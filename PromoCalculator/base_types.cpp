@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
 
-#include "BaseTypes.h"
+#include "base_types.h"
 
 bool fileMove(std::string pFileOri, std::string pFileDest)
 {
@@ -23,9 +23,9 @@ bool fileMove(std::string pFileOri, std::string pFileDest)
     return boost::filesystem::exists(dest);
 }
 
-bool fileDelete(std::string pFileName)
+bool fileDelete(std::string p_file_name)
 {
-    boost::filesystem::path fileToDelete(pFileName);
+    boost::filesystem::path fileToDelete(p_file_name);
     
     try {
         if (boost::filesystem::exists(fileToDelete))

@@ -6,30 +6,30 @@
 //  Copyright (c) 2014 Andrea Giovacchini. All rights reserved.
 //
 
-#include "Barcodes.h"
-#include "BaseTypes.h"
+#include "barcodes.h"
+#include "base_types.h"
 
-void Barcodes::setCode( uint64_t pCode ) {
-    this->code = pCode ;
+void Barcodes::setCode(const uint64_t p_code ) {
+    this->code = p_code ;
 }
 
 uint64_t Barcodes::getCode() const {
     return this->code ;
 }
 
-void Barcodes::setItemCode( uint64_t pItemCode ) {
-    this->itemCode = pItemCode ;
+void Barcodes::setItemCode(const uint64_t p_item_code ) {
+    this->item_code = p_item_code ;
 }
 
 uint64_t Barcodes::getItemCode() const {
-    return this->itemCode ;
+    return this->item_code ;
 }
 
 string Barcodes::toStr() const {
     std::stringstream row ;
     
     row << this->code
-    << "," << this->itemCode ;
+    << "," << this->item_code ;
     
     return row.str() ;
 }

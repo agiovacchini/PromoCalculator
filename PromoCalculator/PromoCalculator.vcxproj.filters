@@ -24,19 +24,19 @@
     <ClInclude Include="targetver.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Barcodes.h">
+    <ClInclude Include="barcodes.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="BaseSystem.h">
+    <ClInclude Include="base_system.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="BaseTypes.h">
+    <ClInclude Include="base_types.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Cart.h">
+    <ClInclude Include="cart.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Department.h">
+    <ClInclude Include="department.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
@@ -66,7 +66,7 @@
     <ClInclude Include="reply.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="Promotion.h">
+    <ClInclude Include="promotion.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
